@@ -38,23 +38,23 @@ data class JwsHeader(
             )
         }
     }
-}
 
-class JwsHeaderBuilder {
-    var type: String? = "JWT"
-    var contentType: String? = null
-    var keyId: String? = null
-    private val extra: MutableMap<String, JsonElement> = mutableMapOf()
+    class Builder {
+        var type: String? = "JWT"
+        var contentType: String? = null
+        var keyId: String? = null
+        private val extra: MutableMap<String, JsonElement> = mutableMapOf()
 
-    fun extra(name: String, value: JsonElement) {
-        extra[name] = value
+        fun extra(name: String, value: JsonElement) {
+            extra[name] = value
+        }
+
+        internal fun build(algorithm: String) = JwsHeader(
+            algorithm = algorithm,
+            type = type,
+            contentType = contentType,
+            keyId = keyId,
+            extra = extra,
+        )
     }
-
-    internal fun build(algorithm: String) = JwsHeader(
-        algorithm = algorithm,
-        type = type,
-        contentType = contentType,
-        keyId = keyId,
-        extra = extra,
-    )
 }

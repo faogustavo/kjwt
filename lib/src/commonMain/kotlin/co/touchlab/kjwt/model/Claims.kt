@@ -12,7 +12,7 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.longOrNull
 
-class Claims(@PublishedApi internal val data: Map<String, JsonElement>) : Map<String, JsonElement> by data {
+class Claims(@PublishedApi internal val data: Map<String, JsonElement>) {
 
     val issuer: String? get() = data[ISS]?.jsonPrimitive?.content
 
@@ -49,40 +49,38 @@ class Claims(@PublishedApi internal val data: Map<String, JsonElement>) : Map<St
         const val IAT = "iat"
         const val JTI = "jti"
     }
-}
 
-class ClaimsBuilder {
-    var issuer: String? = null
-    var subject: String? = null
-    var audience: Set<String>? = null
-    var expiration: Instant? = null
-    var notBefore: Instant? = null
-    var issuedAt: Instant? = null
-    var jwtId: String? = null
+    class Builder {
+        var issuer: String? = null
+        var subject: String? = null
+        var audience: Set<String>? = null
+        var expiration: Instant? = null
+        var notBefore: Instant? = null
+        var issuedAt: Instant? = null
+        var jwtId: String? = null
 
-    @PublishedApi internal val extra: MutableMap<String, JsonElement> = mutableMapOf()
+        @PublishedApi internal val extra: MutableMap<String, JsonElement> = mutableMapOf()
 
-    fun claim(name: String, value: JsonElement) {
-        extra[name] = value
-    }
-
-    inline fun <reified T> claim(name: String, value: T) {
-        extra[name] = JwtJson.encodeToJsonElement(value)
-    }
-
-    internal fun toJsonObject(): JsonObject = buildJsonObject {
-        issuer?.let { put(Claims.ISS, JsonPrimitive(it)) }
-        subject?.let { put(Claims.SUB, JsonPrimitive(it)) }
-        audience?.let { aud ->
-            if (aud.size == 1) put(Claims.AUD, JsonPrimitive(aud.first()))
-            else put(Claims.AUD, JsonArray(aud.map { JsonPrimitive(it) }))
+        fun claim(name: String, value: JsonElement) {
+            extra[name] = value
         }
-        expiration?.let { put(Claims.EXP, JsonPrimitive(it.epochSeconds)) }
-        notBefore?.let { put(Claims.NBF, JsonPrimitive(it.epochSeconds)) }
-        issuedAt?.let { put(Claims.IAT, JsonPrimitive(it.epochSeconds)) }
-        jwtId?.let { put(Claims.JTI, JsonPrimitive(it)) }
-        extra.forEach { (k, v) -> put(k, v) }
-    }
 
-    internal fun build(): Claims = Claims(toJsonObject())
+        inline fun <reified T> claim(name: String, value: T) {
+            extra[name] = JwtJson.encodeToJsonElement(value)
+        }
+
+        internal fun toJsonObject(): JsonObject = buildJsonObject {
+            issuer?.let { put(Claims.ISS, JsonPrimitive(it)) }
+            subject?.let { put(Claims.SUB, JsonPrimitive(it)) }
+            audience?.let { aud ->
+                if (aud.size == 1) put(Claims.AUD, JsonPrimitive(aud.first()))
+                else put(Claims.AUD, JsonArray(aud.map { JsonPrimitive(it) }))
+            }
+            expiration?.let { put(Claims.EXP, JsonPrimitive(it.epochSeconds)) }
+            notBefore?.let { put(Claims.NBF, JsonPrimitive(it.epochSeconds)) }
+            issuedAt?.let { put(Claims.IAT, JsonPrimitive(it.epochSeconds)) }
+            jwtId?.let { put(Claims.JTI, JsonPrimitive(it)) }
+            extra.forEach { (k, v) -> put(k, v) }
+        }
+    }
 }

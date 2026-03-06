@@ -40,8 +40,8 @@ class JwsDecodeTest {
         assertEquals("JWT", jws.header.type)
         assertEquals("1234567890", jws.payload.subject)
         assertEquals(Instant.fromEpochSeconds(1516239022), jws.payload.issuedAt)
-        assertEquals("John Doe", jws.payload["name"]?.jsonPrimitive?.content)
-        assertEquals(true, jws.payload["admin"]?.jsonPrimitive?.boolean)
+        assertEquals("John Doe", jws.payload.getClaim("name"))
+        assertEquals(true, jws.payload.getClaim("admin"))
     }
 
     @Test

@@ -20,6 +20,7 @@ import co.touchlab.kjwt.model.JweHeader
 import co.touchlab.kjwt.model.Jws
 import co.touchlab.kjwt.model.JwsHeader
 import kotlin.time.Clock
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 
@@ -191,7 +192,7 @@ class JwtParser internal constructor(private val config: JwtParserBuilder) {
                         Claims.SUB -> claims.subject
                         Claims.JTI -> claims.jwtId
                         else -> {
-                            val element = claims[name] ?: throw MissingClaimException(name)
+                            val element = claims.getClaim<JsonElement>(name) ?: throw MissingClaimException(name)
                             (element as? JsonPrimitive)?.content ?: element.toString()
                         }
                     }

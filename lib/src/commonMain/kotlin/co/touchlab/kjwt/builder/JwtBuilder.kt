@@ -8,9 +8,9 @@ import co.touchlab.kjwt.internal.encodeBase64Url
 import co.touchlab.kjwt.internal.encodeToBase64Url
 import co.touchlab.kjwt.internal.jweEncrypt
 import co.touchlab.kjwt.internal.jwsSign
-import co.touchlab.kjwt.model.ClaimsBuilder
+import co.touchlab.kjwt.model.Claims
 import co.touchlab.kjwt.model.JweHeader
-import co.touchlab.kjwt.model.JwsHeaderBuilder
+import co.touchlab.kjwt.model.JwsHeader
 import dev.whyoleg.cryptography.materials.key.Key
 import kotlinx.datetime.Instant
 import kotlinx.serialization.json.JsonElement
@@ -36,8 +36,8 @@ import kotlinx.serialization.json.JsonElement
  */
 class JwtBuilder {
     @PublishedApi
-    internal val claims = ClaimsBuilder()
-    private val headerBuilder = JwsHeaderBuilder()
+    internal val claims = Claims.Builder()
+    private val headerBuilder = JwsHeader.Builder()
 
     fun issuer(iss: String): JwtBuilder = apply { claims.issuer = iss }
     fun subject(sub: String): JwtBuilder = apply { claims.subject = sub }
@@ -50,9 +50,9 @@ class JwtBuilder {
     fun claim(name: String, value: JsonElement): JwtBuilder = apply { claims.claim(name, value) }
     inline fun <reified T> claim(name: String, value: T): JwtBuilder = apply { claims.claim(name, value) }
 
-    fun claims(block: ClaimsBuilder.() -> Unit): JwtBuilder = apply { claims.block() }
+    fun claims(block: Claims.Builder.() -> Unit): JwtBuilder = apply { claims.block() }
 
-    fun header(block: JwsHeaderBuilder.() -> Unit): JwtBuilder = apply { headerBuilder.block() }
+    fun header(block: JwsHeader.Builder.() -> Unit): JwtBuilder = apply { headerBuilder.block() }
     fun keyId(kid: String): JwtBuilder = apply { headerBuilder.keyId = kid }
 
     /**
