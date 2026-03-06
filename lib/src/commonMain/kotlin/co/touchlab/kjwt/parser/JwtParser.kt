@@ -116,8 +116,7 @@ class JwtParser internal constructor(private val config: JwtParserBuilder) {
             throw SignatureException("JWE decryption or authentication tag verification failed", e)
         }
 
-        val payloadJson = decodeJsonObjectFromString(plaintext.decodeToString(), "payload")
-        val claims = Claims(payloadJson)
+        val claims = decodeJsonObjectFromString<Claims>(plaintext.decodeToString(), "payload")
 
         // For JWE time-claim validation we create a synthetic JwsHeader for the exception type
         val syntheticJwsHeader = JwtHeader.Jws(algorithm = header.algorithm)
@@ -150,9 +149,9 @@ class JwtParser internal constructor(private val config: JwtParserBuilder) {
         return decodeJsonObjectFromString(bytes.decodeToString(), name)
     }
 
-    private fun decodeJsonObjectFromString(json: String, name: String): JsonObject =
+    private inline fun <reified T> decodeJsonObjectFromString(json: String, name: String): T =
         try {
-            JwtJson.decodeFromString(JsonObject.serializer(), json)
+            JwtJson.decodeFromString(json)
         } catch (e: Exception) {
             throw MalformedJwtException("JWT $name is not valid JSON", e)
         }

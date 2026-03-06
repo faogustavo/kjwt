@@ -2,6 +2,11 @@ package co.touchlab.kjwt.model
 
 import co.touchlab.kjwt.internal.JwtJson
 import kotlin.time.Instant
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
@@ -12,6 +17,7 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.longOrNull
 
+@Serializable(with = Claims.ClaimsSerializer::class)
 class Claims(@PublishedApi internal val data: Map<String, JsonElement>) {
 
     val issuer: String? get() = data[ISS]?.jsonPrimitive?.content
@@ -81,6 +87,19 @@ class Claims(@PublishedApi internal val data: Map<String, JsonElement>) {
                 "issuedAt=$issuedAt, " +
                 "jwtId=$jwtId" +
                 ")"
+
+    object ClaimsSerializer : KSerializer<Claims> {
+        private val delegate = JsonObject.serializer()
+        override val descriptor: SerialDescriptor = delegate.descriptor
+
+        override fun serialize(encoder: Encoder, value: Claims) {
+            encoder.encodeSerializableValue(delegate, JsonObject(value.data))
+        }
+
+        override fun deserialize(decoder: Decoder): Claims {
+            return Claims(decoder.decodeSerializableValue(delegate))
+        }
+    }
 
     class Builder {
         var issuer: String? = null
