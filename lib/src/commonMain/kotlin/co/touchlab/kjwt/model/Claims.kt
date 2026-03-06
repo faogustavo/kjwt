@@ -40,15 +40,47 @@ class Claims(@PublishedApi internal val data: Map<String, JsonElement>) {
         return JwtJson.decodeFromJsonElement(kotlinx.serialization.serializer<T>(), element)
     }
 
-    companion object {
-        const val ISS = "iss"
-        const val SUB = "sub"
-        const val AUD = "aud"
-        const val EXP = "exp"
-        const val NBF = "nbf"
-        const val IAT = "iat"
-        const val JTI = "jti"
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || this::class != other::class) return false
+
+        other as Claims
+
+        if (data != other.data) return false
+        if (issuer != other.issuer) return false
+        if (subject != other.subject) return false
+        if (audience != other.audience) return false
+        if (expiration != other.expiration) return false
+        if (notBefore != other.notBefore) return false
+        if (issuedAt != other.issuedAt) return false
+        if (jwtId != other.jwtId) return false
+
+        return true
     }
+
+    override fun hashCode(): Int {
+        var result = data.hashCode()
+        result = 31 * result + (issuer?.hashCode() ?: 0)
+        result = 31 * result + (subject?.hashCode() ?: 0)
+        result = 31 * result + (audience?.hashCode() ?: 0)
+        result = 31 * result + (expiration?.hashCode() ?: 0)
+        result = 31 * result + (notBefore?.hashCode() ?: 0)
+        result = 31 * result + (issuedAt?.hashCode() ?: 0)
+        result = 31 * result + (jwtId?.hashCode() ?: 0)
+        return result
+    }
+
+    override fun toString(): String =
+        "Claims(" +
+                "data=$data, " +
+                "issuer=$issuer, " +
+                "subject=$subject, " +
+                "audience=$audience, " +
+                "expiration=$expiration, " +
+                "notBefore=$notBefore, " +
+                "issuedAt=$issuedAt, " +
+                "jwtId=$jwtId" +
+                ")"
 
     class Builder {
         var issuer: String? = null
@@ -59,7 +91,8 @@ class Claims(@PublishedApi internal val data: Map<String, JsonElement>) {
         var issuedAt: Instant? = null
         var jwtId: String? = null
 
-        @PublishedApi internal val extra: MutableMap<String, JsonElement> = mutableMapOf()
+        @PublishedApi
+        internal val extra: MutableMap<String, JsonElement> = mutableMapOf()
 
         fun claim(name: String, value: JsonElement) {
             extra[name] = value
@@ -70,17 +103,27 @@ class Claims(@PublishedApi internal val data: Map<String, JsonElement>) {
         }
 
         internal fun toJsonObject(): JsonObject = buildJsonObject {
-            issuer?.let { put(Claims.ISS, JsonPrimitive(it)) }
-            subject?.let { put(Claims.SUB, JsonPrimitive(it)) }
+            issuer?.let { put(ISS, JsonPrimitive(it)) }
+            subject?.let { put(SUB, JsonPrimitive(it)) }
             audience?.let { aud ->
-                if (aud.size == 1) put(Claims.AUD, JsonPrimitive(aud.first()))
-                else put(Claims.AUD, JsonArray(aud.map { JsonPrimitive(it) }))
+                if (aud.size == 1) put(AUD, JsonPrimitive(aud.first()))
+                else put(AUD, JsonArray(aud.map { JsonPrimitive(it) }))
             }
-            expiration?.let { put(Claims.EXP, JsonPrimitive(it.epochSeconds)) }
-            notBefore?.let { put(Claims.NBF, JsonPrimitive(it.epochSeconds)) }
-            issuedAt?.let { put(Claims.IAT, JsonPrimitive(it.epochSeconds)) }
-            jwtId?.let { put(Claims.JTI, JsonPrimitive(it)) }
+            expiration?.let { put(EXP, JsonPrimitive(it.epochSeconds)) }
+            notBefore?.let { put(NBF, JsonPrimitive(it.epochSeconds)) }
+            issuedAt?.let { put(IAT, JsonPrimitive(it.epochSeconds)) }
+            jwtId?.let { put(JTI, JsonPrimitive(it)) }
             extra.forEach { (k, v) -> put(k, v) }
         }
+    }
+
+    companion object {
+        const val ISS = "iss"
+        const val SUB = "sub"
+        const val AUD = "aud"
+        const val EXP = "exp"
+        const val NBF = "nbf"
+        const val IAT = "iat"
+        const val JTI = "jti"
     }
 }

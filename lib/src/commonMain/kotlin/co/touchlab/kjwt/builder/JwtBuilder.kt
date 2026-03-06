@@ -9,10 +9,9 @@ import co.touchlab.kjwt.internal.encodeToBase64Url
 import co.touchlab.kjwt.internal.jweEncrypt
 import co.touchlab.kjwt.internal.jwsSign
 import co.touchlab.kjwt.model.Claims
-import co.touchlab.kjwt.model.JweHeader
-import co.touchlab.kjwt.model.JwsHeader
+import co.touchlab.kjwt.model.JwtHeader
 import dev.whyoleg.cryptography.materials.key.Key
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.serialization.json.JsonElement
 
 /**
@@ -37,7 +36,7 @@ import kotlinx.serialization.json.JsonElement
 class JwtBuilder {
     @PublishedApi
     internal val claims = Claims.Builder()
-    private val headerBuilder = JwsHeader.Builder()
+    private val headerBuilder = JwtHeader.Builder()
 
     fun issuer(iss: String): JwtBuilder = apply { claims.issuer = iss }
     fun subject(sub: String): JwtBuilder = apply { claims.subject = sub }
@@ -52,7 +51,7 @@ class JwtBuilder {
 
     fun claims(block: Claims.Builder.() -> Unit): JwtBuilder = apply { claims.block() }
 
-    fun header(block: JwsHeader.Builder.() -> Unit): JwtBuilder = apply { headerBuilder.block() }
+    fun header(block: JwtHeader.Builder.() -> Unit): JwtBuilder = apply { headerBuilder.block() }
     fun keyId(kid: String): JwtBuilder = apply { headerBuilder.keyId = kid }
 
     /**
@@ -61,7 +60,7 @@ class JwtBuilder {
      * For [JwsAlgorithm.None] the signature part is empty, producing `header.payload.`
      */
     suspend fun <T : Key> signWith(algorithm: JwsAlgorithm<T>, key: T): String {
-        val header = headerBuilder.build(algorithm.id)
+        val header = headerBuilder.build(algorithm)
         val headerB64 = header.toJsonObject().encodeToBase64Url()
         val payloadB64 = claims.toJsonObject().encodeToBase64Url()
         val signingInput = "$headerB64.$payloadB64".encodeToByteArray()
@@ -81,12 +80,7 @@ class JwtBuilder {
         keyAlgorithm: JweKeyAlgorithm<PublicKey, PrivateKey>,
         contentAlgorithm: JweContentAlgorithm,
     ): String {
-        val header = JweHeader(
-            algorithm = keyAlgorithm.id,
-            encryption = contentAlgorithm.id,
-            type = "JWT",
-            keyId = headerBuilder.keyId,
-        )
+        val header = headerBuilder.build(keyAlgorithm, contentAlgorithm)
         val headerB64 = header.toJsonObject().encodeToBase64Url()
         val aad = headerB64.encodeToByteArray()
         val plaintext = claims.toJsonObject().toString().encodeToByteArray()

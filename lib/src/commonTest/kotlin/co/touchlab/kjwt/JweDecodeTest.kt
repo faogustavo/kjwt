@@ -8,8 +8,8 @@ import co.touchlab.kjwt.exception.ExpiredJwtException
 import co.touchlab.kjwt.exception.IncorrectClaimException
 import co.touchlab.kjwt.exception.MalformedJwtException
 import co.touchlab.kjwt.exception.SignatureException
-import co.touchlab.kjwt.model.Jwe
 import co.touchlab.kjwt.model.Claims
+import co.touchlab.kjwt.model.JwtInstance
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -194,8 +194,8 @@ class JweDecodeTest {
 
         val result = Jwt.parser().decryptWith(JweKeyAlgorithm.Dir, cek).build().parse(token)
 
-        assertIs<Jwe<Claims>>(result)
-        assertEquals("auto-detect-jwe", (result as Jwe<Claims>).payload.subject)
+        assertIs<JwtInstance.Jwe<Claims>>(result)
+        assertEquals("auto-detect-jwe", result.payload.subject)
     }
 
     // ---- Error cases ----

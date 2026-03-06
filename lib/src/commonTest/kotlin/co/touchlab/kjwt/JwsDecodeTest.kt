@@ -1,12 +1,9 @@
 package co.touchlab.kjwt
 
 import co.touchlab.kjwt.algorithm.JwsAlgorithm
-import co.touchlab.kjwt.cryptography.SimpleKey
-import co.touchlab.kjwt.model.Jws
 import co.touchlab.kjwt.model.Claims
+import co.touchlab.kjwt.model.JwtInstance
 import dev.whyoleg.cryptography.algorithms.EC
-import dev.whyoleg.cryptography.algorithms.SHA384
-import dev.whyoleg.cryptography.algorithms.SHA512
 import dev.whyoleg.cryptography.materials.key.EncodableKey
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -17,8 +14,6 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.json.boolean
-import kotlinx.serialization.json.jsonPrimitive
 
 class JwsDecodeTest {
 
@@ -216,8 +211,8 @@ class JwsDecodeTest {
             .build()
             .parse(token)
 
-        assertIs<Jws<Claims>>(result)
-        assertEquals("auto-detect-user", (result as Jws<Claims>).payload.subject)
+        assertIs<JwtInstance.Jws<Claims>>(result)
+        assertEquals("auto-detect-user", result.payload.subject)
     }
 
     // ---- Claim validation happy paths ----
