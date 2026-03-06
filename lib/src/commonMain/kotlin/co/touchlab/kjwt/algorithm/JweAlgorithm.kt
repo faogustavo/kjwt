@@ -21,7 +21,7 @@ sealed class JweKeyAlgorithm(val id: String) {
     override fun toString(): String = id
 
     companion object {
-        private val all = listOf(Dir, RsaOaep, RsaOaep256)
+        private val all by lazy { listOf(Dir, RsaOaep, RsaOaep256) }
 
         fun fromId(id: String): JweKeyAlgorithm =
             all.firstOrNull { it.id == id }
