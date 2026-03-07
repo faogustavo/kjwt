@@ -11,7 +11,9 @@ import co.touchlab.kjwt.model.JwtHeader
 import co.touchlab.kjwt.model.JwtPayload
 import co.touchlab.kjwt.serializers.ClaimsSerializer
 import dev.whyoleg.cryptography.materials.key.Key
+import kotlin.time.Duration
 import kotlin.time.Instant
+import kotlin.uuid.ExperimentalUuidApi
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.JsonElement
 
@@ -43,21 +45,32 @@ class JwtBuilder {
     fun subject(sub: String): JwtBuilder = apply { payloadBuilder.subject = sub }
     fun audience(vararg aud: String): JwtBuilder = apply { payloadBuilder.audience = aud.toSet() }
     fun expiration(exp: Instant): JwtBuilder = apply { payloadBuilder.expiration = exp }
+    fun expiresIn(duration: Duration): JwtBuilder = apply { payloadBuilder.expiresIn(duration) }
     fun notBefore(nbf: Instant): JwtBuilder = apply { payloadBuilder.notBefore = nbf }
+    fun notBeforeNow(): JwtBuilder = apply { payloadBuilder.notBeforeNow() }
     fun issuedAt(iat: Instant): JwtBuilder = apply { payloadBuilder.issuedAt = iat }
     fun id(jti: String): JwtBuilder = apply { payloadBuilder.id = jti }
 
-    fun claim(name: String, value: JsonElement): JwtBuilder = apply { payloadBuilder.claim(name, value) }
+    @ExperimentalUuidApi
+    fun randomId(): JwtBuilder = apply { payloadBuilder.randomId() }
+
+    fun claim(name: String, value: JsonElement): JwtBuilder =
+        apply { payloadBuilder.claim(name, value) }
+
     fun <T> claim(name: String, serializer: SerializationStrategy<T>, value: T?): JwtBuilder =
         apply { payloadBuilder.claim(name, serializer, value) }
 
     inline fun <reified T> claim(name: String, value: T): JwtBuilder =
         apply { payloadBuilder.claim(name, value) }
 
-    fun claims(block: JwtPayload.Builder.() -> Unit): JwtBuilder = apply { payloadBuilder.block() }
+    fun claims(block: JwtPayload.Builder.() -> Unit): JwtBuilder =
+        apply { payloadBuilder.block() }
 
-    fun header(block: JwtHeader.Builder.() -> Unit): JwtBuilder = apply { headerBuilder.block() }
-    fun keyId(kid: String): JwtBuilder = apply { headerBuilder.keyId = kid }
+    fun header(block: JwtHeader.Builder.() -> Unit): JwtBuilder =
+        apply { headerBuilder.block() }
+
+    fun keyId(kid: String): JwtBuilder =
+        apply { headerBuilder.keyId = kid }
 
     /**
      * Builds and returns a JWS compact serialization: `header.payload.signature`.

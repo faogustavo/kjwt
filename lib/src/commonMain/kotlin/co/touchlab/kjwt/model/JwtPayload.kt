@@ -2,7 +2,11 @@ package co.touchlab.kjwt.model
 
 import co.touchlab.kjwt.internal.JwtJson
 import co.touchlab.kjwt.serializers.InstantEpochSecondsSerializer
+import kotlin.time.Clock
+import kotlin.time.Duration
 import kotlin.time.Instant
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.JsonElement
@@ -72,6 +76,19 @@ interface JwtPayload {
             } else {
                 content.remove(name)
             }
+        }
+
+        fun expiresIn(duration: Duration) {
+            expiration = Clock.System.now() + duration
+        }
+
+        fun notBeforeNow() {
+            notBefore = Clock.System.now()
+        }
+
+        @ExperimentalUuidApi
+        fun randomId() {
+            id = Uuid.random().toString()
         }
 
         inline fun <reified T> claim(name: String, value: T) {
