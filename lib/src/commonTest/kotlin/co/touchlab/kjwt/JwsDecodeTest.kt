@@ -145,6 +145,38 @@ class JwsDecodeTest {
         assertEquals("none-user", jws.payload.subjectOrNull)
     }
 
+    @Test
+    fun parseNone_withNoVerify_succeeds() = runTest {
+        val token = Jwt.builder()
+            .subject("none-user")
+            .signWith(JwsAlgorithm.None)
+
+        val jws = Jwt.parser()
+            .noVerify()
+            .build()
+            .parseSignedClaims(token)
+
+        assertEquals("none", jws.header.algorithm)
+        assertEquals("none-user", jws.payload.subjectOrNull)
+    }
+
+    @Test
+    fun noVerify_withSignedToken_skipsVerification() = runTest {
+        val key = hs256Key()
+        val token = Jwt.builder()
+            .subject("user")
+            .signWith(JwsAlgorithm.HS256, key)
+
+        // noVerify() matches any algorithm and None.verify() always returns true
+        val jws = Jwt.parser()
+            .noVerify()
+            .build()
+            .parseSignedClaims(token)
+
+        assertEquals("HS256", jws.header.algorithm)
+        assertEquals("user", jws.payload.subjectOrNull)
+    }
+
     // ---- Audience normalization ----
 
     @Test
