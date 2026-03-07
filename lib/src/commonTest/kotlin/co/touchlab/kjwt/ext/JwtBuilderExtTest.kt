@@ -12,7 +12,6 @@ import co.touchlab.kjwt.hs384Key
 import co.touchlab.kjwt.hs384Secret
 import co.touchlab.kjwt.hs512Key
 import co.touchlab.kjwt.hs512Secret
-import co.touchlab.kjwt.model.subjectOrNull
 import co.touchlab.kjwt.rsaPkcs1KeyPair
 import co.touchlab.kjwt.rsaPssKeyPair
 import dev.whyoleg.cryptography.algorithms.EC

@@ -6,14 +6,14 @@ import co.touchlab.kjwt.algorithm.JweContentAlgorithm
 import co.touchlab.kjwt.algorithm.JweKeyAlgorithm
 import co.touchlab.kjwt.algorithm.JwsAlgorithm
 import co.touchlab.kjwt.exception.MissingClaimException
+import co.touchlab.kjwt.ext.expirationOrNull
 import co.touchlab.kjwt.ext.parse
 import co.touchlab.kjwt.ext.parseEncryptedJwt
 import co.touchlab.kjwt.ext.parseSignedJwt
+import co.touchlab.kjwt.ext.subjectOrNull
 import co.touchlab.kjwt.internal.JwtJson
 import co.touchlab.kjwt.model.JwtInstance
 import co.touchlab.kjwt.model.JwtPayload
-import co.touchlab.kjwt.model.expirationOrNull
-import co.touchlab.kjwt.model.subjectOrNull
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs

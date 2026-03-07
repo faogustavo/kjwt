@@ -7,7 +7,7 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonObject
 
-object ClaimsSerializer : KSerializer<Claims> {
+internal object ClaimsSerializer : KSerializer<Claims> {
     private val delegate = JsonObject.serializer()
     override val descriptor: SerialDescriptor = delegate.descriptor
 

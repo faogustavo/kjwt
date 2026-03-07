@@ -10,19 +10,18 @@ import co.touchlab.kjwt.exception.MissingClaimException
 import co.touchlab.kjwt.exception.PrematureJwtException
 import co.touchlab.kjwt.exception.SignatureException
 import co.touchlab.kjwt.exception.UnsupportedJwtException
+import co.touchlab.kjwt.ext.audience
+import co.touchlab.kjwt.ext.expirationOrNull
+import co.touchlab.kjwt.ext.getClaimOrNull
+import co.touchlab.kjwt.ext.issuerOrNull
+import co.touchlab.kjwt.ext.jwtIdOrNull
+import co.touchlab.kjwt.ext.notBeforeOrNull
+import co.touchlab.kjwt.ext.subjectOrNull
 import co.touchlab.kjwt.internal.JwtJson
 import co.touchlab.kjwt.internal.decodeBase64Url
-import co.touchlab.kjwt.model.Claims
 import co.touchlab.kjwt.model.JwtHeader
 import co.touchlab.kjwt.model.JwtInstance
 import co.touchlab.kjwt.model.JwtPayload
-import co.touchlab.kjwt.model.audience
-import co.touchlab.kjwt.model.expirationOrNull
-import co.touchlab.kjwt.model.getClaimOrNull
-import co.touchlab.kjwt.model.issuerOrNull
-import co.touchlab.kjwt.model.jwtIdOrNull
-import co.touchlab.kjwt.model.notBeforeOrNull
-import co.touchlab.kjwt.model.subjectOrNull
 import co.touchlab.kjwt.serializers.ClaimsSerializer
 import kotlin.time.Clock
 import kotlinx.serialization.DeserializationStrategy
@@ -33,7 +32,7 @@ import kotlinx.serialization.json.JsonPrimitive
  * Thread-safe JWT parser. Obtain via [JwtParserBuilder.build].
  */
 class JwtParser internal constructor(private val config: JwtParserBuilder) {
-    suspend fun parseSignedClaims(token: String): JwtInstance.Jws<Claims> =
+    suspend fun parseSignedClaims(token: String): JwtInstance.Jws<JwtPayload> =
         parseSignedJwt(ClaimsSerializer, token)
 
     /**
@@ -92,7 +91,7 @@ class JwtParser internal constructor(private val config: JwtParserBuilder) {
      * @throws MalformedJwtException if the token is not a valid 5-part JWE
      * @throws SignatureException if decryption or authentication tag verification fails
      */
-    suspend fun parseEncryptedClaims(token: String): JwtInstance.Jwe<Claims> =
+    suspend fun parseEncryptedClaims(token: String): JwtInstance.Jwe<JwtPayload> =
         parseEncryptedJwt(ClaimsSerializer, token)
 
     suspend fun <T : JwtPayload> parseEncryptedJwt(
@@ -144,7 +143,7 @@ class JwtParser internal constructor(private val config: JwtParserBuilder) {
     /**
      * Auto-detects JWS (3 parts) or JWE (5 parts) and delegates accordingly.
      */
-    suspend fun parseClaims(token: String): JwtInstance<Claims> =
+    suspend fun parseClaims(token: String): JwtInstance<JwtPayload> =
         parse(ClaimsSerializer, token)
 
     suspend fun <T : JwtPayload> parse(

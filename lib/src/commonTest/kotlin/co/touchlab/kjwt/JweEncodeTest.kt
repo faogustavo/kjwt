@@ -4,7 +4,7 @@ package co.touchlab.kjwt
 
 import co.touchlab.kjwt.algorithm.JweContentAlgorithm
 import co.touchlab.kjwt.algorithm.JweKeyAlgorithm
-import co.touchlab.kjwt.model.subjectOrNull
+import co.touchlab.kjwt.ext.subjectOrNull
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals

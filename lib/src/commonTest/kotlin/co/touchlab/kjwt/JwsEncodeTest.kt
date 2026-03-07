@@ -1,14 +1,14 @@
 package co.touchlab.kjwt
 
 import co.touchlab.kjwt.algorithm.JwsAlgorithm
-import co.touchlab.kjwt.model.audienceOrNull
-import co.touchlab.kjwt.model.expirationOrNull
-import co.touchlab.kjwt.model.getClaimOrNull
-import co.touchlab.kjwt.model.issuedAtOrNull
-import co.touchlab.kjwt.model.issuerOrNull
-import co.touchlab.kjwt.model.jwtIdOrNull
-import co.touchlab.kjwt.model.notBeforeOrNull
-import co.touchlab.kjwt.model.subjectOrNull
+import co.touchlab.kjwt.ext.audienceOrNull
+import co.touchlab.kjwt.ext.expirationOrNull
+import co.touchlab.kjwt.ext.getClaimOrNull
+import co.touchlab.kjwt.ext.issuedAtOrNull
+import co.touchlab.kjwt.ext.issuerOrNull
+import co.touchlab.kjwt.ext.jwtIdOrNull
+import co.touchlab.kjwt.ext.notBeforeOrNull
+import co.touchlab.kjwt.ext.subjectOrNull
 import dev.whyoleg.cryptography.algorithms.EC
 import dev.whyoleg.cryptography.algorithms.SHA384
 import dev.whyoleg.cryptography.algorithms.SHA512

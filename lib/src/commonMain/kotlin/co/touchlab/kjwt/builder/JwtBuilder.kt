@@ -7,10 +7,11 @@ import co.touchlab.kjwt.cryptography.SimpleKey
 import co.touchlab.kjwt.internal.JwtJson
 import co.touchlab.kjwt.internal.encodeBase64Url
 import co.touchlab.kjwt.internal.encodeToBase64Url
-import co.touchlab.kjwt.model.Claims
 import co.touchlab.kjwt.model.JwtHeader
+import co.touchlab.kjwt.model.JwtPayload
 import dev.whyoleg.cryptography.materials.key.Key
 import kotlin.time.Instant
+import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.JsonElement
 
 /**
@@ -34,21 +35,25 @@ import kotlinx.serialization.json.JsonElement
  */
 class JwtBuilder {
     @PublishedApi
-    internal val claimsBuilder = Claims.Builder()
+    internal val payloadBuilder = JwtPayload.Builder()
     private val headerBuilder = JwtHeader.Builder()
 
-    fun issuer(iss: String): JwtBuilder = apply { claimsBuilder.issuer = iss }
-    fun subject(sub: String): JwtBuilder = apply { claimsBuilder.subject = sub }
-    fun audience(vararg aud: String): JwtBuilder = apply { claimsBuilder.audience = aud.toSet() }
-    fun expiration(exp: Instant): JwtBuilder = apply { claimsBuilder.expiration = exp }
-    fun notBefore(nbf: Instant): JwtBuilder = apply { claimsBuilder.notBefore = nbf }
-    fun issuedAt(iat: Instant): JwtBuilder = apply { claimsBuilder.issuedAt = iat }
-    fun id(jti: String): JwtBuilder = apply { claimsBuilder.id = jti }
+    fun issuer(iss: String): JwtBuilder = apply { payloadBuilder.issuer = iss }
+    fun subject(sub: String): JwtBuilder = apply { payloadBuilder.subject = sub }
+    fun audience(vararg aud: String): JwtBuilder = apply { payloadBuilder.audience = aud.toSet() }
+    fun expiration(exp: Instant): JwtBuilder = apply { payloadBuilder.expiration = exp }
+    fun notBefore(nbf: Instant): JwtBuilder = apply { payloadBuilder.notBefore = nbf }
+    fun issuedAt(iat: Instant): JwtBuilder = apply { payloadBuilder.issuedAt = iat }
+    fun id(jti: String): JwtBuilder = apply { payloadBuilder.id = jti }
 
-    fun claim(name: String, value: JsonElement): JwtBuilder = apply { claimsBuilder.claim(name, value) }
-    inline fun <reified T> claim(name: String, value: T): JwtBuilder = apply { claimsBuilder.claim(name, value) }
+    fun claim(name: String, value: JsonElement): JwtBuilder = apply { payloadBuilder.claim(name, value) }
+    fun <T> claim(name: String, serializer: SerializationStrategy<T>, value: T?): JwtBuilder =
+        apply { payloadBuilder.claim(name, serializer, value) }
 
-    fun claims(block: Claims.Builder.() -> Unit): JwtBuilder = apply { claimsBuilder.block() }
+    inline fun <reified T> claim(name: String, value: T): JwtBuilder =
+        apply { payloadBuilder.claim(name, value) }
+
+    fun claims(block: JwtPayload.Builder.() -> Unit): JwtBuilder = apply { payloadBuilder.block() }
 
     fun header(block: JwtHeader.Builder.() -> Unit): JwtBuilder = apply { headerBuilder.block() }
     fun keyId(kid: String): JwtBuilder = apply { headerBuilder.keyId = kid }
@@ -63,10 +68,10 @@ class JwtBuilder {
         key: PrivateKey
     ): String {
         val header = headerBuilder.build(algorithm)
-        val claims = claimsBuilder.build()
+        val payload = payloadBuilder.build()
 
         val headerB64 = JwtJson.encodeToBase64Url(header)
-        val payloadB64 = JwtJson.encodeToBase64Url(claims)
+        val payloadB64 = JwtJson.encodeToBase64Url(payload)
 
         val signingInput = "$headerB64.$payloadB64".encodeToByteArray()
         val signature = algorithm.sign(key, signingInput)
@@ -86,7 +91,7 @@ class JwtBuilder {
         contentAlgorithm: JweContentAlgorithm,
     ): String {
         val header = headerBuilder.build(keyAlgorithm, contentAlgorithm)
-        val claims = claimsBuilder.build()
+        val claims = payloadBuilder.build()
 
         val headerB64 = JwtJson.encodeToBase64Url(header)
         val aad = headerB64.encodeToByteArray()

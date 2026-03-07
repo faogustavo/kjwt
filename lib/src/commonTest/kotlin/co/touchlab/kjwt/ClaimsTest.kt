@@ -1,24 +1,23 @@
 package co.touchlab.kjwt
 
 import co.touchlab.kjwt.exception.MissingClaimException
-import co.touchlab.kjwt.model.Claims
+import co.touchlab.kjwt.ext.audience
+import co.touchlab.kjwt.ext.audienceOrNull
+import co.touchlab.kjwt.ext.expiration
+import co.touchlab.kjwt.ext.expirationOrNull
+import co.touchlab.kjwt.ext.getClaim
+import co.touchlab.kjwt.ext.getClaimOrNull
+import co.touchlab.kjwt.ext.issuedAt
+import co.touchlab.kjwt.ext.issuedAtOrNull
+import co.touchlab.kjwt.ext.issuer
+import co.touchlab.kjwt.ext.issuerOrNull
+import co.touchlab.kjwt.ext.jwtId
+import co.touchlab.kjwt.ext.jwtIdOrNull
+import co.touchlab.kjwt.ext.notBefore
+import co.touchlab.kjwt.ext.notBeforeOrNull
+import co.touchlab.kjwt.ext.subject
+import co.touchlab.kjwt.ext.subjectOrNull
 import co.touchlab.kjwt.model.JwtPayload
-import co.touchlab.kjwt.model.audience
-import co.touchlab.kjwt.model.audienceOrNull
-import co.touchlab.kjwt.model.expiration
-import co.touchlab.kjwt.model.expirationOrNull
-import co.touchlab.kjwt.model.getClaim
-import co.touchlab.kjwt.model.getClaimOrNull
-import co.touchlab.kjwt.model.issuedAt
-import co.touchlab.kjwt.model.issuedAtOrNull
-import co.touchlab.kjwt.model.issuer
-import co.touchlab.kjwt.model.issuerOrNull
-import co.touchlab.kjwt.model.jwtId
-import co.touchlab.kjwt.model.jwtIdOrNull
-import co.touchlab.kjwt.model.notBefore
-import co.touchlab.kjwt.model.notBeforeOrNull
-import co.touchlab.kjwt.model.subject
-import co.touchlab.kjwt.model.subjectOrNull
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -26,9 +25,9 @@ import kotlin.test.assertNull
 
 class ClaimsTest {
 
-    private fun emptyClaims() = Claims.Builder().build()
+    private fun emptyClaims() = JwtPayload.Builder().build()
 
-    private fun claimsWithSubject() = Claims.Builder().apply {
+    private fun claimsWithSubject() = JwtPayload.Builder().apply {
         subject = "test-subject"
     }.build()
 
