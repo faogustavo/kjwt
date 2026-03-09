@@ -87,6 +87,10 @@ interface JwtPayload {
             notBefore = Clock.System.now()
         }
 
+        fun issuedNow() {
+            issuedAt = Clock.System.now()
+        }
+
         @ExperimentalUuidApi
         fun randomId() {
             id = Uuid.random().toString()

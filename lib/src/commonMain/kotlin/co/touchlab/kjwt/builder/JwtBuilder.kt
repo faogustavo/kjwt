@@ -49,6 +49,7 @@ class JwtBuilder {
     fun notBefore(nbf: Instant): JwtBuilder = apply { payloadBuilder.notBefore = nbf }
     fun notBeforeNow(): JwtBuilder = apply { payloadBuilder.notBeforeNow() }
     fun issuedAt(iat: Instant): JwtBuilder = apply { payloadBuilder.issuedAt = iat }
+    fun issuedNow(): JwtBuilder = apply { payloadBuilder.issuedNow() }
     fun id(jti: String): JwtBuilder = apply { payloadBuilder.id = jti }
 
     @ExperimentalUuidApi

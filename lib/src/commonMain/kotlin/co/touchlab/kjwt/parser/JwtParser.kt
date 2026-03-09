@@ -70,8 +70,8 @@ class JwtParser internal constructor(private val config: JwtParserBuilder) {
             val signingInput = "${parts[0]}.${parts[1]}".encodeToByteArray()
             val signature = parts[2].decodeBase64Url()
 
-            val valid = verifier.verify(signingInput, signature)
-            if (!valid) throw SignatureException("JWT signature verification failed")
+            val valid = runCatching { verifier.verify(signingInput, signature) }
+            if (!valid.getOrDefault(false)) throw SignatureException("JWT signature verification failed")
         }
 
         validateTimeClaims(claims, header)

@@ -1,16 +1,11 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+//import helpers.allTargets
 
 plugins {
-    alias(libs.plugins.kotlin.multiplatform)
+    id("kjwt.multiplatform-library")
     alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
-    jvm()
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
-
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
@@ -18,9 +13,19 @@ kotlin {
             implementation(libs.cryptography.core)
         }
         commonTest.dependencies {
-            implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)
-            implementation(libs.cryptography.providerOptimal)
+        }
+
+        jvmTest.dependencies {
+            implementation(libs.cryptography.provider.jdk)
+        }
+
+        webTest.dependencies {
+            implementation(libs.cryptography.provider.web)
+        }
+
+        nativeTest.dependencies {
+            implementation(libs.cryptography.provider.openssl)
         }
     }
 }
