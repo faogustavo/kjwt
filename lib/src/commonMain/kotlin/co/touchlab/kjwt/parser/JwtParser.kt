@@ -1,8 +1,5 @@
 package co.touchlab.kjwt.parser
 
-import co.touchlab.kjwt.algorithm.JweContentAlgorithm
-import co.touchlab.kjwt.algorithm.JweKeyAlgorithm
-import co.touchlab.kjwt.algorithm.JwsAlgorithm
 import co.touchlab.kjwt.exception.ExpiredJwtException
 import co.touchlab.kjwt.exception.IncorrectClaimException
 import co.touchlab.kjwt.exception.MalformedJwtException
@@ -17,6 +14,9 @@ import co.touchlab.kjwt.internal.decodeBase64Url
 import co.touchlab.kjwt.model.JwtHeader
 import co.touchlab.kjwt.model.JwtInstance
 import co.touchlab.kjwt.model.JwtPayload
+import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
+import co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm
+import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
 import co.touchlab.kjwt.serializers.ClaimsSerializer
 import kotlin.time.Clock
 import kotlinx.serialization.DeserializationStrategy
@@ -48,13 +48,13 @@ class JwtParser internal constructor(private val config: JwtParserBuilder) {
 
         val header = decodeJsonObjectFromBase64Url<JwtHeader.Jws>(parts[0], "header")
 
-        val algorithm: JwsAlgorithm<*, *> = try {
-            JwsAlgorithm.fromId(header.algorithm)
+        val algorithm: SigningAlgorithm<*, *> = try {
+            SigningAlgorithm.fromId(header.algorithm)
         } catch (e: IllegalArgumentException) {
             throw UnsupportedJwtException("Unsupported algorithm: '${header.algorithm}'", e)
         }
 
-        if (algorithm == JwsAlgorithm.None && !config.allowUnsecured) {
+        if (algorithm == SigningAlgorithm.None && !config.allowUnsecured) {
             throw UnsupportedJwtException(
                 "JWTs with 'alg=none' are rejected by default. Use allowUnsecured(true) to permit them.",
             )
@@ -62,10 +62,10 @@ class JwtParser internal constructor(private val config: JwtParserBuilder) {
 
         val claims = decodeJsonObjectFromBase64Url(serializer, parts[1], "payload")
 
-        if (algorithm != JwsAlgorithm.None) {
+        if (algorithm != SigningAlgorithm.None) {
             val verifier =
                 config.jwsKeyVerifier
-                    ?.takeIf { it.algorithm == algorithm || it.algorithm == JwsAlgorithm.None && config.allowUnsecured }
+                    ?.takeIf { it.algorithm == algorithm || it.algorithm == SigningAlgorithm.None && config.allowUnsecured }
                     ?: throw IllegalStateException("No verification key configured. Call verifyWith() or noVerify() on the parser builder.")
             val signingInput = "${parts[0]}.${parts[1]}".encodeToByteArray()
             val signature = parts[2].decodeBase64Url()
@@ -99,12 +99,12 @@ class JwtParser internal constructor(private val config: JwtParserBuilder) {
         val header = decodeJsonObjectFromBase64Url<JwtHeader.Jwe>(parts[0], "header")
 
         val keyAlgorithm = try {
-            JweKeyAlgorithm.fromId(header.algorithm)
+            EncryptionAlgorithm.fromId(header.algorithm)
         } catch (e: IllegalArgumentException) {
             throw UnsupportedJwtException("Unsupported JWE key algorithm: '${header.algorithm}'", e)
         }
         val contentAlgorithm = try {
-            JweContentAlgorithm.fromId(header.encryption)
+            EncryptionContentAlgorithm.fromId(header.encryption)
         } catch (e: IllegalArgumentException) {
             throw UnsupportedJwtException("Unsupported JWE content algorithm: '${header.encryption}'", e)
         }

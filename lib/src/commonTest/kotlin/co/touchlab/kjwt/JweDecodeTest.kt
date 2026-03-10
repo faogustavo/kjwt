@@ -2,8 +2,6 @@
 
 package co.touchlab.kjwt
 
-import co.touchlab.kjwt.algorithm.JweContentAlgorithm
-import co.touchlab.kjwt.algorithm.JweKeyAlgorithm
 import co.touchlab.kjwt.exception.ExpiredJwtException
 import co.touchlab.kjwt.exception.IncorrectClaimException
 import co.touchlab.kjwt.exception.MalformedJwtException
@@ -17,6 +15,8 @@ import co.touchlab.kjwt.ext.jwtIdOrNull
 import co.touchlab.kjwt.ext.subjectOrNull
 import co.touchlab.kjwt.model.Claims
 import co.touchlab.kjwt.model.JwtInstance
+import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
+import co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -41,9 +41,9 @@ class JweDecodeTest {
             .expiration(now + 1.hours)
             .issuedAt(now)
             .id("jti-1")
-            .encryptWith(cek, JweKeyAlgorithm.Dir, JweContentAlgorithm.A128GCM)
+            .encryptWith(cek, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A128GCM)
 
-        val jwe = Jwt.parser().decryptWith(JweKeyAlgorithm.Dir, cek).build().parseEncryptedClaims(token)
+        val jwe = Jwt.parser().decryptWith(EncryptionAlgorithm.Dir, cek).build().parseEncryptedClaims(token)
 
         assertEquals("test-iss", jwe.payload.issuerOrNull)
         assertEquals("test-sub", jwe.payload.subjectOrNull)
@@ -58,9 +58,9 @@ class JweDecodeTest {
         val cek = aesSimpleKey(192)
         val token = Jwt.builder()
             .subject("a192gcm-sub")
-            .encryptWith(cek, JweKeyAlgorithm.Dir, JweContentAlgorithm.A192GCM)
+            .encryptWith(cek, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A192GCM)
 
-        val jwe = Jwt.parser().decryptWith(JweKeyAlgorithm.Dir, cek).build().parseEncryptedClaims(token)
+        val jwe = Jwt.parser().decryptWith(EncryptionAlgorithm.Dir, cek).build().parseEncryptedClaims(token)
         assertEquals("a192gcm-sub", jwe.payload.subjectOrNull)
     }
 
@@ -69,9 +69,9 @@ class JweDecodeTest {
         val cek = aesSimpleKey(256)
         val token = Jwt.builder()
             .subject("a256gcm-sub")
-            .encryptWith(cek, JweKeyAlgorithm.Dir, JweContentAlgorithm.A256GCM)
+            .encryptWith(cek, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A256GCM)
 
-        val jwe = Jwt.parser().decryptWith(JweKeyAlgorithm.Dir, cek).build().parseEncryptedClaims(token)
+        val jwe = Jwt.parser().decryptWith(EncryptionAlgorithm.Dir, cek).build().parseEncryptedClaims(token)
         assertEquals("a256gcm-sub", jwe.payload.subjectOrNull)
     }
 
@@ -80,9 +80,9 @@ class JweDecodeTest {
         val cek = aesSimpleKey(256) // 32 bytes
         val token = Jwt.builder()
             .subject("a128cbc-sub")
-            .encryptWith(cek, JweKeyAlgorithm.Dir, JweContentAlgorithm.A128CbcHs256)
+            .encryptWith(cek, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A128CbcHs256)
 
-        val jwe = Jwt.parser().decryptWith(JweKeyAlgorithm.Dir, cek).build().parseEncryptedClaims(token)
+        val jwe = Jwt.parser().decryptWith(EncryptionAlgorithm.Dir, cek).build().parseEncryptedClaims(token)
         assertEquals("a128cbc-sub", jwe.payload.subjectOrNull)
     }
 
@@ -91,9 +91,9 @@ class JweDecodeTest {
         val cek = aesSimpleKey(384) // 48 bytes
         val token = Jwt.builder()
             .subject("a192cbc-sub")
-            .encryptWith(cek, JweKeyAlgorithm.Dir, JweContentAlgorithm.A192CbcHs384)
+            .encryptWith(cek, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A192CbcHs384)
 
-        val jwe = Jwt.parser().decryptWith(JweKeyAlgorithm.Dir, cek).build().parseEncryptedClaims(token)
+        val jwe = Jwt.parser().decryptWith(EncryptionAlgorithm.Dir, cek).build().parseEncryptedClaims(token)
         assertEquals("a192cbc-sub", jwe.payload.subjectOrNull)
     }
 
@@ -102,9 +102,9 @@ class JweDecodeTest {
         val cek = aesSimpleKey(512) // 64 bytes
         val token = Jwt.builder()
             .subject("a256cbc-sub")
-            .encryptWith(cek, JweKeyAlgorithm.Dir, JweContentAlgorithm.A256CbcHs512)
+            .encryptWith(cek, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A256CbcHs512)
 
-        val jwe = Jwt.parser().decryptWith(JweKeyAlgorithm.Dir, cek).build().parseEncryptedClaims(token)
+        val jwe = Jwt.parser().decryptWith(EncryptionAlgorithm.Dir, cek).build().parseEncryptedClaims(token)
         assertEquals("a256cbc-sub", jwe.payload.subjectOrNull)
     }
 
@@ -113,10 +113,11 @@ class JweDecodeTest {
         val keyPair = rsaOaepKeyPair()
         val token = Jwt.builder()
             .subject("rsa-oaep-sub")
-            .encryptWith(keyPair.publicKey, JweKeyAlgorithm.RsaOaep, JweContentAlgorithm.A256GCM)
+            .encryptWith(keyPair.publicKey, EncryptionAlgorithm.RsaOaep, EncryptionContentAlgorithm.A256GCM)
 
         val jwe =
-            Jwt.parser().decryptWith(JweKeyAlgorithm.RsaOaep, keyPair.privateKey).build().parseEncryptedClaims(token)
+            Jwt.parser().decryptWith(EncryptionAlgorithm.RsaOaep, keyPair.privateKey).build()
+                .parseEncryptedClaims(token)
         assertEquals("rsa-oaep-sub", jwe.payload.subjectOrNull)
     }
 
@@ -125,10 +126,11 @@ class JweDecodeTest {
         val keyPair = rsaOaep256KeyPair()
         val token = Jwt.builder()
             .subject("rsa-oaep256-sub")
-            .encryptWith(keyPair.publicKey, JweKeyAlgorithm.RsaOaep256, JweContentAlgorithm.A256GCM)
+            .encryptWith(keyPair.publicKey, EncryptionAlgorithm.RsaOaep256, EncryptionContentAlgorithm.A256GCM)
 
         val jwe =
-            Jwt.parser().decryptWith(JweKeyAlgorithm.RsaOaep256, keyPair.privateKey).build().parseEncryptedClaims(token)
+            Jwt.parser().decryptWith(EncryptionAlgorithm.RsaOaep256, keyPair.privateKey).build()
+                .parseEncryptedClaims(token)
         assertEquals("rsa-oaep256-sub", jwe.payload.subjectOrNull)
     }
 
@@ -137,10 +139,11 @@ class JweDecodeTest {
         val keyPair = rsaOaep256KeyPair()
         val token = Jwt.builder()
             .subject("rsa-oaep256-cbc-sub")
-            .encryptWith(keyPair.publicKey, JweKeyAlgorithm.RsaOaep256, JweContentAlgorithm.A256CbcHs512)
+            .encryptWith(keyPair.publicKey, EncryptionAlgorithm.RsaOaep256, EncryptionContentAlgorithm.A256CbcHs512)
 
         val jwe =
-            Jwt.parser().decryptWith(JweKeyAlgorithm.RsaOaep256, keyPair.privateKey).build().parseEncryptedClaims(token)
+            Jwt.parser().decryptWith(EncryptionAlgorithm.RsaOaep256, keyPair.privateKey).build()
+                .parseEncryptedClaims(token)
         assertEquals("rsa-oaep256-cbc-sub", jwe.payload.subjectOrNull)
     }
 
@@ -153,9 +156,9 @@ class JweDecodeTest {
             .claim("role", "admin")
             .claim("level", 7)
             .claim("active", true)
-            .encryptWith(cek, JweKeyAlgorithm.Dir, JweContentAlgorithm.A256GCM)
+            .encryptWith(cek, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A256GCM)
 
-        val jwe = Jwt.parser().decryptWith(JweKeyAlgorithm.Dir, cek).build().parseEncryptedClaims(token)
+        val jwe = Jwt.parser().decryptWith(EncryptionAlgorithm.Dir, cek).build().parseEncryptedClaims(token)
 
         assertEquals("admin", jwe.payload.getClaimOrNull<String>("role"))
         assertEquals(7, jwe.payload.getClaimOrNull<Int>("level"))
@@ -168,9 +171,9 @@ class JweDecodeTest {
         // Single audience — must come back as Set<String>
         val token = Jwt.builder()
             .audience("single-aud")
-            .encryptWith(cek, JweKeyAlgorithm.Dir, JweContentAlgorithm.A256GCM)
+            .encryptWith(cek, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A256GCM)
 
-        val jwe = Jwt.parser().decryptWith(JweKeyAlgorithm.Dir, cek).build().parseEncryptedClaims(token)
+        val jwe = Jwt.parser().decryptWith(EncryptionAlgorithm.Dir, cek).build().parseEncryptedClaims(token)
         assertEquals(setOf("single-aud"), jwe.payload.audienceOrNull)
     }
 
@@ -181,9 +184,9 @@ class JweDecodeTest {
         val cek = aesSimpleKey(256)
         val token = Jwt.builder()
             .subject("test")
-            .encryptWith(cek, JweKeyAlgorithm.Dir, JweContentAlgorithm.A256GCM)
+            .encryptWith(cek, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A256GCM)
 
-        val jwe = Jwt.parser().decryptWith(JweKeyAlgorithm.Dir, cek).build().parseEncryptedClaims(token)
+        val jwe = Jwt.parser().decryptWith(EncryptionAlgorithm.Dir, cek).build().parseEncryptedClaims(token)
 
         assertEquals("dir", jwe.header.algorithm)
         assertEquals("A256GCM", jwe.header.encryption)
@@ -197,9 +200,9 @@ class JweDecodeTest {
         val cek = aesSimpleKey(256)
         val token = Jwt.builder()
             .subject("auto-detect-jwe")
-            .encryptWith(cek, JweKeyAlgorithm.Dir, JweContentAlgorithm.A256GCM)
+            .encryptWith(cek, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A256GCM)
 
-        val result = Jwt.parser().decryptWith(JweKeyAlgorithm.Dir, cek).build().parseClaims(token)
+        val result = Jwt.parser().decryptWith(EncryptionAlgorithm.Dir, cek).build().parseClaims(token)
 
         assertIs<JwtInstance.Jwe<Claims>>(result)
         assertEquals("auto-detect-jwe", result.payload.subjectOrNull)
@@ -214,10 +217,10 @@ class JweDecodeTest {
 
         val token = Jwt.builder()
             .subject("test")
-            .encryptWith(cek, JweKeyAlgorithm.Dir, JweContentAlgorithm.A256GCM)
+            .encryptWith(cek, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A256GCM)
 
         assertFailsWith<SignatureException> {
-            Jwt.parser().decryptWith(JweKeyAlgorithm.Dir, wrongCek).build().parseEncryptedClaims(token)
+            Jwt.parser().decryptWith(EncryptionAlgorithm.Dir, wrongCek).build().parseEncryptedClaims(token)
         }
     }
 
@@ -228,10 +231,10 @@ class JweDecodeTest {
 
         val token = Jwt.builder()
             .subject("test")
-            .encryptWith(correctKeyPair.publicKey, JweKeyAlgorithm.RsaOaep, JweContentAlgorithm.A256GCM)
+            .encryptWith(correctKeyPair.publicKey, EncryptionAlgorithm.RsaOaep, EncryptionContentAlgorithm.A256GCM)
 
         assertFailsWith<SignatureException> {
-            Jwt.parser().decryptWith(JweKeyAlgorithm.RsaOaep, wrongKeyPair.privateKey).build()
+            Jwt.parser().decryptWith(EncryptionAlgorithm.RsaOaep, wrongKeyPair.privateKey).build()
                 .parseEncryptedClaims(token)
         }
     }
@@ -241,7 +244,7 @@ class JweDecodeTest {
         val cek = aesSimpleKey(256)
         val token = Jwt.builder()
             .subject("test")
-            .encryptWith(cek, JweKeyAlgorithm.Dir, JweContentAlgorithm.A256GCM)
+            .encryptWith(cek, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A256GCM)
 
         val parts = token.split('.').toMutableList()
         // Corrupt the ciphertext (index 3) by appending 'X'
@@ -249,7 +252,7 @@ class JweDecodeTest {
         val tamperedToken = parts.joinToString(".")
 
         assertFailsWith<SignatureException> {
-            Jwt.parser().decryptWith(JweKeyAlgorithm.Dir, cek).build().parseEncryptedClaims(tamperedToken)
+            Jwt.parser().decryptWith(EncryptionAlgorithm.Dir, cek).build().parseEncryptedClaims(tamperedToken)
         }
     }
 
@@ -258,7 +261,7 @@ class JweDecodeTest {
         val cek = aesSimpleKey(256)
         val token = Jwt.builder()
             .subject("test")
-            .encryptWith(cek, JweKeyAlgorithm.Dir, JweContentAlgorithm.A256GCM)
+            .encryptWith(cek, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A256GCM)
 
         val parts = token.split('.').toMutableList()
         // Corrupt the tag (index 4)
@@ -267,7 +270,7 @@ class JweDecodeTest {
         val tamperedToken = parts.joinToString(".")
 
         assertFailsWith<SignatureException> {
-            Jwt.parser().decryptWith(JweKeyAlgorithm.Dir, cek).build().parseEncryptedClaims(tamperedToken)
+            Jwt.parser().decryptWith(EncryptionAlgorithm.Dir, cek).build().parseEncryptedClaims(tamperedToken)
         }
     }
 
@@ -276,7 +279,7 @@ class JweDecodeTest {
         val cek = aesSimpleKey(256)
         val token = Jwt.builder()
             .subject("test")
-            .encryptWith(cek, JweKeyAlgorithm.Dir, JweContentAlgorithm.A256GCM)
+            .encryptWith(cek, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A256GCM)
 
         val parts = token.split('.').toMutableList()
         // Corrupt the IV (index 2)
@@ -285,7 +288,7 @@ class JweDecodeTest {
         val tamperedToken = parts.joinToString(".")
 
         assertFailsWith<SignatureException> {
-            Jwt.parser().decryptWith(JweKeyAlgorithm.Dir, cek).build().parseEncryptedClaims(tamperedToken)
+            Jwt.parser().decryptWith(EncryptionAlgorithm.Dir, cek).build().parseEncryptedClaims(tamperedToken)
         }
     }
 
@@ -295,7 +298,7 @@ class JweDecodeTest {
         // Pass a 3-part JWS token to parseEncryptedClaims
         assertFailsWith<MalformedJwtException> {
             Jwt.parser()
-                .decryptWith(JweKeyAlgorithm.Dir, cek)
+                .decryptWith(EncryptionAlgorithm.Dir, cek)
                 .build()
                 .parseEncryptedClaims("eyJhbGciOiJkaXIifQ.eyJzdWIiOiJ0ZXN0In0.signature")
         }
@@ -307,10 +310,10 @@ class JweDecodeTest {
         val token = Jwt.builder()
             .subject("test")
             .expiration(Clock.System.now() - 1.hours) // already expired
-            .encryptWith(cek, JweKeyAlgorithm.Dir, JweContentAlgorithm.A256GCM)
+            .encryptWith(cek, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A256GCM)
 
         assertFailsWith<ExpiredJwtException> {
-            Jwt.parser().decryptWith(JweKeyAlgorithm.Dir, cek).build().parseEncryptedClaims(token)
+            Jwt.parser().decryptWith(EncryptionAlgorithm.Dir, cek).build().parseEncryptedClaims(token)
         }
     }
 
@@ -319,11 +322,11 @@ class JweDecodeTest {
         val cek = aesSimpleKey(256)
         val token = Jwt.builder()
             .issuer("actual-issuer")
-            .encryptWith(cek, JweKeyAlgorithm.Dir, JweContentAlgorithm.A256GCM)
+            .encryptWith(cek, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A256GCM)
 
         assertFailsWith<IncorrectClaimException> {
             Jwt.parser()
-                .decryptWith(JweKeyAlgorithm.Dir, cek)
+                .decryptWith(EncryptionAlgorithm.Dir, cek)
                 .requireIssuer("expected-issuer")
                 .build()
                 .parseEncryptedClaims(token)

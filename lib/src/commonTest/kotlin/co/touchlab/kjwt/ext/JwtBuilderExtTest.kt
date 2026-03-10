@@ -1,9 +1,6 @@
 package co.touchlab.kjwt.ext
 
 import co.touchlab.kjwt.Jwt
-import co.touchlab.kjwt.algorithm.JweContentAlgorithm
-import co.touchlab.kjwt.algorithm.JweKeyAlgorithm
-import co.touchlab.kjwt.algorithm.JwsAlgorithm
 import co.touchlab.kjwt.cryptography.SimpleKey
 import co.touchlab.kjwt.ecKeyPair
 import co.touchlab.kjwt.hs256Key
@@ -12,6 +9,9 @@ import co.touchlab.kjwt.hs384Key
 import co.touchlab.kjwt.hs384Secret
 import co.touchlab.kjwt.hs512Key
 import co.touchlab.kjwt.hs512Secret
+import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
+import co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm
+import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
 import co.touchlab.kjwt.rsaPkcs1KeyPair
 import co.touchlab.kjwt.rsaPssKeyPair
 import dev.whyoleg.cryptography.algorithms.EC
@@ -32,10 +32,10 @@ class JwtBuilderExtTest {
     fun signHs256_stringKey_roundTrip() = runTest {
         val token = Jwt.builder()
             .subject("ext-hs256")
-            .signWith(JwsAlgorithm.HS256, hs256Secret.decodeToString(), HMAC.Key.Format.RAW)
+            .signWith(SigningAlgorithm.HS256, hs256Secret.decodeToString(), HMAC.Key.Format.RAW)
 
         val jws = Jwt.parser()
-            .verifyWith(JwsAlgorithm.HS256, hs256Key())
+            .verifyWith(SigningAlgorithm.HS256, hs256Key())
             .build()
             .parseSignedClaims(token)
 
@@ -47,10 +47,10 @@ class JwtBuilderExtTest {
     fun signHs384_stringKey_roundTrip() = runTest {
         val token = Jwt.builder()
             .subject("ext-hs384")
-            .signWith(JwsAlgorithm.HS384, hs384Secret.decodeToString(), HMAC.Key.Format.RAW)
+            .signWith(SigningAlgorithm.HS384, hs384Secret.decodeToString(), HMAC.Key.Format.RAW)
 
         val jws = Jwt.parser()
-            .verifyWith(JwsAlgorithm.HS384, hs384Key())
+            .verifyWith(SigningAlgorithm.HS384, hs384Key())
             .build()
             .parseSignedClaims(token)
 
@@ -61,10 +61,10 @@ class JwtBuilderExtTest {
     fun signHs512_stringKey_roundTrip() = runTest {
         val token = Jwt.builder()
             .subject("ext-hs512")
-            .signWith(JwsAlgorithm.HS512, hs512Secret.decodeToString(), HMAC.Key.Format.RAW)
+            .signWith(SigningAlgorithm.HS512, hs512Secret.decodeToString(), HMAC.Key.Format.RAW)
 
         val jws = Jwt.parser()
-            .verifyWith(JwsAlgorithm.HS512, hs512Key())
+            .verifyWith(SigningAlgorithm.HS512, hs512Key())
             .build()
             .parseSignedClaims(token)
 
@@ -81,10 +81,10 @@ class JwtBuilderExtTest {
 
         val token = Jwt.builder()
             .subject("ext-rs256")
-            .signWith(JwsAlgorithm.RS256, privatePem, RSA.PrivateKey.Format.PEM)
+            .signWith(SigningAlgorithm.RS256, privatePem, RSA.PrivateKey.Format.PEM)
 
         val jws = Jwt.parser()
-            .verifyWith(JwsAlgorithm.RS256, keyPair.publicKey)
+            .verifyWith(SigningAlgorithm.RS256, keyPair.publicKey)
             .build()
             .parseSignedClaims(token)
 
@@ -99,10 +99,10 @@ class JwtBuilderExtTest {
 
         val token = Jwt.builder()
             .subject("ext-rs512")
-            .signWith(JwsAlgorithm.RS512, privatePem, RSA.PrivateKey.Format.PEM)
+            .signWith(SigningAlgorithm.RS512, privatePem, RSA.PrivateKey.Format.PEM)
 
         val jws = Jwt.parser()
-            .verifyWith(JwsAlgorithm.RS512, keyPair.publicKey)
+            .verifyWith(SigningAlgorithm.RS512, keyPair.publicKey)
             .build()
             .parseSignedClaims(token)
 
@@ -118,10 +118,10 @@ class JwtBuilderExtTest {
 
         val token = Jwt.builder()
             .subject("ext-ps256")
-            .signWith(JwsAlgorithm.PS256, privatePem, RSA.PrivateKey.Format.PEM)
+            .signWith(SigningAlgorithm.PS256, privatePem, RSA.PrivateKey.Format.PEM)
 
         val jws = Jwt.parser()
-            .verifyWith(JwsAlgorithm.PS256, keyPair.publicKey)
+            .verifyWith(SigningAlgorithm.PS256, keyPair.publicKey)
             .build()
             .parseSignedClaims(token)
 
@@ -136,10 +136,10 @@ class JwtBuilderExtTest {
 
         val token = Jwt.builder()
             .subject("ext-ps384")
-            .signWith(JwsAlgorithm.PS384, privatePem, RSA.PrivateKey.Format.PEM)
+            .signWith(SigningAlgorithm.PS384, privatePem, RSA.PrivateKey.Format.PEM)
 
         val jws = Jwt.parser()
-            .verifyWith(JwsAlgorithm.PS384, keyPair.publicKey)
+            .verifyWith(SigningAlgorithm.PS384, keyPair.publicKey)
             .build()
             .parseSignedClaims(token)
 
@@ -155,10 +155,10 @@ class JwtBuilderExtTest {
 
         val token = Jwt.builder()
             .subject("ext-es256")
-            .signWith(JwsAlgorithm.ES256, privatePem, EC.PrivateKey.Format.PEM)
+            .signWith(SigningAlgorithm.ES256, privatePem, EC.PrivateKey.Format.PEM)
 
         val jws = Jwt.parser()
-            .verifyWith(JwsAlgorithm.ES256, keyPair.publicKey)
+            .verifyWith(SigningAlgorithm.ES256, keyPair.publicKey)
             .build()
             .parseSignedClaims(token)
 
@@ -173,10 +173,10 @@ class JwtBuilderExtTest {
 
         val token = Jwt.builder()
             .subject("ext-es512")
-            .signWith(JwsAlgorithm.ES512, privatePem, EC.PrivateKey.Format.PEM)
+            .signWith(SigningAlgorithm.ES512, privatePem, EC.PrivateKey.Format.PEM)
 
         val jws = Jwt.parser()
-            .verifyWith(JwsAlgorithm.ES512, keyPair.publicKey)
+            .verifyWith(SigningAlgorithm.ES512, keyPair.publicKey)
             .build()
             .parseSignedClaims(token)
 
@@ -191,10 +191,10 @@ class JwtBuilderExtTest {
 
         val token = Jwt.builder()
             .subject("ext-encrypt-bytes")
-            .encryptWith(keyBytes, JweKeyAlgorithm.Dir, JweContentAlgorithm.A256GCM)
+            .encryptWith(keyBytes, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A256GCM)
 
         val jwe = Jwt.parser()
-            .decryptWith(JweKeyAlgorithm.Dir, SimpleKey(keyBytes))
+            .decryptWith(EncryptionAlgorithm.Dir, SimpleKey(keyBytes))
             .build()
             .parseEncryptedClaims(token)
 
@@ -207,10 +207,10 @@ class JwtBuilderExtTest {
 
         val token = Jwt.builder()
             .subject("ext-encrypt-cbc")
-            .encryptWith(keyBytes, JweKeyAlgorithm.Dir, JweContentAlgorithm.A256CbcHs512)
+            .encryptWith(keyBytes, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A256CbcHs512)
 
         val jwe = Jwt.parser()
-            .decryptWith(JweKeyAlgorithm.Dir, SimpleKey(keyBytes))
+            .decryptWith(EncryptionAlgorithm.Dir, SimpleKey(keyBytes))
             .build()
             .parseEncryptedClaims(token)
 
@@ -226,10 +226,10 @@ class JwtBuilderExtTest {
 
         val token = Jwt.builder()
             .subject("ext-encrypt-string")
-            .encryptWith(keyString, JweKeyAlgorithm.Dir, JweContentAlgorithm.A256GCM)
+            .encryptWith(keyString, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A256GCM)
 
         val jwe = Jwt.parser()
-            .decryptWith(JweKeyAlgorithm.Dir, SimpleKey(keyString.encodeToByteArray()))
+            .decryptWith(EncryptionAlgorithm.Dir, SimpleKey(keyString.encodeToByteArray()))
             .build()
             .parseEncryptedClaims(token)
 

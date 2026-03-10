@@ -1,10 +1,10 @@
 package co.touchlab.kjwt
 
-import co.touchlab.kjwt.algorithm.JweKeyAlgorithm
-import co.touchlab.kjwt.algorithm.JwsAlgorithm
 import co.touchlab.kjwt.exception.MalformedJwtException
 import co.touchlab.kjwt.exception.SignatureException
 import co.touchlab.kjwt.exception.UnsupportedJwtException
+import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
+import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 import kotlinx.coroutines.test.runTest
@@ -17,7 +17,7 @@ class MalformedTokenTest {
     fun parse_emptyString_throwsMalformedJwtException() = runTest {
         val key = hs256Key()
         assertFailsWith<MalformedJwtException> {
-            Jwt.parser().verifyWith(JwsAlgorithm.HS256, key).build().parseSignedClaims("")
+            Jwt.parser().verifyWith(SigningAlgorithm.HS256, key).build().parseSignedClaims("")
         }
     }
 
@@ -26,7 +26,7 @@ class MalformedTokenTest {
         val key = hs256Key()
         assertFailsWith<MalformedJwtException> {
             Jwt.parser()
-                .verifyWith(JwsAlgorithm.HS256, key)
+                .verifyWith(SigningAlgorithm.HS256, key)
                 .build()
                 .parseSignedClaims("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0In0")
         }
@@ -37,7 +37,7 @@ class MalformedTokenTest {
         val key = hs256Key()
         assertFailsWith<MalformedJwtException> {
             Jwt.parser()
-                .verifyWith(JwsAlgorithm.HS256, key)
+                .verifyWith(SigningAlgorithm.HS256, key)
                 .build()
                 .parseSignedClaims("part1.part2.part3.part4")
         }
@@ -48,7 +48,7 @@ class MalformedTokenTest {
         val key = hs256Key()
         assertFailsWith<MalformedJwtException> {
             Jwt.parser()
-                .verifyWith(JwsAlgorithm.HS256, key)
+                .verifyWith(SigningAlgorithm.HS256, key)
                 .build()
                 // First part contains invalid base64url characters
                 .parseSignedClaims("not!!valid!!base64.eyJzdWIiOiJ0ZXN0In0.signature")
@@ -62,7 +62,7 @@ class MalformedTokenTest {
         val notJsonB64 = "bm90LWpzb24" // base64url("not-json")
         assertFailsWith<MalformedJwtException> {
             Jwt.parser()
-                .verifyWith(JwsAlgorithm.HS256, key)
+                .verifyWith(SigningAlgorithm.HS256, key)
                 .build()
                 .parseSignedClaims("$notJsonB64.eyJzdWIiOiJ0ZXN0In0.signature")
         }
@@ -77,7 +77,7 @@ class MalformedTokenTest {
         val notJsonB64 = "bm90LWpzb24"
         assertFailsWith<MalformedJwtException> {
             Jwt.parser()
-                .verifyWith(JwsAlgorithm.HS256, key)
+                .verifyWith(SigningAlgorithm.HS256, key)
                 .build()
                 .parseSignedClaims("$headerB64.$notJsonB64.signature")
         }
@@ -90,7 +90,7 @@ class MalformedTokenTest {
         val key = hs256Key()
         val token = Jwt.builder()
             .subject("original-subject")
-            .signWith(JwsAlgorithm.HS256, key)
+            .signWith(SigningAlgorithm.HS256, key)
 
         val parts = token.split('.')
         // Replace the payload with a different base64url payload ({"sub":"hacked"})
@@ -99,7 +99,7 @@ class MalformedTokenTest {
 
         assertFailsWith<SignatureException> {
             Jwt.parser()
-                .verifyWith(JwsAlgorithm.HS256, key)
+                .verifyWith(SigningAlgorithm.HS256, key)
                 .build()
                 .parseSignedClaims(tamperedToken)
         }
@@ -110,7 +110,7 @@ class MalformedTokenTest {
         val key = hs256Key()
         val token = Jwt.builder()
             .subject("user")
-            .signWith(JwsAlgorithm.HS256, key)
+            .signWith(SigningAlgorithm.HS256, key)
 
         val parts = token.split('.')
         // Replace last char of signature to corrupt it
@@ -120,7 +120,7 @@ class MalformedTokenTest {
 
         assertFailsWith<SignatureException> {
             Jwt.parser()
-                .verifyWith(JwsAlgorithm.HS256, key)
+                .verifyWith(SigningAlgorithm.HS256, key)
                 .build()
                 .parseSignedClaims(tamperedToken)
         }
@@ -136,11 +136,11 @@ class MalformedTokenTest {
 
         val token = Jwt.builder()
             .subject("user")
-            .signWith(JwsAlgorithm.HS256, signingKey)
+            .signWith(SigningAlgorithm.HS256, signingKey)
 
         assertFailsWith<SignatureException> {
             Jwt.parser()
-                .verifyWith(JwsAlgorithm.HS256, wrongKey)
+                .verifyWith(SigningAlgorithm.HS256, wrongKey)
                 .build()
                 .parseSignedClaims(token)
         }
@@ -153,11 +153,11 @@ class MalformedTokenTest {
 
         val token = Jwt.builder()
             .subject("user")
-            .signWith(JwsAlgorithm.RS256, signingKeyPair.privateKey)
+            .signWith(SigningAlgorithm.RS256, signingKeyPair.privateKey)
 
         assertFailsWith<SignatureException> {
             Jwt.parser()
-                .verifyWith(JwsAlgorithm.RS256, differentKeyPair.publicKey) // wrong public key
+                .verifyWith(SigningAlgorithm.RS256, differentKeyPair.publicKey) // wrong public key
                 .build()
                 .parseSignedClaims(token)
         }
@@ -169,7 +169,7 @@ class MalformedTokenTest {
     fun parse_none_withoutAllowUnsecured_throwsUnsupportedJwtException() = runTest {
         val noneToken = Jwt.builder()
             .subject("user")
-            .signWith(JwsAlgorithm.None)
+            .signWith(SigningAlgorithm.None)
 
         assertFailsWith<UnsupportedJwtException> {
             Jwt.parser()
@@ -190,7 +190,7 @@ class MalformedTokenTest {
         val key = hs256Key()
         assertFailsWith<UnsupportedJwtException> {
             Jwt.parser()
-                .verifyWith(JwsAlgorithm.HS256, key)
+                .verifyWith(SigningAlgorithm.HS256, key)
                 .build()
                 .parseSignedClaims(fakeToken)
         }
@@ -202,13 +202,13 @@ class MalformedTokenTest {
         // Token signed with RS256
         val token = Jwt.builder()
             .subject("user")
-            .signWith(JwsAlgorithm.RS256, rsaKeyPair.privateKey)
+            .signWith(SigningAlgorithm.RS256, rsaKeyPair.privateKey)
 
         val hs256Key = hs256Key()
         // Parser configured only with HS256 verifier, but token is RS256
         assertFailsWith<IllegalStateException> {
             Jwt.parser()
-                .verifyWith(JwsAlgorithm.HS256, hs256Key)
+                .verifyWith(SigningAlgorithm.HS256, hs256Key)
                 .build()
                 .parseSignedClaims(token)
         }
@@ -222,7 +222,7 @@ class MalformedTokenTest {
         // A 5-part token passed to parseSignedClaims (JWS expects 3)
         assertFailsWith<MalformedJwtException> {
             Jwt.parser()
-                .verifyWith(JwsAlgorithm.HS256, key)
+                .verifyWith(SigningAlgorithm.HS256, key)
                 .build()
                 .parseSignedClaims("a.b.c.d.e")
         }
@@ -234,7 +234,7 @@ class MalformedTokenTest {
         // A 3-part token passed to parseEncryptedClaims (JWE expects 5)
         assertFailsWith<MalformedJwtException> {
             Jwt.parser()
-                .decryptWith(JweKeyAlgorithm.RsaOaep, key)
+                .decryptWith(EncryptionAlgorithm.RsaOaep, key)
                 .build()
                 .parseEncryptedClaims("a.b.c")
         }
@@ -245,7 +245,7 @@ class MalformedTokenTest {
         val key = hs256Key()
         assertFailsWith<MalformedJwtException> {
             Jwt.parser()
-                .verifyWith(JwsAlgorithm.HS256, key)
+                .verifyWith(SigningAlgorithm.HS256, key)
                 .build()
                 .parseClaims("a.b.c.d") // 4 parts — neither JWS nor JWE
         }

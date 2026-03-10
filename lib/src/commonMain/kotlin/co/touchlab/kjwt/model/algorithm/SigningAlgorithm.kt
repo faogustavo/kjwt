@@ -1,4 +1,4 @@
-package co.touchlab.kjwt.algorithm
+package co.touchlab.kjwt.model.algorithm
 
 import co.touchlab.kjwt.cryptography.SimpleKey
 import dev.whyoleg.cryptography.algorithms.ECDSA
@@ -8,13 +8,14 @@ import dev.whyoleg.cryptography.algorithms.SHA256
 import dev.whyoleg.cryptography.algorithms.SHA384
 import dev.whyoleg.cryptography.algorithms.SHA512
 import dev.whyoleg.cryptography.materials.key.Key
-import kotlin.jvm.JvmStatic
 
-sealed class JwsAlgorithm<PublicKey : Key, PrivateKey : Key>(val id: String) {
+sealed class SigningAlgorithm<PublicKey : Key, PrivateKey : Key>(
+    override val id: String,
+) : Jwa<PublicKey, PrivateKey> {
     internal abstract suspend fun sign(key: PrivateKey, signingInput: ByteArray): ByteArray
     internal abstract suspend fun verify(key: PublicKey, signingInput: ByteArray, signature: ByteArray): Boolean
 
-    sealed class HashBased(id: String) : JwsAlgorithm<HMAC.Key, HMAC.Key>(id) {
+    sealed class HashBased(id: String) : SigningAlgorithm<HMAC.Key, HMAC.Key>(id) {
         override suspend fun sign(key: HMAC.Key, signingInput: ByteArray): ByteArray =
             key.signatureGenerator().generateSignature(signingInput)
 
@@ -24,7 +25,7 @@ sealed class JwsAlgorithm<PublicKey : Key, PrivateKey : Key>(val id: String) {
         }
     }
 
-    sealed class PKCS1Based(id: String) : JwsAlgorithm<RSA.PKCS1.PublicKey, RSA.PKCS1.PrivateKey>(id) {
+    sealed class PKCS1Based(id: String) : SigningAlgorithm<RSA.PKCS1.PublicKey, RSA.PKCS1.PrivateKey>(id) {
         override suspend fun sign(key: RSA.PKCS1.PrivateKey, signingInput: ByteArray): ByteArray =
             key.signatureGenerator().generateSignature(signingInput)
 
@@ -34,7 +35,7 @@ sealed class JwsAlgorithm<PublicKey : Key, PrivateKey : Key>(val id: String) {
         }
     }
 
-    sealed class PSSBased(id: String) : JwsAlgorithm<RSA.PSS.PublicKey, RSA.PSS.PrivateKey>(id) {
+    sealed class PSSBased(id: String) : SigningAlgorithm<RSA.PSS.PublicKey, RSA.PSS.PrivateKey>(id) {
         override suspend fun sign(key: RSA.PSS.PrivateKey, signingInput: ByteArray): ByteArray =
             key.signatureGenerator().generateSignature(signingInput)
 
@@ -44,7 +45,7 @@ sealed class JwsAlgorithm<PublicKey : Key, PrivateKey : Key>(val id: String) {
         }
     }
 
-    sealed class ECDSABased(id: String) : JwsAlgorithm<ECDSA.PublicKey, ECDSA.PrivateKey>(id) {
+    sealed class ECDSABased(id: String) : SigningAlgorithm<ECDSA.PublicKey, ECDSA.PrivateKey>(id) {
         override suspend fun sign(key: ECDSA.PrivateKey, signingInput: ByteArray): ByteArray =
             key.signatureGenerator(
                 when (this) {
@@ -85,7 +86,7 @@ sealed class JwsAlgorithm<PublicKey : Key, PrivateKey : Key>(val id: String) {
     data object ES512 : ECDSABased("ES512")
 
     /** Unsecured JWT — opt-in only. Rejected by parser unless `allowUnsecured(true)`. */
-    data object None : JwsAlgorithm<SimpleKey, SimpleKey>("none") {
+    data object None : SigningAlgorithm<SimpleKey, SimpleKey>("none") {
         override suspend fun sign(key: SimpleKey, signingInput: ByteArray): ByteArray = ByteArray(0)
         override suspend fun verify(key: SimpleKey, signingInput: ByteArray, signature: ByteArray): Boolean = true
     }
@@ -93,8 +94,7 @@ sealed class JwsAlgorithm<PublicKey : Key, PrivateKey : Key>(val id: String) {
     override fun toString(): String = id
 
     companion object {
-        @JvmStatic
-        val entries: List<JwsAlgorithm<*, *>> by lazy {
+        internal val entries: List<SigningAlgorithm<*, *>> by lazy {
             listOf(
                 HS256, HS384, HS512,
                 RS256, RS384, RS512,
@@ -104,8 +104,7 @@ sealed class JwsAlgorithm<PublicKey : Key, PrivateKey : Key>(val id: String) {
             )
         }
 
-        @JvmStatic
-        fun fromId(id: String): JwsAlgorithm<*, *> =
+        fun fromId(id: String): SigningAlgorithm<*, *> =
             entries.firstOrNull { it.id == id }
                 ?: throw IllegalArgumentException("Unknown JWS algorithm: '$id'")
     }

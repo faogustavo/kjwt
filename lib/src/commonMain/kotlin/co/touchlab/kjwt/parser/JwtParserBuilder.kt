@@ -1,8 +1,5 @@
 package co.touchlab.kjwt.parser
 
-import co.touchlab.kjwt.algorithm.JweContentAlgorithm
-import co.touchlab.kjwt.algorithm.JweKeyAlgorithm
-import co.touchlab.kjwt.algorithm.JwsAlgorithm
 import co.touchlab.kjwt.cryptography.SimpleKey
 import co.touchlab.kjwt.exception.IncorrectClaimException
 import co.touchlab.kjwt.ext.audience
@@ -10,6 +7,9 @@ import co.touchlab.kjwt.ext.getClaim
 import co.touchlab.kjwt.ext.issuer
 import co.touchlab.kjwt.ext.subject
 import co.touchlab.kjwt.model.JwtPayload
+import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
+import co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm
+import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
 import dev.whyoleg.cryptography.materials.key.Key
 
 /**
@@ -36,18 +36,18 @@ class JwtParserBuilder {
 
     fun noVerify(): JwtParserBuilder = apply {
         allowUnsecured = true
-        jwsKeyVerifier = JwsKeyVerifier(JwsAlgorithm.None, SimpleKey.Empty)
+        jwsKeyVerifier = JwsKeyVerifier(SigningAlgorithm.None, SimpleKey.Empty)
     }
 
     fun <PublicKey : Key, PrivateKey : Key> verifyWith(
-        algorithm: JwsAlgorithm<PublicKey, PrivateKey>,
+        algorithm: SigningAlgorithm<PublicKey, PrivateKey>,
         key: PublicKey
     ): JwtParserBuilder = apply {
         jwsKeyVerifier = JwsKeyVerifier(algorithm, key)
     }
 
     fun <PublicKey : Key, PrivateKey : Key> decryptWith(
-        algorithm: JweKeyAlgorithm<PublicKey, PrivateKey>,
+        algorithm: EncryptionAlgorithm<PublicKey, PrivateKey>,
         privateKey: PrivateKey
     ): JwtParserBuilder = apply {
         jweKeyDecryptor = JweKeyDecryptor(algorithm, privateKey)
@@ -104,7 +104,7 @@ class JwtParserBuilder {
 }
 
 internal data class JwsKeyVerifier<PublicKey : Key, PrivateKey : Key>(
-    val algorithm: JwsAlgorithm<PublicKey, PrivateKey>,
+    val algorithm: SigningAlgorithm<PublicKey, PrivateKey>,
     val publicKey: PublicKey,
 ) {
     suspend fun verify(signingInput: ByteArray, signature: ByteArray): Boolean = try {
@@ -115,11 +115,11 @@ internal data class JwsKeyVerifier<PublicKey : Key, PrivateKey : Key>(
 }
 
 internal data class JweKeyDecryptor<PublicKey : Key, PrivateKey : Key>(
-    val algorithm: JweKeyAlgorithm<PublicKey, PrivateKey>,
+    val algorithm: EncryptionAlgorithm<PublicKey, PrivateKey>,
     val privateKey: PrivateKey,
 ) {
     suspend fun decrypt(
-        contentAlgorithm: JweContentAlgorithm,
+        contentAlgorithm: EncryptionContentAlgorithm,
         encryptedKey: ByteArray,
         iv: ByteArray,
         ciphertext: ByteArray,

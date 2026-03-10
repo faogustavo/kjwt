@@ -2,9 +2,6 @@
 
 package co.touchlab.kjwt
 
-import co.touchlab.kjwt.algorithm.JweContentAlgorithm
-import co.touchlab.kjwt.algorithm.JweKeyAlgorithm
-import co.touchlab.kjwt.algorithm.JwsAlgorithm
 import co.touchlab.kjwt.exception.MissingClaimException
 import co.touchlab.kjwt.ext.expirationOrNull
 import co.touchlab.kjwt.ext.parse
@@ -14,6 +11,9 @@ import co.touchlab.kjwt.ext.subjectOrNull
 import co.touchlab.kjwt.internal.JwtJson
 import co.touchlab.kjwt.model.JwtInstance
 import co.touchlab.kjwt.model.JwtPayload
+import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
+import co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm
+import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -60,10 +60,10 @@ class CustomPayloadTest {
             .subject("user-42")
             .claim("role", "admin")
             .claim("level", 7)
-            .signWith(JwsAlgorithm.HS256, key)
+            .signWith(SigningAlgorithm.HS256, key)
 
         val jws = Jwt.parser()
-            .verifyWith(JwsAlgorithm.HS256, key)
+            .verifyWith(SigningAlgorithm.HS256, key)
             .build()
             .parseSignedJwt(UserClaims.serializer(), token)
 
@@ -78,10 +78,10 @@ class CustomPayloadTest {
         val token = Jwt.builder()
             .subject("user-ext")
             .claim("role", "viewer")
-            .signWith(JwsAlgorithm.HS256, key)
+            .signWith(SigningAlgorithm.HS256, key)
 
         val jws: JwtInstance.Jws<UserClaims> = Jwt.parser()
-            .verifyWith(JwsAlgorithm.HS256, key)
+            .verifyWith(SigningAlgorithm.HS256, key)
             .build()
             .parseSignedJwt<UserClaims>(token)
 
@@ -95,10 +95,10 @@ class CustomPayloadTest {
         // Token has no "role" or "level" claims
         val token = Jwt.builder()
             .subject("minimal-user")
-            .signWith(JwsAlgorithm.HS256, key)
+            .signWith(SigningAlgorithm.HS256, key)
 
         val jws = Jwt.parser()
-            .verifyWith(JwsAlgorithm.HS256, key)
+            .verifyWith(SigningAlgorithm.HS256, key)
             .build()
             .parseSignedJwt<UserClaims>(token)
 
@@ -112,10 +112,10 @@ class CustomPayloadTest {
         val key = hs256Key()
         val token = Jwt.builder()
             .subject("claim-user")
-            .signWith(JwsAlgorithm.HS256, key)
+            .signWith(SigningAlgorithm.HS256, key)
 
         val jws = Jwt.parser()
-            .verifyWith(JwsAlgorithm.HS256, key)
+            .verifyWith(SigningAlgorithm.HS256, key)
             .build()
             .parseSignedJwt<UserClaims>(token)
 
@@ -130,10 +130,10 @@ class CustomPayloadTest {
         val token = Jwt.builder()
             .subject("timed-user")
             .expiration(expiry)
-            .signWith(JwsAlgorithm.HS256, key)
+            .signWith(SigningAlgorithm.HS256, key)
 
         val jws = Jwt.parser()
-            .verifyWith(JwsAlgorithm.HS256, key)
+            .verifyWith(SigningAlgorithm.HS256, key)
             .build()
             .parseSignedJwt<UserClaims>(token)
 
@@ -148,10 +148,10 @@ class CustomPayloadTest {
         val token = Jwt.builder()
             .subject("auto-user")
             .claim("role", "superadmin")
-            .signWith(JwsAlgorithm.HS256, key)
+            .signWith(SigningAlgorithm.HS256, key)
 
         val result: JwtInstance<UserClaims> = Jwt.parser()
-            .verifyWith(JwsAlgorithm.HS256, key)
+            .verifyWith(SigningAlgorithm.HS256, key)
             .build()
             .parse<UserClaims>(token)
 
@@ -169,10 +169,10 @@ class CustomPayloadTest {
             .subject("enc-user")
             .claim("role", "operator")
             .claim("level", 3)
-            .encryptWith(cek, JweKeyAlgorithm.Dir, JweContentAlgorithm.A128GCM)
+            .encryptWith(cek, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A128GCM)
 
         val jwe = Jwt.parser()
-            .decryptWith(JweKeyAlgorithm.Dir, cek)
+            .decryptWith(EncryptionAlgorithm.Dir, cek)
             .build()
             .parseEncryptedJwt(UserClaims.serializer(), token)
 
@@ -187,10 +187,10 @@ class CustomPayloadTest {
         val token = Jwt.builder()
             .subject("enc-ext-user")
             .claim("role", "reader")
-            .encryptWith(cek, JweKeyAlgorithm.Dir, JweContentAlgorithm.A256GCM)
+            .encryptWith(cek, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A256GCM)
 
         val jwe: JwtInstance.Jwe<UserClaims> = Jwt.parser()
-            .decryptWith(JweKeyAlgorithm.Dir, cek)
+            .decryptWith(EncryptionAlgorithm.Dir, cek)
             .build()
             .parseEncryptedJwt<UserClaims>(token)
 
@@ -204,10 +204,10 @@ class CustomPayloadTest {
         val token = Jwt.builder()
             .subject("enc-auto-user")
             .claim("role", "admin")
-            .encryptWith(cek, JweKeyAlgorithm.Dir, JweContentAlgorithm.A192GCM)
+            .encryptWith(cek, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A192GCM)
 
         val result: JwtInstance<UserClaims> = Jwt.parser()
-            .decryptWith(JweKeyAlgorithm.Dir, cek)
+            .decryptWith(EncryptionAlgorithm.Dir, cek)
             .build()
             .parse<UserClaims>(token)
 
@@ -223,10 +223,10 @@ class CustomPayloadTest {
         val token = Jwt.builder()
             .subject("enc-timed-user")
             .expiration(expiry)
-            .encryptWith(cek, JweKeyAlgorithm.Dir, JweContentAlgorithm.A128GCM)
+            .encryptWith(cek, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A128GCM)
 
         val jwe = Jwt.parser()
-            .decryptWith(JweKeyAlgorithm.Dir, cek)
+            .decryptWith(EncryptionAlgorithm.Dir, cek)
             .build()
             .parseEncryptedJwt<UserClaims>(token)
 

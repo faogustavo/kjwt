@@ -1,8 +1,8 @@
 package co.touchlab.kjwt.model
 
-import co.touchlab.kjwt.algorithm.JweContentAlgorithm
-import co.touchlab.kjwt.algorithm.JweKeyAlgorithm
-import co.touchlab.kjwt.algorithm.JwsAlgorithm
+import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
+import co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm
+import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
 import co.touchlab.kjwt.serializers.JweHeaderSerializer
 import co.touchlab.kjwt.serializers.JwsHeaderSerializer
 import kotlinx.serialization.Serializable
@@ -44,7 +44,7 @@ sealed class JwtHeader {
             extra[name] = value
         }
 
-        internal fun build(algorithm: JwsAlgorithm<*, *>) = Jws(
+        internal fun build(algorithm: SigningAlgorithm<*, *>) = Jws(
             algorithm = algorithm.id,
             type = type,
             contentType = contentType,
@@ -53,8 +53,8 @@ sealed class JwtHeader {
         )
 
         internal fun build(
-            keyAlgorithm: JweKeyAlgorithm<*, *>,
-            contentAlgorithm: JweContentAlgorithm,
+            keyAlgorithm: EncryptionAlgorithm<*, *>,
+            contentAlgorithm: EncryptionContentAlgorithm,
         ) = Jwe(
             algorithm = keyAlgorithm.id,
             encryption = contentAlgorithm.id,

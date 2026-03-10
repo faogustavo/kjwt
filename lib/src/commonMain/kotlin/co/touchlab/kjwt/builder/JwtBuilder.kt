@@ -1,14 +1,14 @@
 package co.touchlab.kjwt.builder
 
-import co.touchlab.kjwt.algorithm.JweContentAlgorithm
-import co.touchlab.kjwt.algorithm.JweKeyAlgorithm
-import co.touchlab.kjwt.algorithm.JwsAlgorithm
 import co.touchlab.kjwt.cryptography.SimpleKey
 import co.touchlab.kjwt.internal.JwtJson
 import co.touchlab.kjwt.internal.encodeBase64Url
 import co.touchlab.kjwt.internal.encodeToBase64Url
 import co.touchlab.kjwt.model.JwtHeader
 import co.touchlab.kjwt.model.JwtPayload
+import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
+import co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm
+import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
 import co.touchlab.kjwt.serializers.ClaimsSerializer
 import dev.whyoleg.cryptography.materials.key.Key
 import kotlin.time.Duration
@@ -76,10 +76,10 @@ class JwtBuilder {
     /**
      * Builds and returns a JWS compact serialization: `header.payload.signature`.
      *
-     * For [JwsAlgorithm.None] the signature part is empty, producing `header.payload.`
+     * For [SigningAlgorithm.None] the signature part is empty, producing `header.payload.`
      */
     suspend fun <PublicKey : Key, PrivateKey : Key> signWith(
-        algorithm: JwsAlgorithm<PublicKey, PrivateKey>,
+        algorithm: SigningAlgorithm<PublicKey, PrivateKey>,
         key: PrivateKey
     ): String {
         val header = headerBuilder.build(algorithm)
@@ -93,7 +93,7 @@ class JwtBuilder {
         return "$headerB64.$payloadB64.${signature.encodeBase64Url()}"
     }
 
-    suspend fun signWith(algorithm: JwsAlgorithm.None): String =
+    suspend fun signWith(algorithm: SigningAlgorithm.None): String =
         signWith(algorithm, SimpleKey.Empty)
 
     /**
@@ -102,8 +102,8 @@ class JwtBuilder {
      */
     suspend fun <PublicKey : Key, PrivateKey : Key> encryptWith(
         key: PublicKey,
-        keyAlgorithm: JweKeyAlgorithm<PublicKey, PrivateKey>,
-        contentAlgorithm: JweContentAlgorithm,
+        keyAlgorithm: EncryptionAlgorithm<PublicKey, PrivateKey>,
+        contentAlgorithm: EncryptionContentAlgorithm,
     ): String {
         val header = headerBuilder.build(keyAlgorithm, contentAlgorithm)
         val claims = payloadBuilder.build()
