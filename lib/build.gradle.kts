@@ -11,6 +11,9 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.cryptography.core)
+            implementation(libs.cryptography.bigint)
+            implementation(libs.cryptography.serialization.asn1)
+            implementation(libs.cryptography.serialization.asn1.modules)
         }
         commonTest.dependencies {
             implementation(libs.kotlinx.coroutines.test)
