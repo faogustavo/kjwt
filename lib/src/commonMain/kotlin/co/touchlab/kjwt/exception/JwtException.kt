@@ -7,6 +7,8 @@ open class JwtException(message: String, cause: Throwable? = null) : Exception(m
 
 class MalformedJwtException(message: String, cause: Throwable? = null) : JwtException(message, cause)
 
+class MalformedJwkException(message: String, cause: Throwable? = null) : JwtException(message, cause)
+
 class SignatureException(message: String, cause: Throwable? = null) : JwtException(message, cause)
 
 class UnsupportedJwtException(message: String, cause: Throwable? = null) : JwtException(message, cause)

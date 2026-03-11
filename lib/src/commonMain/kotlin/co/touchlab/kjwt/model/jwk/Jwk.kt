@@ -1,14 +1,16 @@
-@file:OptIn(ExperimentalSerializationApi::class)
-
 package co.touchlab.kjwt.model.jwk
 
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.SerialName
+import co.touchlab.kjwt.serializers.JwkEcSerializer
+import co.touchlab.kjwt.serializers.JwkEcThumbprintSerializer
+import co.touchlab.kjwt.serializers.JwkOctSerializer
+import co.touchlab.kjwt.serializers.JwkOctThumbprintSerializer
+import co.touchlab.kjwt.serializers.JwkRsaSerializer
+import co.touchlab.kjwt.serializers.JwkRsaThumbprintSerializer
+import co.touchlab.kjwt.serializers.JwkSerializer
+import co.touchlab.kjwt.serializers.JwkThumbprintSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonClassDiscriminator
 
-@Serializable
-@JsonClassDiscriminator("kty")
+@Serializable(with = JwkSerializer::class)
 sealed class Jwk {
     abstract val use: String?
     abstract val keyOps: List<String>?
@@ -18,8 +20,7 @@ sealed class Jwk {
 
     abstract val thumbprint: Thumbprint
 
-    @Serializable
-    @JsonClassDiscriminator("kty")
+    @Serializable(with = JwkThumbprintSerializer::class)
     sealed class Thumbprint
 
     /**
@@ -27,8 +28,7 @@ sealed class Jwk {
      * Private key additionally requires [d]; CRT parameters [p], [q], [dp], [dq], [qi]
      * are optional but required for key conversion to cryptography-kotlin types.
      */
-    @Serializable
-    @SerialName(Rsa.KTY)
+    @Serializable(with = JwkRsaSerializer::class)
     data class Rsa(
         val n: String,
         val e: String,
@@ -39,7 +39,7 @@ sealed class Jwk {
         val dq: String? = null,
         val qi: String? = null,
         override val use: String? = null,
-        @SerialName("key_ops") override val keyOps: List<String>? = null,
+        override val keyOps: List<String>? = null,
         override val alg: String? = null,
         override val kid: String? = null,
     ) : Jwk() {
@@ -49,8 +49,7 @@ sealed class Jwk {
             RSAThumbprint(e, n)
         }
 
-        @Serializable
-        @SerialName(Rsa.KTY)
+        @Serializable(with = JwkRsaThumbprintSerializer::class)
         data class RSAThumbprint(
             val e: String,
             val n: String,
@@ -65,15 +64,14 @@ sealed class Jwk {
      * Elliptic Curve key (kty = "EC"). Public key requires [crv], [x], and [y].
      * Private key additionally requires [d]. Supported curves: "P-256", "P-384", "P-521".
      */
-    @Serializable
-    @SerialName(Ec.KTY)
+    @Serializable(with = JwkEcSerializer::class)
     data class Ec(
         val crv: String,
         val x: String,
         val y: String,
         val d: String? = null,
         override val use: String? = null,
-        @SerialName("key_ops") override val keyOps: List<String>? = null,
+        override val keyOps: List<String>? = null,
         override val alg: String? = null,
         override val kid: String? = null,
     ) : Jwk() {
@@ -83,8 +81,7 @@ sealed class Jwk {
             ECThumbprint(crv, x, y)
         }
 
-        @Serializable
-        @SerialName(Ec.KTY)
+        @Serializable(with = JwkEcThumbprintSerializer::class)
         data class ECThumbprint(
             val crv: String,
             val x: String,
@@ -100,12 +97,11 @@ sealed class Jwk {
      * Symmetric (octet sequence) key (kty = "oct"). The [k] parameter holds the raw key bytes
      * encoded as base64url. Always considered private key material.
      */
-    @Serializable
-    @SerialName(Oct.KTY)
+    @Serializable(with = JwkOctSerializer::class)
     data class Oct(
         val k: String,
         override val use: String? = null,
-        @SerialName("key_ops") override val keyOps: List<String>? = null,
+        override val keyOps: List<String>? = null,
         override val alg: String? = null,
         override val kid: String? = null,
     ) : Jwk() {
@@ -115,8 +111,7 @@ sealed class Jwk {
             OctThumbprint(k)
         }
 
-        @Serializable
-        @SerialName(Oct.KTY)
+        @Serializable(with = JwkOctThumbprintSerializer::class)
         data class OctThumbprint(val k: String) : Thumbprint()
 
         companion object {

@@ -1,5 +1,7 @@
 package co.touchlab.kjwt.jwk
 
+import co.touchlab.kjwt.exception.MalformedJwkException
+import co.touchlab.kjwt.exception.UnsupportedJwtException
 import co.touchlab.kjwt.internal.JwtJson
 import co.touchlab.kjwt.model.jwk.Jwk
 import co.touchlab.kjwt.model.jwk.JwkSet
@@ -8,7 +10,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
-import kotlinx.serialization.SerializationException
 
 class JwkSerializationTest {
 
@@ -137,17 +138,57 @@ class JwkSerializationTest {
     // ---- unknown kty ----
 
     @Test
-    fun unknownKty_throwsSerializationException() {
-        assertFailsWith<SerializationException> {
+    fun unknownKty_throwsUnsupportedJwtException() {
+        assertFailsWith<UnsupportedJwtException> {
             JwtJson.decodeFromString<Jwk>("""{"kty":"OKP","crv":"Ed25519","x":"abc"}""")
         }
     }
 
     @Test
-    fun missingKty_throwsSerializationException() {
-        assertFailsWith<SerializationException> {
+    fun missingKty_throwsMalformedJwkException() {
+        assertFailsWith<MalformedJwkException> {
             JwtJson.decodeFromString<Jwk>("""{"n":"mod","e":"AQAB"}""")
         }
+    }
+
+    @Test
+    fun missingRequiredField_throwsMalformedJwkException() {
+        assertFailsWith<MalformedJwkException> {
+            JwtJson.decodeFromString<Jwk.Rsa>("""{"kty":"RSA","e":"AQAB"}""") // missing "n"
+        }
+    }
+
+    // ---- subtype-typed serialization (kty always present) ----
+
+    @Test
+    fun rsaSubtype_ktyIncludedWhenTypedAsConcrete() {
+        val jwk = Jwk.Rsa(n = "modulus", e = "AQAB")
+        assertTrue(JwtJson.encodeToString(jwk).contains("\"kty\":\"RSA\""))
+    }
+
+    @Test
+    fun ecSubtype_ktyIncludedWhenTypedAsConcrete() {
+        val jwk = Jwk.Ec(crv = "P-256", x = "x", y = "y")
+        assertTrue(JwtJson.encodeToString(jwk).contains("\"kty\":\"EC\""))
+    }
+
+    @Test
+    fun octSubtype_ktyIncludedWhenTypedAsConcrete() {
+        val jwk = Jwk.Oct(k = "secret")
+        assertTrue(JwtJson.encodeToString(jwk).contains("\"kty\":\"oct\""))
+    }
+
+    @Test
+    fun rsaSubtype_roundTripWhenTypedAsConcrete() {
+        val original = Jwk.Rsa(n = "modulus", e = "AQAB", kid = "test")
+        assertEquals(original, JwtJson.decodeFromString<Jwk.Rsa>(JwtJson.encodeToString(original)))
+    }
+
+    @Test
+    fun noDuplicateKty_whenTypedAsParent() {
+        val jwk: Jwk = Jwk.Rsa(n = "n", e = "AQAB")
+        val count = JwtJson.encodeToString(jwk).split("\"kty\"").size - 1
+        assertEquals(1, count)
     }
 
     // ---- parse from RFC 7517 Appendix A examples ----

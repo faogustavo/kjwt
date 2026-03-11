@@ -23,8 +23,8 @@ class JwkThumbprintTest {
 
     @Test
     fun rsaThumbprint_matchesRfcTestVector() = runTest {
-        // Expected value from RFC 7638 §3.1
-        val expected = "JB6443M7xg5tnuL5A8fNJnxFJpa0bXE4b02-X08AjS0"
+        // Expected value from RFC 7638 §3.1 (canonical JSON: {"e":...,"kty":"RSA","n":...})
+        val expected = "NzbLsXh8uDCcd-6MNwXF4W_7noWXFZAfHkxZsRGC9Xs"
         assertEquals(expected, rfcRsaKey.thumbprint.hashed())
     }
 
