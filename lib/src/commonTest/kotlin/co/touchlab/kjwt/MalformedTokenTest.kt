@@ -17,7 +17,7 @@ class MalformedTokenTest {
     fun parse_emptyString_throwsMalformedJwtException() = runTest {
         val key = hs256Key()
         assertFailsWith<MalformedJwtException> {
-            Jwt.parser().verifyWith(SigningAlgorithm.HS256, key).build().parseSignedClaims("")
+            Jwt.parser().verifyWith(SigningAlgorithm.HS256, key).build().parseSigned("")
         }
     }
 
@@ -28,7 +28,7 @@ class MalformedTokenTest {
             Jwt.parser()
                 .verifyWith(SigningAlgorithm.HS256, key)
                 .build()
-                .parseSignedClaims("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0In0")
+                .parseSigned("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0In0")
         }
     }
 
@@ -39,7 +39,7 @@ class MalformedTokenTest {
             Jwt.parser()
                 .verifyWith(SigningAlgorithm.HS256, key)
                 .build()
-                .parseSignedClaims("part1.part2.part3.part4")
+                .parseSigned("part1.part2.part3.part4")
         }
     }
 
@@ -51,7 +51,7 @@ class MalformedTokenTest {
                 .verifyWith(SigningAlgorithm.HS256, key)
                 .build()
                 // First part contains invalid base64url characters
-                .parseSignedClaims("not!!valid!!base64.eyJzdWIiOiJ0ZXN0In0.signature")
+                .parseSigned("not!!valid!!base64.eyJzdWIiOiJ0ZXN0In0.signature")
         }
     }
 
@@ -64,7 +64,7 @@ class MalformedTokenTest {
             Jwt.parser()
                 .verifyWith(SigningAlgorithm.HS256, key)
                 .build()
-                .parseSignedClaims("$notJsonB64.eyJzdWIiOiJ0ZXN0In0.signature")
+                .parseSigned("$notJsonB64.eyJzdWIiOiJ0ZXN0In0.signature")
         }
     }
 
@@ -79,7 +79,7 @@ class MalformedTokenTest {
             Jwt.parser()
                 .verifyWith(SigningAlgorithm.HS256, key)
                 .build()
-                .parseSignedClaims("$headerB64.$notJsonB64.signature")
+                .parseSigned("$headerB64.$notJsonB64.signature")
         }
     }
 
@@ -91,6 +91,7 @@ class MalformedTokenTest {
         val token = Jwt.builder()
             .subject("original-subject")
             .signWith(SigningAlgorithm.HS256, key)
+            .compact()
 
         val parts = token.split('.')
         // Replace the payload with a different base64url payload ({"sub":"hacked"})
@@ -101,7 +102,7 @@ class MalformedTokenTest {
             Jwt.parser()
                 .verifyWith(SigningAlgorithm.HS256, key)
                 .build()
-                .parseSignedClaims(tamperedToken)
+                .parseSigned(tamperedToken)
         }
     }
 
@@ -111,6 +112,7 @@ class MalformedTokenTest {
         val token = Jwt.builder()
             .subject("user")
             .signWith(SigningAlgorithm.HS256, key)
+            .compact()
 
         val parts = token.split('.')
         // Replace last char of signature to corrupt it
@@ -122,7 +124,7 @@ class MalformedTokenTest {
             Jwt.parser()
                 .verifyWith(SigningAlgorithm.HS256, key)
                 .build()
-                .parseSignedClaims(tamperedToken)
+                .parseSigned(tamperedToken)
         }
     }
 
@@ -137,12 +139,13 @@ class MalformedTokenTest {
         val token = Jwt.builder()
             .subject("user")
             .signWith(SigningAlgorithm.HS256, signingKey)
+            .compact()
 
         assertFailsWith<SignatureException> {
             Jwt.parser()
                 .verifyWith(SigningAlgorithm.HS256, wrongKey)
                 .build()
-                .parseSignedClaims(token)
+                .parseSigned(token)
         }
     }
 
@@ -154,12 +157,13 @@ class MalformedTokenTest {
         val token = Jwt.builder()
             .subject("user")
             .signWith(SigningAlgorithm.RS256, signingKeyPair.privateKey)
+            .compact()
 
         assertFailsWith<SignatureException> {
             Jwt.parser()
                 .verifyWith(SigningAlgorithm.RS256, differentKeyPair.publicKey) // wrong public key
                 .build()
-                .parseSignedClaims(token)
+                .parseSigned(token)
         }
     }
 
@@ -170,12 +174,13 @@ class MalformedTokenTest {
         val noneToken = Jwt.builder()
             .subject("user")
             .signWith(SigningAlgorithm.None)
+            .compact()
 
         assertFailsWith<UnsupportedJwtException> {
             Jwt.parser()
                 // No allowUnsecured(true) call
                 .build()
-                .parseSignedClaims(noneToken)
+                .parseSigned(noneToken)
         }
     }
 
@@ -192,7 +197,7 @@ class MalformedTokenTest {
             Jwt.parser()
                 .verifyWith(SigningAlgorithm.HS256, key)
                 .build()
-                .parseSignedClaims(fakeToken)
+                .parseSigned(fakeToken)
         }
     }
 
@@ -203,6 +208,7 @@ class MalformedTokenTest {
         val token = Jwt.builder()
             .subject("user")
             .signWith(SigningAlgorithm.RS256, rsaKeyPair.privateKey)
+            .compact()
 
         val hs256Key = hs256Key()
         // Parser configured only with HS256 verifier, but token is RS256
@@ -210,7 +216,7 @@ class MalformedTokenTest {
             Jwt.parser()
                 .verifyWith(SigningAlgorithm.HS256, hs256Key)
                 .build()
-                .parseSignedClaims(token)
+                .parseSigned(token)
         }
     }
 
@@ -224,7 +230,7 @@ class MalformedTokenTest {
             Jwt.parser()
                 .verifyWith(SigningAlgorithm.HS256, key)
                 .build()
-                .parseSignedClaims("a.b.c.d.e")
+                .parseSigned("a.b.c.d.e")
         }
     }
 
@@ -236,7 +242,7 @@ class MalformedTokenTest {
             Jwt.parser()
                 .decryptWith(EncryptionAlgorithm.RsaOaep, key)
                 .build()
-                .parseEncryptedClaims("a.b.c")
+                .parseEncrypted("a.b.c")
         }
     }
 
@@ -247,7 +253,7 @@ class MalformedTokenTest {
             Jwt.parser()
                 .verifyWith(SigningAlgorithm.HS256, key)
                 .build()
-                .parseClaims("a.b.c.d") // 4 parts — neither JWS nor JWE
+                .parse("a.b.c.d") // 4 parts — neither JWS nor JWE
         }
     }
 }

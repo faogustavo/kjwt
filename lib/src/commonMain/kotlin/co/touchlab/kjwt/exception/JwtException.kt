@@ -29,6 +29,10 @@ class MissingClaimException(
     val claimName: String,
 ) : JwtException("Missing required claim: '$claimName'")
 
+class MissingHeaderException(
+    val headerName: String,
+) : JwtException("Missing required header: '$headerName'")
+
 class IncorrectClaimException(
     val claimName: String,
     val expected: Any?,

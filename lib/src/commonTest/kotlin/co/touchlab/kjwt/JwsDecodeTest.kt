@@ -7,7 +7,7 @@ import co.touchlab.kjwt.ext.issuedAtOrNull
 import co.touchlab.kjwt.ext.issuerOrNull
 import co.touchlab.kjwt.ext.notBeforeOrNull
 import co.touchlab.kjwt.ext.subjectOrNull
-import co.touchlab.kjwt.model.Claims
+import co.touchlab.kjwt.ext.type
 import co.touchlab.kjwt.model.JwtInstance
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
 import dev.whyoleg.cryptography.algorithms.EC
@@ -31,7 +31,7 @@ class JwsDecodeTest {
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS256, key)
             .build()
-            .parseSignedClaims(
+            .parseSigned(
                 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" +
                         ".eyJzdWIiOiIxMjM0NTY3ODkwIiwiaWF0IjoxNTE2MjM5MDIyLCJuYW1lIjoiSm9obiBEb2UiLCJhZG1pbiI6dHJ1ZX0" +
                         "._-A3B6dTUb8NrJi2SlUH_9jxmaU3plM2sxf-OyXnWiw",
@@ -52,11 +52,12 @@ class JwsDecodeTest {
             .subject("hs384-user")
             .issuedAt(Instant.fromEpochSeconds(1_700_000_000))
             .signWith(SigningAlgorithm.HS384, key)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS384, key)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("HS384", jws.header.algorithm)
         assertEquals("hs384-user", jws.payload.subjectOrNull)
@@ -69,11 +70,12 @@ class JwsDecodeTest {
             .subject("hs512-user")
             .issuedAt(Instant.fromEpochSeconds(1_700_000_000))
             .signWith(SigningAlgorithm.HS512, key)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS512, key)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("HS512", jws.header.algorithm)
         assertEquals("hs512-user", jws.payload.subjectOrNull)
@@ -85,11 +87,12 @@ class JwsDecodeTest {
         val token = Jwt.builder()
             .subject("rs256-user")
             .signWith(SigningAlgorithm.RS256, keyPair.privateKey)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.RS256, keyPair.publicKey)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("RS256", jws.header.algorithm)
         assertEquals("rs256-user", jws.payload.subjectOrNull)
@@ -102,11 +105,12 @@ class JwsDecodeTest {
         val token = Jwt.builder()
             .subject("es256-user")
             .signWith(SigningAlgorithm.ES256, keyPair.privateKey)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.ES256, keyPair.publicKey)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("ES256", jws.header.algorithm)
         assertEquals("es256-user", jws.payload.subjectOrNull)
@@ -118,11 +122,12 @@ class JwsDecodeTest {
         val token = Jwt.builder()
             .subject("ps256-user")
             .signWith(SigningAlgorithm.PS256, keyPair.privateKey)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.PS256, keyPair.publicKey)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("PS256", jws.header.algorithm)
         assertEquals("ps256-user", jws.payload.subjectOrNull)
@@ -135,11 +140,12 @@ class JwsDecodeTest {
         val token = Jwt.builder()
             .subject("none-user")
             .signWith(SigningAlgorithm.None)
+            .compact()
 
         val jws = Jwt.parser()
             .allowUnsecured(true)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("none", jws.header.algorithm)
         assertEquals("none-user", jws.payload.subjectOrNull)
@@ -150,11 +156,12 @@ class JwsDecodeTest {
         val token = Jwt.builder()
             .subject("none-user")
             .signWith(SigningAlgorithm.None)
+            .compact()
 
         val jws = Jwt.parser()
             .noVerify()
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("none", jws.header.algorithm)
         assertEquals("none-user", jws.payload.subjectOrNull)
@@ -166,12 +173,13 @@ class JwsDecodeTest {
         val token = Jwt.builder()
             .subject("user")
             .signWith(SigningAlgorithm.HS256, key)
+            .compact()
 
         // noVerify() matches any algorithm and None.verify() always returns true
         val jws = Jwt.parser()
             .noVerify()
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("HS256", jws.header.algorithm)
         assertEquals("user", jws.payload.subjectOrNull)
@@ -186,11 +194,12 @@ class JwsDecodeTest {
         val token = Jwt.builder()
             .audience("api.example.com")
             .signWith(SigningAlgorithm.HS256, key)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS256, key)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals(setOf("api.example.com"), jws.payload.audienceOrNull)
     }
@@ -202,11 +211,12 @@ class JwsDecodeTest {
         val token = Jwt.builder()
             .audience("aud1", "aud2")
             .signWith(SigningAlgorithm.HS256, key)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS256, key)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals(setOf("aud1", "aud2"), jws.payload.audienceOrNull)
     }
@@ -221,11 +231,12 @@ class JwsDecodeTest {
             .claim("level", 5)
             .claim("active", true)
             .signWith(SigningAlgorithm.HS256, key)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS256, key)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("admin", jws.payload.getClaimOrNull<String>("role"))
         assertEquals(5, jws.payload.getClaimOrNull<Int>("level"))
@@ -240,13 +251,14 @@ class JwsDecodeTest {
         val token = Jwt.builder()
             .subject("auto-detect-user")
             .signWith(SigningAlgorithm.HS256, key)
+            .compact()
 
         val result = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS256, key)
             .build()
-            .parseClaims(token)
+            .parse(token)
 
-        assertIs<JwtInstance.Jws<Claims>>(result)
+        assertIs<JwtInstance.Jws>(result)
         assertEquals("auto-detect-user", result.payload.subjectOrNull)
     }
 
@@ -259,12 +271,13 @@ class JwsDecodeTest {
             .issuer("my-issuer")
             .expiration(Clock.System.now() + 1.hours)
             .signWith(SigningAlgorithm.HS256, key)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS256, key)
             .requireIssuer("my-issuer")
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("my-issuer", jws.payload.issuerOrNull)
     }
@@ -276,12 +289,13 @@ class JwsDecodeTest {
             .subject("my-subject")
             .expiration(Clock.System.now() + 1.hours)
             .signWith(SigningAlgorithm.HS256, key)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS256, key)
             .requireSubject("my-subject")
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("my-subject", jws.payload.subjectOrNull)
     }
@@ -293,12 +307,13 @@ class JwsDecodeTest {
             .audience("my-api")
             .expiration(Clock.System.now() + 1.hours)
             .signWith(SigningAlgorithm.HS256, key)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS256, key)
             .requireAudience("my-api")
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals(setOf("my-api"), jws.payload.audienceOrNull)
     }
@@ -310,12 +325,13 @@ class JwsDecodeTest {
             .audience("api1", "api2", "api3")
             .expiration(Clock.System.now() + 1.hours)
             .signWith(SigningAlgorithm.HS256, key)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS256, key)
             .requireAudience("api2")
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals(setOf("api1", "api2", "api3"), jws.payload.audienceOrNull)
     }
@@ -326,12 +342,13 @@ class JwsDecodeTest {
         val token = Jwt.builder()
             .expiration(Clock.System.now() + 1.hours)
             .signWith(SigningAlgorithm.HS256, key)
+            .compact()
 
         // Should not throw
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS256, key)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertNotNull(jws.payload.expirationOrNull)
     }
@@ -342,12 +359,13 @@ class JwsDecodeTest {
         val token = Jwt.builder()
             .notBefore(Clock.System.now() - 1.hours) // already past, so valid
             .signWith(SigningAlgorithm.HS256, key)
+            .compact()
 
         // Should not throw
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS256, key)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertNotNull(jws.payload.notBeforeOrNull)
     }
@@ -359,13 +377,14 @@ class JwsDecodeTest {
         val token = Jwt.builder()
             .expiration(Clock.System.now() - 3.seconds)
             .signWith(SigningAlgorithm.HS256, key)
+            .compact()
 
         // With 5-second skew, it should pass
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS256, key)
             .clockSkew(5L)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertNotNull(jws.payload.expirationOrNull)
     }

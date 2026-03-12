@@ -64,6 +64,7 @@ class JwkKeyConversionTest {
         val token = Jwt.builder()
             .subject("jwk-rsa-test")
             .signWith(SigningAlgorithm.RS256, keyPair.privateKey)
+            .compact()
 
         // Re-export native public key via DER and decode back as a quick sanity check
         val reParsed = provider.get(RSA.PKCS1)
@@ -73,7 +74,7 @@ class JwkKeyConversionTest {
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.RS256, reParsed)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("jwk-rsa-test", jws.payload.subjectOrNull)
     }
@@ -114,11 +115,12 @@ class JwkKeyConversionTest {
         val token = Jwt.builder()
             .subject("jwk-ec-p256")
             .signWith(SigningAlgorithm.ES256, keyPair.privateKey)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.ES256, reParsedPublicKey)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("jwk-ec-p256", jws.payload.subjectOrNull)
     }

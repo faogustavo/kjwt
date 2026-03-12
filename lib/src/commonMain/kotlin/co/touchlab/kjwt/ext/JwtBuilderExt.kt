@@ -2,6 +2,7 @@ package co.touchlab.kjwt.ext
 
 import co.touchlab.kjwt.builder.JwtBuilder
 import co.touchlab.kjwt.cryptography.SimpleKey
+import co.touchlab.kjwt.model.JwtInstance
 import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
 import co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
@@ -18,7 +19,7 @@ suspend fun JwtBuilder.signWith(
     algorithm: SigningAlgorithm.HashBased,
     key: String,
     keyFormat: HMAC.Key.Format,
-): String {
+): JwtInstance.Jws {
     val parsedKey = CryptographyProvider.Default.get(HMAC)
         .keyDecoder(
             when (algorithm) {
@@ -36,7 +37,7 @@ suspend fun JwtBuilder.signWith(
     algorithm: SigningAlgorithm.PKCS1Based,
     key: String,
     keyFormat: RSA.PrivateKey.Format,
-): String {
+): JwtInstance.Jws {
     val parsedKey = CryptographyProvider.Default.get(RSA.PKCS1)
         .privateKeyDecoder(
             when (algorithm) {
@@ -54,7 +55,7 @@ suspend fun JwtBuilder.signWith(
     algorithm: SigningAlgorithm.PSSBased,
     key: String,
     keyFormat: RSA.PrivateKey.Format,
-): String {
+): JwtInstance.Jws {
     val parsedKey = CryptographyProvider.Default.get(RSA.PSS)
         .privateKeyDecoder(
             when (algorithm) {
@@ -72,7 +73,7 @@ suspend fun JwtBuilder.signWith(
     algorithm: SigningAlgorithm.ECDSABased,
     key: String,
     keyFormat: EC.PrivateKey.Format,
-): String {
+): JwtInstance.Jws {
     val parsedKey = CryptographyProvider.Default.get(ECDSA)
         .privateKeyDecoder(
             when (algorithm) {
@@ -90,10 +91,10 @@ suspend fun JwtBuilder.encryptWith(
     key: ByteArray,
     keyAlgorithm: EncryptionAlgorithm.Dir,
     contentAlgorithm: EncryptionContentAlgorithm,
-): String = encryptWith(SimpleKey(key), keyAlgorithm, contentAlgorithm)
+): JwtInstance.Jwe = encryptWith(SimpleKey(key), keyAlgorithm, contentAlgorithm)
 
 suspend fun JwtBuilder.encryptWith(
     key: String,
     keyAlgorithm: EncryptionAlgorithm.Dir,
     contentAlgorithm: EncryptionContentAlgorithm,
-): String = encryptWith(key.encodeToByteArray(), keyAlgorithm, contentAlgorithm)
+): JwtInstance.Jwe = encryptWith(key.encodeToByteArray(), keyAlgorithm, contentAlgorithm)

@@ -6,6 +6,7 @@ import co.touchlab.kjwt.ext.getClaimOrNull
 import co.touchlab.kjwt.ext.issuedAtOrNull
 import co.touchlab.kjwt.ext.issuerOrNull
 import co.touchlab.kjwt.ext.jwtIdOrNull
+import co.touchlab.kjwt.ext.keyId
 import co.touchlab.kjwt.ext.notBeforeOrNull
 import co.touchlab.kjwt.ext.subjectOrNull
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
@@ -34,11 +35,12 @@ class JwsEncodeTest {
             .claim("admin", true)
             .issuedAt(kotlin.time.Instant.fromEpochSeconds(1516239022))
             .signWith(SigningAlgorithm.HS256, key)
+            .compact()
 
         assertEquals(
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" +
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9" +
                     ".eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0" +
-                    ".KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30",
+                    ".pUreHG4uYuv50ST4Sn4ZGZiB104ItoBnvrhBsEoDS1M",
             token,
         )
     }
@@ -50,11 +52,12 @@ class JwsEncodeTest {
             .subject("user-384")
             .issuedAt(kotlin.time.Instant.fromEpochSeconds(1516239022))
             .signWith(SigningAlgorithm.HS384, key)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS384, key)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("HS384", jws.header.algorithm)
         assertEquals("user-384", jws.payload.subjectOrNull)
@@ -67,11 +70,12 @@ class JwsEncodeTest {
             .subject("user-512")
             .issuedAt(kotlin.time.Instant.fromEpochSeconds(1516239022))
             .signWith(SigningAlgorithm.HS512, key)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS512, key)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("HS512", jws.header.algorithm)
         assertEquals("user-512", jws.payload.subjectOrNull)
@@ -92,11 +96,12 @@ class JwsEncodeTest {
             .issuedAt(now)
             .id("unique-jwt-id")
             .signWith(SigningAlgorithm.HS256, key)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS256, key)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("test-issuer", jws.payload.issuerOrNull)
         assertEquals("test-subject", jws.payload.subjectOrNull)
@@ -117,11 +122,12 @@ class JwsEncodeTest {
             .claim("numClaim", 42)
             .claim("boolClaim", true)
             .signWith(SigningAlgorithm.HS256, key)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS256, key)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("hello", jws.payload.getClaimOrNull<String>("strClaim"))
         assertEquals(42, jws.payload.getClaimOrNull<Int>("numClaim"))
@@ -136,6 +142,7 @@ class JwsEncodeTest {
         val token = Jwt.builder()
             .audience("single-aud")
             .signWith(SigningAlgorithm.HS256, key)
+            .compact()
 
         val payloadJson = decodeTokenPayload(token)
         // Single audience must be serialized as a plain string, not an array
@@ -148,6 +155,7 @@ class JwsEncodeTest {
         val token = Jwt.builder()
             .audience("aud1", "aud2", "aud3")
             .signWith(SigningAlgorithm.HS256, key)
+            .compact()
 
         val payloadJson = decodeTokenPayload(token)
         // Multiple audiences must be serialized as JSON array
@@ -163,11 +171,12 @@ class JwsEncodeTest {
             .keyId("my-key-id")
             .subject("test")
             .signWith(SigningAlgorithm.HS256, key)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS256, key)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("my-key-id", jws.header.keyId)
     }
@@ -179,6 +188,7 @@ class JwsEncodeTest {
             .header { extra("x-custom", JsonPrimitive("custom-value")) }
             .subject("test")
             .signWith(SigningAlgorithm.HS256, key)
+            .compact()
 
         val headerJson = decodeTokenHeader(token)
         assertTrue(headerJson.contains("x-custom"), "Expected custom header field, got: $headerJson")
@@ -192,11 +202,12 @@ class JwsEncodeTest {
         val token = Jwt.builder()
             .subject("rs256-subject")
             .signWith(SigningAlgorithm.RS256, keyPair.privateKey)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.RS256, keyPair.publicKey)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("RS256", jws.header.algorithm)
         assertEquals("rs256-subject", jws.payload.subjectOrNull)
@@ -208,11 +219,12 @@ class JwsEncodeTest {
         val token = Jwt.builder()
             .subject("rs384-subject")
             .signWith(SigningAlgorithm.RS384, keyPair.privateKey)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.RS384, keyPair.publicKey)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("rs384-subject", jws.payload.subjectOrNull)
     }
@@ -223,11 +235,12 @@ class JwsEncodeTest {
         val token = Jwt.builder()
             .subject("rs512-subject")
             .signWith(SigningAlgorithm.RS512, keyPair.privateKey)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.RS512, keyPair.publicKey)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("rs512-subject", jws.payload.subjectOrNull)
     }
@@ -240,11 +253,12 @@ class JwsEncodeTest {
         val token = Jwt.builder()
             .subject("ps256-subject")
             .signWith(SigningAlgorithm.PS256, keyPair.privateKey)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.PS256, keyPair.publicKey)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("PS256", jws.header.algorithm)
         assertEquals("ps256-subject", jws.payload.subjectOrNull)
@@ -256,11 +270,12 @@ class JwsEncodeTest {
         val token = Jwt.builder()
             .subject("ps384-subject")
             .signWith(SigningAlgorithm.PS384, keyPair.privateKey)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.PS384, keyPair.publicKey)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("ps384-subject", jws.payload.subjectOrNull)
     }
@@ -271,11 +286,12 @@ class JwsEncodeTest {
         val token = Jwt.builder()
             .subject("ps512-subject")
             .signWith(SigningAlgorithm.PS512, keyPair.privateKey)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.PS512, keyPair.publicKey)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("ps512-subject", jws.payload.subjectOrNull)
     }
@@ -288,11 +304,12 @@ class JwsEncodeTest {
         val token = Jwt.builder()
             .subject("es256-subject")
             .signWith(SigningAlgorithm.ES256, keyPair.privateKey)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.ES256, keyPair.publicKey)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("ES256", jws.header.algorithm)
         assertEquals("es256-subject", jws.payload.subjectOrNull)
@@ -304,11 +321,12 @@ class JwsEncodeTest {
         val token = Jwt.builder()
             .subject("es384-subject")
             .signWith(SigningAlgorithm.ES384, keyPair.privateKey)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.ES384, keyPair.publicKey)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("es384-subject", jws.payload.subjectOrNull)
     }
@@ -319,11 +337,12 @@ class JwsEncodeTest {
         val token = Jwt.builder()
             .subject("es512-subject")
             .signWith(SigningAlgorithm.ES512, keyPair.privateKey)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.ES512, keyPair.publicKey)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("es512-subject", jws.payload.subjectOrNull)
     }
@@ -335,6 +354,7 @@ class JwsEncodeTest {
         val token = Jwt.builder()
             .subject("test")
             .signWith(SigningAlgorithm.ES256, keyPair.privateKey)
+            .compact()
 
         val signatureB64 = token.split('.')[2]
         val signatureBytes = decodeBase64Url(signatureB64)
@@ -348,6 +368,7 @@ class JwsEncodeTest {
         val token = Jwt.builder()
             .subject("test")
             .signWith(SigningAlgorithm.None)
+            .compact()
 
         val parts = token.split('.')
         assertEquals(3, parts.size)
@@ -361,7 +382,9 @@ class JwsEncodeTest {
         val key = hs256Key()
         val iat = kotlin.time.Instant.fromEpochSeconds(1_700_000_000)
         val t1 = Jwt.builder().subject("user").issuedAt(iat).signWith(SigningAlgorithm.HS256, key)
+            .compact()
         val t2 = Jwt.builder().subject("user").issuedAt(iat).signWith(SigningAlgorithm.HS256, key)
+            .compact()
         assertEquals(t1, t2)
     }
 
@@ -371,7 +394,9 @@ class JwsEncodeTest {
         val keyPair = ecKeyPair(EC.Curve.P256)
         val iat = kotlin.time.Instant.fromEpochSeconds(1_700_000_000)
         val t1 = Jwt.builder().subject("user").issuedAt(iat).signWith(SigningAlgorithm.ES256, keyPair.privateKey)
+            .compact()
         val t2 = Jwt.builder().subject("user").issuedAt(iat).signWith(SigningAlgorithm.ES256, keyPair.privateKey)
+            .compact()
         assertNotEquals(t1, t2, "ECDSA signatures should differ across calls due to random nonce")
     }
 }

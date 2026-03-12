@@ -2,10 +2,11 @@ package co.touchlab.kjwt.parser
 
 import co.touchlab.kjwt.cryptography.SimpleKey
 import co.touchlab.kjwt.exception.IncorrectClaimException
-import co.touchlab.kjwt.ext.audience
-import co.touchlab.kjwt.ext.getClaim
-import co.touchlab.kjwt.ext.issuer
-import co.touchlab.kjwt.ext.subject
+import co.touchlab.kjwt.exception.MissingClaimException
+import co.touchlab.kjwt.ext.audienceOrNull
+import co.touchlab.kjwt.ext.getClaimOrNull
+import co.touchlab.kjwt.ext.issuerOrNull
+import co.touchlab.kjwt.ext.subjectOrNull
 import co.touchlab.kjwt.model.JwtHeader
 import co.touchlab.kjwt.model.JwtPayload
 import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
@@ -56,7 +57,7 @@ class JwtParserBuilder {
 
     fun requireIssuer(iss: String, ignoreCase: Boolean = false): JwtParserBuilder = apply {
         validators.add { payload, _ ->
-            val currentValue = payload.issuer
+            val currentValue = payload.issuerOrNull ?: throw MissingClaimException(JwtPayload.ISS)
             if (!currentValue.equals(iss, ignoreCase)) {
                 throw IncorrectClaimException(JwtPayload.ISS, iss, currentValue)
             }
@@ -65,7 +66,7 @@ class JwtParserBuilder {
 
     fun requireSubject(sub: String): JwtParserBuilder = apply {
         validators.add { payload, _ ->
-            val currentValue = payload.subject
+            val currentValue = payload.subjectOrNull ?: throw MissingClaimException(JwtPayload.SUB)
             if (currentValue != sub) {
                 throw IncorrectClaimException(JwtPayload.SUB, sub, currentValue)
             }
@@ -74,7 +75,8 @@ class JwtParserBuilder {
 
     fun requireAudience(aud: String): JwtParserBuilder = apply {
         validators.add { payload, _ ->
-            val currentValue = payload.audience
+            val currentValue = payload.audienceOrNull ?: throw MissingClaimException(JwtPayload.AUD)
+
             if (currentValue.contains(aud).not()) {
                 throw IncorrectClaimException(JwtPayload.AUD, aud, currentValue)
             }
@@ -83,7 +85,7 @@ class JwtParserBuilder {
 
     inline fun <reified T> requireClaim(claimName: String, value: T): JwtParserBuilder = apply {
         validators.add { payload, _ ->
-            val currentValue = payload.getClaim<T>(claimName)
+            val currentValue = payload.getClaimOrNull<T>(claimName) ?: throw MissingClaimException(claimName)
             if (currentValue != value) {
                 throw IncorrectClaimException(claimName, value, currentValue)
             }

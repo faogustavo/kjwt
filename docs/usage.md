@@ -9,16 +9,19 @@ All signing, verifying, encrypting, and decrypting operations are `suspend` func
 ```kotlin
 import co.touchlab.kjwt.Jwt
 import co.touchlab.kjwt.algorithm.JwsAlgorithm
+import co.touchlab.kjwt.model.JwtInstance
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
 
-val token: String = Jwt.builder()
+val jws: JwtInstance.Jws = Jwt.builder()
     .issuer("my-app")
     .subject("user-123")
     .audience("api")
     .expiresIn(1.hours)
     .issuedAt(Clock.System.now())
     .signWith(JwsAlgorithm.HS256, hmacKey)
+
+val token: String = jws.compact()
 ```
 
 ### Verify / Parse a JWS
@@ -31,17 +34,19 @@ val parser = Jwt.parser()
     .clockSkew(30L) // seconds of tolerance
     .build()
 
-val jws = parser.parseSignedClaims(token)
+val jws = parser.parseSigned(token)
 val subject: String = jws.payload.subject
 ```
 
 ### Encrypt a JWT (JWE)
 
 ```kotlin
-val token: String = Jwt.builder()
+val jwe: JwtInstance.Jwe = Jwt.builder()
     .subject("user-123")
     .expiresIn(1.hours)
     .encryptWith(rsaPublicKey, JweKeyAlgorithm.RsaOaep256, JweContentAlgorithm.A256GCM)
+
+val token: String = jwe.compact()
 ```
 
 ### Decrypt a JWE
@@ -51,7 +56,7 @@ val parser = Jwt.parser()
     .decryptWith(JweKeyAlgorithm.RsaOaep256, rsaPrivateKey)
     .build()
 
-val jwe = parser.parseEncryptedClaims(token)
+val jwe = parser.parseEncrypted(token)
 val subject: String = jwe.payload.subject
 ```
 
@@ -62,7 +67,7 @@ val subject: String = jwe.payload.subject
 All seven RFC 7519 registered claims are supported via the builder:
 
 ```kotlin
-Jwt.builder()
+val jws: JwtInstance.Jws = Jwt.builder()
     .issuer("my-app")                           // iss
     .subject("user-123")                        // sub
     .audience("api", "admin")                   // aud (multiple → JSON array)
@@ -75,6 +80,8 @@ Jwt.builder()
     .id("unique-token-id")                      // jti
     .randomId()                                 // jti (convenience: random UUID, @ExperimentalUuidApi)
     .signWith(JwsAlgorithm.HS256, hmacKey)
+
+val token: String = jws.compact()
 ```
 
 ## Custom Claims
@@ -82,7 +89,7 @@ Jwt.builder()
 ```kotlin
 import kotlinx.serialization.json.JsonPrimitive
 
-Jwt.builder()
+val jws: JwtInstance.Jws = Jwt.builder()
     .subject("user-123")
     // reified generic - most convenient
     .claim("role", "admin")
@@ -92,12 +99,14 @@ Jwt.builder()
     // raw JsonElement
     .claim("raw", JsonPrimitive(42))
     .signWith(JwsAlgorithm.HS256, hmacKey)
+
+val token: String = jws.compact()
 ```
 
 ## Header Parameters
 
 ```kotlin
-Jwt.builder()
+val jws: JwtInstance.Jws = Jwt.builder()
     .subject("user-123")
     .keyId("key-2024-01")                       // kid header parameter
     .header {
@@ -105,6 +114,8 @@ Jwt.builder()
         contentType = "application/json"        // cty
     }
     .signWith(JwsAlgorithm.RS256, rsaPrivateKey)
+
+val token: String = jws.compact()
 ```
 
 ## Parsing Claims
@@ -162,9 +173,11 @@ Permits tokens where `alg=none` was used at creation time. All other algorithms 
 
 ```kotlin
 // Create an unsecured JWT
-val token: String = Jwt.builder()
+val jws: JwtInstance.Jws = Jwt.builder()
     .subject("user-123")
     .signWith(JwsAlgorithm.None)
+
+val token: String = jws.compact()
 
 // Parse — only alg=none tokens are accepted without a key;
 // signed tokens still require verifyWith()
@@ -172,7 +185,7 @@ val parser = Jwt.parser()
     .allowUnsecured(true)
     .build()
 
-val jws = parser.parseSignedClaims(token)
+val parsed = parser.parseSigned(token)
 ```
 
 ### `noVerify()` — skip signature verification entirely
@@ -186,15 +199,15 @@ val parser = Jwt.parser()
 
 // Parses successfully even if the token was signed with HS256/RS256/etc.
 // — the signature is NOT checked
-val jws = parser.parseSignedClaims(signedToken)
+val jws = parser.parseSigned(signedToken)
 ```
 
 ## Auto-Detect JWS vs JWE
 
-When you don't know whether a token is signed or encrypted, use `parseClaims` (or the reified `parse<T>`) which detects by part count (3 = JWS, 5 = JWE):
+When you don't know whether a token is signed or encrypted, use `parse` which detects by part count (3 = JWS, 5 = JWE):
 
 ```kotlin
-val instance: JwtInstance<JwtPayload> = parser.parseClaims(token)
+val instance: JwtInstance = parser.parse(token)
 
 when (instance) {
     is JwtInstance.Jws -> println("Signed, subject=${instance.payload.subject}")
@@ -237,18 +250,13 @@ data class MyPayload(
 }
 ```
 
-Parse with the reified extension (no serializer argument needed):
+Parse using `parseSigned`, then call `getPayload<T>()` on the result to decode to your custom type:
 
 ```kotlin
-val jws: JwtInstance.Jws<MyPayload> = parser.parseSignedJwt<MyPayload>(token)
-println(jws.payload.role)
-println(jws.payload.userId)
-```
-
-Or pass the serializer explicitly:
-
-```kotlin
-val jws = parser.parseSignedJwt(MyPayload.serializer().asJwtPayloadSerializer(), token)
+val jws: JwtInstance.Jws = parser.parseSigned(token)
+val payload: MyPayload = jws.getPayload<MyPayload>()
+println(payload.role)
+println(payload.userId)
 ```
 
 ## JWE with Direct Key (`dir`)
@@ -261,14 +269,16 @@ import co.touchlab.kjwt.algorithm.JweContentAlgorithm
 import co.touchlab.kjwt.ext.encryptWith  // extension for ByteArray / String keys
 
 // Encrypt - key is the raw CEK bytes (must match content algorithm key size)
-val token: String = Jwt.builder()
+val jwe: JwtInstance.Jwe = Jwt.builder()
     .subject("user-123")
     .encryptWith(cekBytes, JweKeyAlgorithm.Dir, JweContentAlgorithm.A256GCM)
+
+val token: String = jwe.compact()
 
 // Decrypt
 val parser = Jwt.parser()
     .decryptWith(JweKeyAlgorithm.Dir, SimpleKey(cekBytes))
     .build()
 
-val jwe = parser.parseEncryptedClaims(token)
+val jwe = parser.parseEncrypted(token)
 ```

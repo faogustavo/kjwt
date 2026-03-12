@@ -1,6 +1,5 @@
 package co.touchlab.kjwt
 
-import co.touchlab.kjwt.exception.MissingClaimException
 import co.touchlab.kjwt.ext.audience
 import co.touchlab.kjwt.ext.audienceOrNull
 import co.touchlab.kjwt.ext.expiration
@@ -31,48 +30,41 @@ class ClaimsTest {
         subject = "test-subject"
     }.build()
 
-    // ---- Registered claims: missing throws MissingClaimException ----
+    // ---- Registered claims: missing throws NullPointerException ----
 
     @Test
-    fun issuer_missing_throwsMissingClaimException() {
-        val ex = assertFailsWith<MissingClaimException> { emptyClaims().issuer }
-        assertEquals(JwtPayload.ISS, ex.claimName)
+    fun issuer_missing_throwsNullPointerException() {
+        assertFailsWith<NullPointerException> { emptyClaims().issuer }
     }
 
     @Test
-    fun subject_missing_throwsMissingClaimException() {
-        val ex = assertFailsWith<MissingClaimException> { emptyClaims().subject }
-        assertEquals(JwtPayload.SUB, ex.claimName)
+    fun subject_missing_throwsNullPointerException() {
+        assertFailsWith<NullPointerException> { emptyClaims().subject }
     }
 
     @Test
-    fun audience_missing_throwsMissingClaimException() {
-        val ex = assertFailsWith<MissingClaimException> { emptyClaims().audience }
-        assertEquals(JwtPayload.AUD, ex.claimName)
+    fun audience_missing_throwsNullPointerException() {
+        assertFailsWith<NullPointerException> { emptyClaims().audience }
     }
 
     @Test
-    fun expiration_missing_throwsMissingClaimException() {
-        val ex = assertFailsWith<MissingClaimException> { emptyClaims().expiration }
-        assertEquals(JwtPayload.EXP, ex.claimName)
+    fun expiration_missing_throwsNullPointerException() {
+        assertFailsWith<NullPointerException> { emptyClaims().expiration }
     }
 
     @Test
-    fun notBefore_missing_throwsMissingClaimException() {
-        val ex = assertFailsWith<MissingClaimException> { emptyClaims().notBefore }
-        assertEquals(JwtPayload.NBF, ex.claimName)
+    fun notBefore_missing_throwsNullPointerException() {
+        assertFailsWith<NullPointerException> { emptyClaims().notBefore }
     }
 
     @Test
-    fun issuedAt_missing_throwsMissingClaimException() {
-        val ex = assertFailsWith<MissingClaimException> { emptyClaims().issuedAt }
-        assertEquals(JwtPayload.IAT, ex.claimName)
+    fun issuedAt_missing_throwsNullPointerException() {
+        assertFailsWith<NullPointerException> { emptyClaims().issuedAt }
     }
 
     @Test
-    fun jwtId_missing_throwsMissingClaimException() {
-        val ex = assertFailsWith<MissingClaimException> { emptyClaims().jwtId }
-        assertEquals(JwtPayload.JTI, ex.claimName)
+    fun jwtId_missing_throwsNullPointerException() {
+        assertFailsWith<NullPointerException> { emptyClaims().jwtId }
     }
 
     // ---- Registered claims: missing returns null ----
@@ -115,9 +107,8 @@ class ClaimsTest {
     // ---- Custom claims ----
 
     @Test
-    fun getClaim_missing_throwsMissingClaimException() {
-        val ex = assertFailsWith<MissingClaimException> { emptyClaims().getClaim<String>("role") }
-        assertEquals("role", ex.claimName)
+    fun getClaim_missing_throwsNullPointerException() {
+        assertFailsWith<NullPointerException> { emptyClaims().getClaim<String>("role") }
     }
 
     @Test

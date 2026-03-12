@@ -32,11 +32,12 @@ class JwkBuilderExtTest {
         val token = Jwt.builder()
             .subject("jwk-hs256")
             .signWith(SigningAlgorithm.HS256, jwk)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS256, jwk)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("HS256", jws.header.algorithm)
         assertEquals("jwk-hs256", jws.payload.subjectOrNull)
@@ -49,11 +50,12 @@ class JwkBuilderExtTest {
         val token = Jwt.builder()
             .subject("jwk-hs384")
             .signWith(SigningAlgorithm.HS384, jwk)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS384, jwk)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("HS384", jws.header.algorithm)
         assertEquals("jwk-hs384", jws.payload.subjectOrNull)
@@ -66,11 +68,12 @@ class JwkBuilderExtTest {
         val token = Jwt.builder()
             .subject("jwk-hs512")
             .signWith(SigningAlgorithm.HS512, jwk)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS512, jwk)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("HS512", jws.header.algorithm)
         assertEquals("jwk-hs512", jws.payload.subjectOrNull)
@@ -85,6 +88,7 @@ class JwkBuilderExtTest {
         val token = Jwt.builder()
             .subject("jwk-cross-verify")
             .signWith(SigningAlgorithm.HS256, jwk)
+            .compact()
 
         val nativeKey = dev.whyoleg.cryptography.CryptographyProvider.Default
             .get(dev.whyoleg.cryptography.algorithms.HMAC)
@@ -94,7 +98,7 @@ class JwkBuilderExtTest {
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS256, nativeKey)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("jwk-cross-verify", jws.payload.subjectOrNull)
     }

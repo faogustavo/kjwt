@@ -1,21 +1,63 @@
 package co.touchlab.kjwt.model
 
 import co.touchlab.kjwt.internal.JwtJson
+import co.touchlab.kjwt.internal.decodeBase64Url
+import co.touchlab.kjwt.internal.encodeToBase64Url
 import co.touchlab.kjwt.serializers.InstantEpochSecondsSerializer
+import co.touchlab.kjwt.serializers.JwtPayloadSerializer
 import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 import kotlinx.serialization.DeserializationStrategy
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 
-interface JwtPayload {
-    fun hasClaim(name: String): Boolean
-    fun <T> getClaim(serializer: DeserializationStrategy<T>, name: String): T
-    fun <T> getClaimOrNull(serializer: DeserializationStrategy<T>, name: String): T?
+@Serializable(with = JwtPayloadSerializer::class)
+class JwtPayload internal constructor(
+    internal val base64Encoded: String,
+    @PublishedApi internal val jsonData: JsonObject,
+) {
+    internal constructor(jsonData: JsonObject) : this(
+        base64Encoded = JwtJson.encodeToBase64Url(jsonData),
+        jsonData = jsonData,
+    )
+
+    internal constructor(base64Encoded: String) : this(
+        base64Encoded = base64Encoded,
+        jsonData = JwtJson.decodeBase64Url(
+            deserializer = JsonObject.serializer(),
+            base64UrlString = base64Encoded,
+            name = "payload"
+        )
+    )
+
+    fun hasClaim(name: String): Boolean =
+        jsonData.containsKey(name)
+
+    fun <T> getClaim(serializer: DeserializationStrategy<T>, name: String): T =
+        getClaimOrNull(serializer, name) ?: throw NullPointerException(name)
+
+    fun <T> getClaimOrNull(serializer: DeserializationStrategy<T>, name: String): T? {
+        val element = jsonData[name] ?: return null
+        return JwtJson.decodeFromJsonElement(serializer, element)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || this::class != other::class) return false
+
+        other as JwtPayload
+
+        return base64Encoded == other.base64Encoded
+    }
+
+    override fun hashCode(): Int = base64Encoded.hashCode()
+
+    override fun toString(): String = base64Encoded
 
     class Builder {
         var issuer: String? = null
@@ -67,16 +109,20 @@ interface JwtPayload {
         @PublishedApi
         internal val content: MutableMap<String, JsonElement> = mutableMapOf()
 
-        fun claim(name: String, value: JsonElement) {
-            content[name] = value
-        }
-
-        fun <T> claim(name: String, serializer: SerializationStrategy<T>, value: T?) {
+        fun claim(name: String, value: JsonElement?) {
             if (value != null) {
-                claim(name, JwtJson.encodeToJsonElement(serializer, value))
+                content[name] = value
             } else {
                 content.remove(name)
             }
+        }
+
+        fun <T> claim(name: String, serializer: SerializationStrategy<T>, value: T?) {
+            claim(name, value?.let { JwtJson.encodeToJsonElement(serializer, it) })
+        }
+
+        inline fun <reified T> claim(name: String, value: T) {
+            claim(name, kotlinx.serialization.serializer<T>(), value)
         }
 
         fun expiresIn(duration: Duration) {
@@ -96,11 +142,7 @@ interface JwtPayload {
             id = Uuid.random().toString()
         }
 
-        inline fun <reified T> claim(name: String, value: T) {
-            claim(name, kotlinx.serialization.serializer<T>(), value)
-        }
-
-        internal fun build(): Claims = Claims(JsonObject(content))
+        internal fun build() = JwtPayload(JsonObject(content))
     }
 
     companion object {

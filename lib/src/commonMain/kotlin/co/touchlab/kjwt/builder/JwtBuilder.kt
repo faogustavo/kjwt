@@ -5,11 +5,11 @@ import co.touchlab.kjwt.internal.JwtJson
 import co.touchlab.kjwt.internal.encodeBase64Url
 import co.touchlab.kjwt.internal.encodeToBase64Url
 import co.touchlab.kjwt.model.JwtHeader
+import co.touchlab.kjwt.model.JwtInstance
 import co.touchlab.kjwt.model.JwtPayload
 import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
 import co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
-import co.touchlab.kjwt.serializers.ClaimsSerializer
 import dev.whyoleg.cryptography.materials.key.Key
 import kotlin.time.Duration
 import kotlin.time.Instant
@@ -81,19 +81,17 @@ class JwtBuilder {
     suspend fun <PublicKey : Key, PrivateKey : Key> signWith(
         algorithm: SigningAlgorithm<PublicKey, PrivateKey>,
         key: PrivateKey
-    ): String {
+    ): JwtInstance.Jws {
         val header = headerBuilder.build(algorithm)
         val payload = payloadBuilder.build()
 
-        val headerB64 = JwtJson.encodeToBase64Url(header)
-        val payloadB64 = JwtJson.encodeToBase64Url(ClaimsSerializer, payload)
-
-        val signingInput = "$headerB64.$payloadB64".encodeToByteArray()
+        val signingInput = "$header.$payload".encodeToByteArray()
         val signature = algorithm.sign(key, signingInput)
-        return "$headerB64.$payloadB64.${signature.encodeBase64Url()}"
+
+        return JwtInstance.Jws(header, payload, signature.encodeBase64Url())
     }
 
-    suspend fun signWith(algorithm: SigningAlgorithm.None): String =
+    suspend fun signWith(algorithm: SigningAlgorithm.None): JwtInstance.Jws =
         signWith(algorithm, SimpleKey.Empty)
 
     /**
@@ -104,26 +102,23 @@ class JwtBuilder {
         key: PublicKey,
         keyAlgorithm: EncryptionAlgorithm<PublicKey, PrivateKey>,
         contentAlgorithm: EncryptionContentAlgorithm,
-    ): String {
+    ): JwtInstance.Jwe {
         val header = headerBuilder.build(keyAlgorithm, contentAlgorithm)
-        val claims = payloadBuilder.build()
+        val payload = payloadBuilder.build()
 
         val headerB64 = JwtJson.encodeToBase64Url(header)
         val aad = headerB64.encodeToByteArray()
-        val plaintext = JwtJson.encodeToString(ClaimsSerializer, claims).encodeToByteArray()
+        val plaintext = JwtJson.encodeToString(payload).encodeToByteArray()
 
         val result = keyAlgorithm.encrypt(key, contentAlgorithm, plaintext, aad)
 
-        return buildString {
-            append(headerB64)
-            append('.')
-            append(result.encryptedKey.encodeBase64Url())
-            append('.')
-            append(result.iv.encodeBase64Url())
-            append('.')
-            append(result.ciphertext.encodeBase64Url())
-            append('.')
-            append(result.tag.encodeBase64Url())
-        }
+        return JwtInstance.Jwe(
+            header = header,
+            payload = payload,
+            encryptedKey = result.encryptedKey.encodeBase64Url(),
+            iv = result.iv.encodeBase64Url(),
+            cipherText = result.ciphertext.encodeBase64Url(),
+            tag = result.tag.encodeBase64Url()
+        )
     }
 }

@@ -33,11 +33,12 @@ class JwtBuilderExtTest {
         val token = Jwt.builder()
             .subject("ext-hs256")
             .signWith(SigningAlgorithm.HS256, hs256Secret.decodeToString(), HMAC.Key.Format.RAW)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS256, hs256Key())
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("HS256", jws.header.algorithm)
         assertEquals("ext-hs256", jws.payload.subjectOrNull)
@@ -48,11 +49,12 @@ class JwtBuilderExtTest {
         val token = Jwt.builder()
             .subject("ext-hs384")
             .signWith(SigningAlgorithm.HS384, hs384Secret.decodeToString(), HMAC.Key.Format.RAW)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS384, hs384Key())
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("ext-hs384", jws.payload.subjectOrNull)
     }
@@ -62,11 +64,12 @@ class JwtBuilderExtTest {
         val token = Jwt.builder()
             .subject("ext-hs512")
             .signWith(SigningAlgorithm.HS512, hs512Secret.decodeToString(), HMAC.Key.Format.RAW)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.HS512, hs512Key())
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("ext-hs512", jws.payload.subjectOrNull)
     }
@@ -82,11 +85,12 @@ class JwtBuilderExtTest {
         val token = Jwt.builder()
             .subject("ext-rs256")
             .signWith(SigningAlgorithm.RS256, privatePem, RSA.PrivateKey.Format.PEM)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.RS256, keyPair.publicKey)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("RS256", jws.header.algorithm)
         assertEquals("ext-rs256", jws.payload.subjectOrNull)
@@ -100,11 +104,12 @@ class JwtBuilderExtTest {
         val token = Jwt.builder()
             .subject("ext-rs512")
             .signWith(SigningAlgorithm.RS512, privatePem, RSA.PrivateKey.Format.PEM)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.RS512, keyPair.publicKey)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("ext-rs512", jws.payload.subjectOrNull)
     }
@@ -119,11 +124,12 @@ class JwtBuilderExtTest {
         val token = Jwt.builder()
             .subject("ext-ps256")
             .signWith(SigningAlgorithm.PS256, privatePem, RSA.PrivateKey.Format.PEM)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.PS256, keyPair.publicKey)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("PS256", jws.header.algorithm)
         assertEquals("ext-ps256", jws.payload.subjectOrNull)
@@ -137,11 +143,12 @@ class JwtBuilderExtTest {
         val token = Jwt.builder()
             .subject("ext-ps384")
             .signWith(SigningAlgorithm.PS384, privatePem, RSA.PrivateKey.Format.PEM)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.PS384, keyPair.publicKey)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("ext-ps384", jws.payload.subjectOrNull)
     }
@@ -156,11 +163,12 @@ class JwtBuilderExtTest {
         val token = Jwt.builder()
             .subject("ext-es256")
             .signWith(SigningAlgorithm.ES256, privatePem, EC.PrivateKey.Format.PEM)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.ES256, keyPair.publicKey)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("ES256", jws.header.algorithm)
         assertEquals("ext-es256", jws.payload.subjectOrNull)
@@ -174,11 +182,12 @@ class JwtBuilderExtTest {
         val token = Jwt.builder()
             .subject("ext-es512")
             .signWith(SigningAlgorithm.ES512, privatePem, EC.PrivateKey.Format.PEM)
+            .compact()
 
         val jws = Jwt.parser()
             .verifyWith(SigningAlgorithm.ES512, keyPair.publicKey)
             .build()
-            .parseSignedClaims(token)
+            .parseSigned(token)
 
         assertEquals("ext-es512", jws.payload.subjectOrNull)
     }
@@ -192,11 +201,12 @@ class JwtBuilderExtTest {
         val token = Jwt.builder()
             .subject("ext-encrypt-bytes")
             .encryptWith(keyBytes, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A256GCM)
+            .compact()
 
         val jwe = Jwt.parser()
             .decryptWith(EncryptionAlgorithm.Dir, SimpleKey(keyBytes))
             .build()
-            .parseEncryptedClaims(token)
+            .parseEncrypted(token)
 
         assertEquals("ext-encrypt-bytes", jwe.payload.subjectOrNull)
     }
@@ -208,11 +218,12 @@ class JwtBuilderExtTest {
         val token = Jwt.builder()
             .subject("ext-encrypt-cbc")
             .encryptWith(keyBytes, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A256CbcHs512)
+            .compact()
 
         val jwe = Jwt.parser()
             .decryptWith(EncryptionAlgorithm.Dir, SimpleKey(keyBytes))
             .build()
-            .parseEncryptedClaims(token)
+            .parseEncrypted(token)
 
         assertEquals("ext-encrypt-cbc", jwe.payload.subjectOrNull)
     }
@@ -227,11 +238,12 @@ class JwtBuilderExtTest {
         val token = Jwt.builder()
             .subject("ext-encrypt-string")
             .encryptWith(keyString, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A256GCM)
+            .compact()
 
         val jwe = Jwt.parser()
             .decryptWith(EncryptionAlgorithm.Dir, SimpleKey(keyString.encodeToByteArray()))
             .build()
-            .parseEncryptedClaims(token)
+            .parseEncrypted(token)
 
         assertEquals("ext-encrypt-string", jwe.payload.subjectOrNull)
     }
