@@ -178,6 +178,41 @@ class ClaimsValidationTest {
         assertEquals("iss", ex.claimName)
     }
 
+    @Test
+    fun requireIssuer_caseMismatch_throwsIncorrectClaimException() = runTest {
+        val key = hs256Key()
+        val token = Jwt.builder()
+            .issuer("Auth.MyApp.io")
+            .signWith(SigningAlgorithm.HS256, key)
+
+        // Default comparison is case-sensitive
+        val ex = assertFailsWith<IncorrectClaimException> {
+            Jwt.parser()
+                .verifyWith(SigningAlgorithm.HS256, key)
+                .requireIssuer("auth.myapp.io")
+                .build()
+                .parseSignedClaims(token)
+        }
+
+        assertEquals("iss", ex.claimName)
+        assertEquals("auth.myapp.io", ex.expected)
+    }
+
+    @Test
+    fun requireIssuer_ignoreCase_passes() = runTest {
+        val key = hs256Key()
+        val token = Jwt.builder()
+            .issuer("AUTH.MYAPP.IO")
+            .signWith(SigningAlgorithm.HS256, key)
+
+        // Should not throw — comparison is case-insensitive
+        Jwt.parser()
+            .verifyWith(SigningAlgorithm.HS256, key)
+            .requireIssuer("auth.myapp.io", ignoreCase = true)
+            .build()
+            .parseSignedClaims(token)
+    }
+
     // ---- Subject ----
 
     @Test
@@ -209,6 +244,25 @@ class ClaimsValidationTest {
             Jwt.parser()
                 .verifyWith(SigningAlgorithm.HS256, key)
                 .requireSubject("expected-subject")
+                .build()
+                .parseSignedClaims(token)
+        }
+
+        assertEquals("sub", ex.claimName)
+    }
+
+    @Test
+    fun requireSubject_caseMismatch_throwsIncorrectClaimException() = runTest {
+        val key = hs256Key()
+        val token = Jwt.builder()
+            .subject("User-123")
+            .signWith(SigningAlgorithm.HS256, key)
+
+        // Subject comparison is case-sensitive
+        val ex = assertFailsWith<IncorrectClaimException> {
+            Jwt.parser()
+                .verifyWith(SigningAlgorithm.HS256, key)
+                .requireSubject("user-123")
                 .build()
                 .parseSignedClaims(token)
         }
@@ -251,6 +305,23 @@ class ClaimsValidationTest {
     }
 
     @Test
+    fun requireAudience_caseMismatch_throwsIncorrectClaimException() = runTest {
+        val key = hs256Key()
+        val token = Jwt.builder()
+            .audience("Mobile-App")
+            .signWith(SigningAlgorithm.HS256, key)
+
+        // Audience comparison is case-sensitive
+        assertFailsWith<IncorrectClaimException> {
+            Jwt.parser()
+                .verifyWith(SigningAlgorithm.HS256, key)
+                .requireAudience("mobile-app")
+                .build()
+                .parseSignedClaims(token)
+        }
+    }
+
+    @Test
     fun requireAudience_missing_throwsMissingClaimException() = runTest {
         val key = hs256Key()
         val token = Jwt.builder()
@@ -280,7 +351,7 @@ class ClaimsValidationTest {
         // Should not throw
         Jwt.parser()
             .verifyWith(SigningAlgorithm.HS256, key)
-            .require("role", "admin")
+            .requireClaim("role", "admin")
             .build()
             .parseSignedClaims(token)
     }
@@ -295,7 +366,7 @@ class ClaimsValidationTest {
         val ex = assertFailsWith<IncorrectClaimException> {
             Jwt.parser()
                 .verifyWith(SigningAlgorithm.HS256, key)
-                .require("role", "admin")
+                .requireClaim("role", "admin")
                 .build()
                 .parseSignedClaims(token)
         }
@@ -314,7 +385,7 @@ class ClaimsValidationTest {
         val ex = assertFailsWith<MissingClaimException> {
             Jwt.parser()
                 .verifyWith(SigningAlgorithm.HS256, key)
-                .require("role", "admin")
+                .requireClaim("role", "admin")
                 .build()
                 .parseSignedClaims(token)
         }

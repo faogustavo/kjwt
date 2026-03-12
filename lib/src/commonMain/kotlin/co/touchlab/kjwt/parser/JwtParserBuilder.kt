@@ -6,6 +6,7 @@ import co.touchlab.kjwt.ext.audience
 import co.touchlab.kjwt.ext.getClaim
 import co.touchlab.kjwt.ext.issuer
 import co.touchlab.kjwt.ext.subject
+import co.touchlab.kjwt.model.JwtHeader
 import co.touchlab.kjwt.model.JwtPayload
 import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
 import co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm
@@ -30,7 +31,7 @@ class JwtParserBuilder {
     internal var jweKeyDecryptor: JweKeyDecryptor<*, *>? = null
 
     @PublishedApi
-    internal val validators: MutableList<(JwtPayload) -> Unit> = mutableListOf()
+    internal val validators: MutableList<(JwtPayload, JwtHeader) -> Unit> = mutableListOf()
     internal var clockSkewSeconds: Long = 0L
     internal var allowUnsecured: Boolean = false
 
@@ -53,18 +54,18 @@ class JwtParserBuilder {
         jweKeyDecryptor = JweKeyDecryptor(algorithm, privateKey)
     }
 
-    fun requireIssuer(iss: String): JwtParserBuilder = apply {
-        validators.add {
-            val currentValue = it.issuer
-            if (currentValue != iss) {
+    fun requireIssuer(iss: String, ignoreCase: Boolean = false): JwtParserBuilder = apply {
+        validators.add { payload, _ ->
+            val currentValue = payload.issuer
+            if (!currentValue.equals(iss, ignoreCase)) {
                 throw IncorrectClaimException(JwtPayload.ISS, iss, currentValue)
             }
         }
     }
 
     fun requireSubject(sub: String): JwtParserBuilder = apply {
-        validators.add {
-            val currentValue = it.subject
+        validators.add { payload, _ ->
+            val currentValue = payload.subject
             if (currentValue != sub) {
                 throw IncorrectClaimException(JwtPayload.SUB, sub, currentValue)
             }
@@ -72,17 +73,17 @@ class JwtParserBuilder {
     }
 
     fun requireAudience(aud: String): JwtParserBuilder = apply {
-        validators.add {
-            val currentValue = it.audience
+        validators.add { payload, _ ->
+            val currentValue = payload.audience
             if (currentValue.contains(aud).not()) {
                 throw IncorrectClaimException(JwtPayload.AUD, aud, currentValue)
             }
         }
     }
 
-    inline fun <reified T> require(claimName: String, value: T): JwtParserBuilder = apply {
-        validators.add {
-            val currentValue = it.getClaim<T>(claimName)
+    inline fun <reified T> requireClaim(claimName: String, value: T): JwtParserBuilder = apply {
+        validators.add { payload, _ ->
+            val currentValue = payload.getClaim<T>(claimName)
             if (currentValue != value) {
                 throw IncorrectClaimException(claimName, value, currentValue)
             }

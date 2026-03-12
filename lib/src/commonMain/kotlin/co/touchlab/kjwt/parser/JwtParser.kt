@@ -75,7 +75,7 @@ class JwtParser internal constructor(private val config: JwtParserBuilder) {
         }
 
         validateTimeClaims(claims, header)
-        validateRequiredClaims(claims)
+        validateJwtClaimsAndHeader(claims, header)
 
         return JwtInstance.Jws(header, claims, parts[2].decodeBase64Url())
     }
@@ -127,10 +127,8 @@ class JwtParser internal constructor(private val config: JwtParserBuilder) {
 
         val claims = decodeJsonObjectFromString(serializer, plaintext.decodeToString(), "payload")
 
-        // For JWE time-claim validation we create a synthetic JwsHeader for the exception type
-        val syntheticJwsHeader = JwtHeader.Jws(algorithm = header.algorithm)
-        validateTimeClaims(claims, syntheticJwsHeader)
-        validateRequiredClaims(claims)
+        validateTimeClaims(claims, header)
+        validateJwtClaimsAndHeader(claims, header)
 
         return JwtInstance.Jwe(header, claims)
     }
@@ -201,7 +199,7 @@ class JwtParser internal constructor(private val config: JwtParserBuilder) {
         }
     }
 
-    private fun validateRequiredClaims(claims: JwtPayload) {
-        config.validators.forEach { validate -> validate(claims) }
+    private fun validateJwtClaimsAndHeader(claims: JwtPayload, header: JwtHeader) {
+        config.validators.forEach { validate -> validate(claims, header) }
     }
 }
