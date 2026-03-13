@@ -6,49 +6,27 @@ import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
 import co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
 import co.touchlab.kjwt.model.jwk.Jwk
-import dev.whyoleg.cryptography.algorithms.SHA1
-import dev.whyoleg.cryptography.algorithms.SHA256
-import dev.whyoleg.cryptography.algorithms.SHA384
-import dev.whyoleg.cryptography.algorithms.SHA512
 
 // ---------------------------------------------------------------------------
 // signWith — HMAC (oct)
 // ---------------------------------------------------------------------------
 
-suspend fun JwtBuilder.signWith(algorithm: SigningAlgorithm.HashBased, jwk: Jwk.Oct): JwtInstance.Jws {
-    val digest = when (algorithm) {
-        SigningAlgorithm.HS256 -> SHA256
-        SigningAlgorithm.HS384 -> SHA384
-        SigningAlgorithm.HS512 -> SHA512
-    }
-    return signWith(algorithm, jwk.toHmacKey(digest))
-}
+suspend fun JwtBuilder.signWith(algorithm: SigningAlgorithm.HashBased, jwk: Jwk.Oct): JwtInstance.Jws =
+    signWith(algorithm, jwk.toHmacKey(algorithm.digest))
 
 // ---------------------------------------------------------------------------
 // signWith — RSA PKCS1 (RS*)
 // ---------------------------------------------------------------------------
 
-suspend fun JwtBuilder.signWith(algorithm: SigningAlgorithm.PKCS1Based, jwk: Jwk.Rsa): JwtInstance.Jws {
-    val digest = when (algorithm) {
-        SigningAlgorithm.RS256 -> SHA256
-        SigningAlgorithm.RS384 -> SHA384
-        SigningAlgorithm.RS512 -> SHA512
-    }
-    return signWith(algorithm, jwk.toRsaPkcs1PrivateKey(digest))
-}
+suspend fun JwtBuilder.signWith(algorithm: SigningAlgorithm.PKCS1Based, jwk: Jwk.Rsa): JwtInstance.Jws =
+    signWith(algorithm, jwk.toRsaPkcs1PrivateKey(algorithm.digest))
 
 // ---------------------------------------------------------------------------
 // signWith — RSA PSS (PS*)
 // ---------------------------------------------------------------------------
 
-suspend fun JwtBuilder.signWith(algorithm: SigningAlgorithm.PSSBased, jwk: Jwk.Rsa): JwtInstance.Jws {
-    val digest = when (algorithm) {
-        SigningAlgorithm.PS256 -> SHA256
-        SigningAlgorithm.PS384 -> SHA384
-        SigningAlgorithm.PS512 -> SHA512
-    }
-    return signWith(algorithm, jwk.toRsaPssPrivateKey(digest))
-}
+suspend fun JwtBuilder.signWith(algorithm: SigningAlgorithm.PSSBased, jwk: Jwk.Rsa): JwtInstance.Jws =
+    signWith(algorithm, jwk.toRsaPssPrivateKey(algorithm.digest))
 
 // ---------------------------------------------------------------------------
 // signWith — ECDSA (ES*)
@@ -66,10 +44,5 @@ suspend fun JwtBuilder.encryptWith(
     jwk: Jwk.Rsa,
     keyAlgorithm: EncryptionAlgorithm.OAEPBased,
     contentAlgorithm: EncryptionContentAlgorithm,
-): JwtInstance.Jwe {
-    val digest = when (keyAlgorithm) {
-        EncryptionAlgorithm.RsaOaep -> SHA1
-        EncryptionAlgorithm.RsaOaep256 -> SHA256
-    }
-    return encryptWith(jwk.toRsaOaepPublicKey(digest), keyAlgorithm, contentAlgorithm)
-}
+): JwtInstance.Jwe =
+    encryptWith(jwk.toRsaOaepPublicKey(keyAlgorithm.digest), keyAlgorithm, contentAlgorithm)

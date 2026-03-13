@@ -5,11 +5,14 @@ package co.touchlab.kjwt.model.algorithm
 
 import co.touchlab.kjwt.cryptography.SimpleKey
 import co.touchlab.kjwt.serializers.EncryptionAlgorithmSerializer
+import dev.whyoleg.cryptography.CryptographyAlgorithmId
 import dev.whyoleg.cryptography.CryptographyProvider
 import dev.whyoleg.cryptography.DelicateCryptographyApi
 import dev.whyoleg.cryptography.algorithms.AES
+import dev.whyoleg.cryptography.algorithms.Digest
 import dev.whyoleg.cryptography.algorithms.HMAC
 import dev.whyoleg.cryptography.algorithms.RSA
+import dev.whyoleg.cryptography.algorithms.SHA1
 import dev.whyoleg.cryptography.algorithms.SHA256
 import dev.whyoleg.cryptography.algorithms.SHA384
 import dev.whyoleg.cryptography.algorithms.SHA512
@@ -79,7 +82,15 @@ sealed class EncryptionAlgorithm<PublicKey : Key, PrivateKey : Key>(
         encryptedKey: ByteArray,
     ): ByteArray
 
-    sealed class OAEPBased(id: String) : EncryptionAlgorithm<RSA.OAEP.PublicKey, RSA.OAEP.PrivateKey>(id) {
+    sealed class OAEPBased(
+        id: String,
+    ) : EncryptionAlgorithm<RSA.OAEP.PublicKey, RSA.OAEP.PrivateKey>(id), Jwa.UsesHashingAlgorithm {
+        override val digest: CryptographyAlgorithmId<Digest>
+            get() = when (this) {
+                RsaOaep -> SHA1
+                RsaOaep256 -> SHA256
+            }
+
         override suspend fun generateContentEncryptionKey(
             key: RSA.OAEP.PublicKey,
             contentAlgorithm: EncryptionContentAlgorithm,
