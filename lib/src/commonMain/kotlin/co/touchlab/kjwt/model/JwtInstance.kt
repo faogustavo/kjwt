@@ -81,10 +81,18 @@ sealed class JwtInstance {
     }
 
     class Jws internal constructor(
-        override val header: JwtHeader,
         override val payload: JwtPayload,
-        val signature: String, // Base64 URLEncoded
+        val signatures: List<Signature>,
     ) : JwtInstance() {
+        internal constructor(
+            header: JwtHeader,
+            payload: JwtPayload,
+            signature: String
+        ) : this(
+            payload = payload,
+            signatures = listOf(Signature(header, signature)),
+        )
+
         internal constructor(
             headerB64: String, // Base64 URLEncoded
             payloadB64: String, // Base64 URLEncoded
@@ -95,6 +103,12 @@ sealed class JwtInstance {
             signature = signature,
         )
 
+        override val header: JwtHeader
+            get() = signatures.first().header
+
+        val signature: String
+            get() = signatures.first().signature
+
         override fun compact(): String =
             "$header.$payload.$signature"
 
@@ -104,9 +118,8 @@ sealed class JwtInstance {
 
             other as Jws
 
-            if (header != other.header) return false
             if (payload != other.payload) return false
-            if (signature != other.signature) return false
+            if (!signatures.containsAll(other.signatures)) return false
 
             return true
         }
@@ -117,5 +130,10 @@ sealed class JwtInstance {
             result = 31 * result + signature.hashCode()
             return result
         }
+
+        class Signature(
+            val header: JwtHeader,
+            val signature: String,
+        )
     }
 }
