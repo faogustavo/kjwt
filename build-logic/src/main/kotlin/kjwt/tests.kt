@@ -1,4 +1,4 @@
-package helpers
+package kjwt
 
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.tasks.testing.Test

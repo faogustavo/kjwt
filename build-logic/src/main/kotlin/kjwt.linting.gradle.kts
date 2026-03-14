@@ -29,6 +29,13 @@ tasks.withType<Detekt>().configureEach {
     }
 }
 
+val detektAll by tasks.registering {
+    group = "verification"
+    description = "Runs over whole code base without the starting overhead for each module."
+
+    dependsOn(tasks.withType<Detekt>())
+}
+
 val mergedDetektReport by tasks.registering(ReportMergeTask::class) {
     group = "verification"
     description = "Merges all detekt SARIF reports into one"
@@ -36,17 +43,17 @@ val mergedDetektReport by tasks.registering(ReportMergeTask::class) {
     output.set(project.layout.buildDirectory.file("reports/detekt/merged-report.sarif"))
     input.from(tasks.withType<Detekt>().map { it.sarifReportFile })
 
-    dependsOn(tasks.withType<Detekt>())
+    dependsOn(detektAll)
 }
 
 val mergedDetektXmlReport by tasks.registering(ReportMergeTask::class) {
     group = "verification"
-    description = "Merges all detekt XML reports into one (checkstyle format for reviewdog)"
+    description = "Merges all detekt XML reports into one"
 
     output.set(project.layout.buildDirectory.file("reports/detekt/merged-report.xml"))
     input.from(tasks.withType<Detekt>().map { it.xmlReportFile })
 
-    dependsOn(tasks.withType<Detekt>())
+    dependsOn(detektAll)
 }
 
 subprojects {

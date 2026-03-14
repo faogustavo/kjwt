@@ -7,4 +7,5 @@ dependencies {
     implementation(libs.ksp.plugin)
     implementation(libs.kotest.plugin)
     implementation(libs.detekt.plugin)
+    implementation(libs.dokka.plugin)
 }

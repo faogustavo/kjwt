@@ -1,4 +1,4 @@
-package helpers
+package kjwt
 
 import org.gradle.kotlin.dsl.assign
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl

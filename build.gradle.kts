@@ -1,3 +1,5 @@
+import kjwt.Projects
+
 plugins {
     // this is necessary to avoid the plugins to be loaded multiple times
     // in each subproject's classloader
@@ -5,10 +7,17 @@ plugins {
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.kotest) apply false
+    alias(libs.plugins.dokka)
     id("kjwt.linting")
 }
 
 allprojects {
     group = "co.touchlab"
     version = "0.1.0-SNAPSHOT"
+}
+
+dependencies {
+    Projects.allLibraries.forEach {
+        dokka(project(it))
+    }
 }
