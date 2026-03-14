@@ -209,11 +209,11 @@ class MalformedTokenTest : FunSpec({
         }
     }
 
-    context("JWE structure errors from parseSignedClaims") {
+    context("JWE structure errors from parseSigned") {
 
         test("parse signed claims five parts throws MalformedJwtException") {
             val key = hs256Key()
-            // A 5-part token passed to parseSignedClaims (JWS expects 3)
+            // A 5-part token passed to parseSigned (JWS expects 3)
             assertFailsWith<MalformedJwtException> {
                 Jwt.parser()
                     .verifyWith(SigningAlgorithm.HS256, key)

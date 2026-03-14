@@ -217,47 +217,33 @@ when (instance) {
 
 ## Custom Payload Types
 
-Implement `JwtPayload` and annotate with `@Serializable`. The key requirement is a `jsonData: JsonObject` field with a default value - the serializer injects the entire claims JSON object into it, making all claims (including ones without a dedicated field) available via `getClaim` / `getClaimOrNull`.
+Implement a plain `@Serializable` data class. Use `@SerialName` to map fields to JWT claim names. Fields should have default values so deserialization works when a claim is absent. Unmapped claims are silently ignored.
+
+You can reference standard claim name constants from `JwtPayload.SUB`, `JwtPayload.ISS`, etc.
 
 ```kotlin
-import co.touchlab.kjwt.exception.MissingClaimException
-import co.touchlab.kjwt.internal.JwtJson
+import co.touchlab.kjwt.model.JwtPayload
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonObject
 
 @Serializable
-data class MyPayload(
-    // Typed fields - mapped from the JSON claims by @SerialName
-    @SerialName("sub") val userId: String,
-    @SerialName("role") val role: String,
-
-    // Required: receives the full claims JsonObject.
-    // Use a default value so kotlinx.serialization can construct the object
-    // even when the field is absent from other code paths.
-    val jsonData: JsonObject = JsonObject(emptyMap()),
-) : JwtPayload {
-    override fun hasClaim(name: String): Boolean =
-        jsonData.containsKey(name)
-
-    override fun <T> getClaim(serializer: DeserializationStrategy<T>, name: String): T =
-        getClaimOrNull(serializer, name) ?: throw MissingClaimException(name)
-
-    override fun <T> getClaimOrNull(serializer: DeserializationStrategy<T>, name: String): T? {
-        val element = jsonData[name] ?: return null
-        return JwtJson.decodeFromJsonElement(serializer, element)
-    }
-}
+data class UserClaims(
+    @SerialName(JwtPayload.SUB) val subject: String? = null,
+    @SerialName("role") val role: String? = null,
+    @SerialName("level") val level: Int? = null,
+)
 ```
 
-Parse using `parseSigned`, then call `getPayload<T>()` on the result to decode to your custom type:
+Parse using `parseSigned` (or `parseEncrypted`), then call `getPayload<T>()` on the result:
 
 ```kotlin
 val jws: JwtInstance.Jws = parser.parseSigned(token)
-val payload: MyPayload = jws.getPayload<MyPayload>()
+val payload: UserClaims = jws.getPayload<UserClaims>()
 println(payload.role)
-println(payload.userId)
+println(payload.subject)
 ```
+
+`getPayload<T>()` is available on both `JwtInstance.Jws` and `JwtInstance.Jwe`.
 
 ## JWE with Direct Key (`dir`)
 

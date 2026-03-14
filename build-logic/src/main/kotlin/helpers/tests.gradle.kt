@@ -35,6 +35,10 @@ private fun KotlinMultiplatformExtension.configureKotlinTestDependencies() {
         implementation(libs.findLibrary("cryptography-provider-web").get())
     }
 
+    sourceSets.wasmWasiTest.dependencies {
+        implementation(libs.findLibrary("cryptography-provider-web").get())
+    }
+
     project.tasks.named<Test>("jvmTest") {
         useJUnitPlatform()
         filter {

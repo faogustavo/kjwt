@@ -24,7 +24,7 @@ import dev.whyoleg.cryptography.materials.key.Key
  *     .requireIssuer("myapp")
  *     .clockSkew(DateTimePeriod(seconds = 30))
  *     .build()
- * val jws = parser.parseSignedClaims(token)
+ * val jws = parser.parse(token)
  * ```
  */
 class JwtParserBuilder {

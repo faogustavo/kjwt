@@ -21,7 +21,7 @@ import co.touchlab.kjwt.parser.JwtParserBuilder
  *     .verifyWith(JwsAlgorithm.HS256, hmacKey)
  *     .requireIssuer("myapp")
  *     .build()
- *     .parseSignedClaims(token)
+ *     .parseSigned(token)
  * val subject = jws.payload.subject
  * ```
  *
@@ -37,7 +37,7 @@ import co.touchlab.kjwt.parser.JwtParserBuilder
  * val jwe = Jwt.parser()
  *     .decryptWith(rsaPrivateKey)
  *     .build()
- *     .parseEncryptedClaims(token)
+ *     .parseEncrypted(token)
  * ```
  *
  * **Note:** This library depends on `cryptography-core` interfaces. You must register a
