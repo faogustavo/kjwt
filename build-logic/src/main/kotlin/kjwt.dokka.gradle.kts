@@ -1,14 +1,26 @@
+import kjwt.Projects
+import kjwt.isRootProject
 import kjwt.registerExternalDocumentation
+import kjwt.registerVersioningPlugin
+import kjwt.rootProjectDependencies
 
 plugins {
-    kotlin("multiplatform")
     id("org.jetbrains.dokka")
+}
+
+rootProjectDependencies { versionCatalog ->
+    Projects.allLibraries.forEach { dokka(project(it)) }
+    dokkaPlugin(versionCatalog.findLibrary("dokka-plugin-versioning").get())
 }
 
 dokka {
     dokkaPublications.configureEach {
         suppressInheritedMembers = false
         failOnWarning = true
+
+        if (project.isRootProject) {
+            registerVersioningPlugin(project)
+        }
     }
 
     dokkaSourceSets.configureEach {
@@ -26,12 +38,4 @@ dokka {
     }
 
     registerExternalDocumentation()
-}
-
-kotlin {
-    sourceSets.configureEach {
-        if (name.endsWith("Test")) {
-            kotlin.srcDir("src/${name.replace("Test", "Samples")}/kotlin")
-        }
-    }
 }

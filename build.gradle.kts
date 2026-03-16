@@ -7,17 +7,11 @@ plugins {
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.kotest) apply false
-    alias(libs.plugins.dokka)
     id("kjwt.linting")
+    id("kjwt.dokka")
 }
 
 allprojects {
-    group = "co.touchlab"
-    version = "0.1.0-SNAPSHOT"
-}
-
-dependencies {
-    Projects.allLibraries.forEach {
-        dokka(project(it))
-    }
+    group = Projects.group
+    version = Projects.version
 }

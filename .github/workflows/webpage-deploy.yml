@@ -1,9 +1,12 @@
 name: Publish the website
-on: workflow_dispatch
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-  detekt:
-    name: Detekt Checks
+  dokka:
+    name: Dokka Build and Publish
     runs-on: ubuntu-latest
     permissions:
       contents: write

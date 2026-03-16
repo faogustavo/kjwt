@@ -8,4 +8,5 @@ dependencies {
     implementation(libs.kotest.plugin)
     implementation(libs.detekt.plugin)
     implementation(libs.dokka.plugin)
+    implementation(libs.dokka.plugin.versioning)
 }
