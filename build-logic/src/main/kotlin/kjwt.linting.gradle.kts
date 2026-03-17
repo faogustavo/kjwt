@@ -58,9 +58,21 @@ val mergedDetektXmlReport by tasks.registering(ReportMergeTask::class) {
 
 subprojects {
     mergedDetektReport {
-        input.from(input.from + tasks.withType<ReportMergeTask>().map { it.output })
+        input.from(
+            input.from +
+                    tasks.withType<ReportMergeTask>()
+                        .asSequence()
+                        .filter { it.name.equals("mergedDetektReport", true) }
+                        .map { it.output }
+        )
     }
     mergedDetektXmlReport {
-        input.from(input.from + tasks.withType<ReportMergeTask>().map { it.output })
+        input.from(
+            input.from +
+                    tasks.withType<ReportMergeTask>()
+                        .asSequence()
+                        .filter { it.name.equals("mergedDetektXmlReport", true) }
+                        .map { it.output }
+        )
     }
 }
