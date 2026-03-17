@@ -2,21 +2,36 @@ package kjwt
 
 import gradle.kotlin.dsl.accessors._ae0e2e0f59d526dd61b4865f6e032691.versioning
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.assign
+import org.gradle.kotlin.dsl.named
 import org.jetbrains.dokka.gradle.DokkaExtension
+import org.jetbrains.dokka.gradle.engine.parameters.DokkaSourceSetSpec
+import org.jetbrains.dokka.gradle.engine.plugins.DokkaHtmlPluginParameters
 
-fun DokkaExtension.registerExternalDocumentation() {
-    dokkaSourceSets.configureEach {
-        externalDocumentationLinks.register("cryptography-kotlin") {
-            url("https://whyoleg.github.io/cryptography-kotlin/api/")
-        }
+fun DokkaExtension.setupHtmlPlugin() {
+    pluginsConfiguration.named<DokkaHtmlPluginParameters>("html") {
+        homepageLink.set("https://github.com/touchlab/kjwt")
+        footerMessage.set("© 2026 Touchlab")
+    }
+}
+
+fun DokkaSourceSetSpec.registerSourceLink(project: Project) {
+    sourceLink {
+        localDirectory.set(project.rootDir)
+        remoteLineSuffix.set("#L")
+        remoteUrl("https://github.com/touchlab/kjwt/tree/${project.version}/")
+    }
+}
+
+fun DokkaSourceSetSpec.registerExternalDocumentation() {
+    externalDocumentationLinks.register("cryptography-kotlin") {
+        url("https://whyoleg.github.io/cryptography-kotlin/api/")
     }
 }
 
 fun DokkaExtension.registerVersioningPlugin(project: Project) {
     pluginsConfiguration.versioning {
-        version = Projects.version
+        version.set(Projects.version)
         olderVersionsDir.set(project.rootProject.projectDir.resolve("build/previous-versions"))
-        renderVersionsNavigationOnAllPages = true
+        renderVersionsNavigationOnAllPages.set(true)
     }
 }
