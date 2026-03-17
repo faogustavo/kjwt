@@ -1,5 +1,9 @@
 name: Publish to Maven Central
 
+concurrency:
+  group: maven-publish-${{ github.ref }}
+  cancel-in-progress: false
+
 on:
   push:
     branches: [main]

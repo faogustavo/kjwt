@@ -1,4 +1,9 @@
 name: Publish the website
+
+concurrency:
+  group: dokka-deploy-${{ github.ref }}
+  cancel-in-progress: false
+
 on:
   push:
     branches: [ main ]

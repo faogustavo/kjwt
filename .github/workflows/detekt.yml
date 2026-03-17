@@ -1,5 +1,9 @@
 name: Detekt Checks
 
+concurrency:
+  group: detekt-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches: [main]
