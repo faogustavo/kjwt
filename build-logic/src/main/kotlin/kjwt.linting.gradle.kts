@@ -60,19 +60,19 @@ subprojects {
     mergedDetektReport {
         input.from(
             input.from +
-                    tasks.withType<ReportMergeTask>()
-                        .asSequence()
-                        .filter { it.name.equals("mergedDetektReport", true) }
-                        .map { it.output }
+                tasks.withType<ReportMergeTask>()
+                    .asSequence()
+                    .filter { it.name.equals("mergedDetektReport", true) }
+                    .map { it.output }
         )
     }
     mergedDetektXmlReport {
         input.from(
             input.from +
-                    tasks.withType<ReportMergeTask>()
-                        .asSequence()
-                        .filter { it.name.equals("mergedDetektXmlReport", true) }
-                        .map { it.output }
+                tasks.withType<ReportMergeTask>()
+                    .asSequence()
+                    .filter { it.name.equals("mergedDetektXmlReport", true) }
+                    .map { it.output }
         )
     }
 }

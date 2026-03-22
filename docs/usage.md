@@ -1,6 +1,7 @@
 # Usage Guide
 
-All signing, verifying, encrypting, and decrypting operations are `suspend` functions and must be called from a coroutine.
+All signing, verifying, encrypting, and decrypting operations are `suspend` functions and must be called from a
+coroutine.
 
 ## Quick Start
 
@@ -290,7 +291,9 @@ val token: String = jws.compact()
 
 ## Key ID (`kid`)
 
-The `kid` header parameter identifies which key was used to sign or encrypt a token — defined in RFC 7515 §4.1.4 for JWS and RFC 7516 §4.1.6 for JWE. It is useful when a server holds multiple keys or rotates keys over time — the recipient can use `kid` to look up the correct verification or decryption key without trying each one.
+The `kid` header parameter identifies which key was used to sign or encrypt a token — defined in RFC 7515 §4.1.4 for JWS
+and RFC 7516 §4.1.6 for JWE. It is useful when a server holds multiple keys or rotates keys over time — the recipient
+can use `kid` to look up the correct verification or decryption key without trying each one.
 
 ### Setting `kid` when signing
 
@@ -345,11 +348,14 @@ val kid: String? = jws.header.keyId   // null if the header did not include kid
 
 ## Multiple Keys (Key Rotation)
 
-The parser can hold multiple keys for the same algorithm, each identified by an optional `kid`. This is useful for key rotation — where old and new keys need to coexist during a transition period — or for multi-tenant scenarios where different parties use different keys.
+The parser can hold multiple keys for the same algorithm, each identified by an optional `kid`. This is useful for key
+rotation — where old and new keys need to coexist during a transition period — or for multi-tenant scenarios where
+different parties use different keys.
 
 ### Registering multiple signing keys
 
-Embed a `kid` in each key via the `keyId` parameter when constructing it. Each `(algorithm, kid)` pair must be unique; registering the same combination twice throws `IllegalArgumentException` at builder time.
+Embed a `kid` in each key via the `keyId` parameter when constructing it. Each `(algorithm, kid)` pair must be unique;
+registering the same combination twice throws `IllegalArgumentException` at builder time.
 
 ```kotlin
 val key2024 = SigningAlgorithm.RS256.parsePublicKey(pem2024, keyId = "key-2024")
@@ -369,8 +375,11 @@ val parser = Jwt.parser()
 When parsing a token the key is selected by this ordered strategy:
 
 1. **Exact match** — find a registered key whose algorithm and `kid` both match the token's header.
-2. **Algo-only fallback** — if the token has a `kid` but no exact match exists, use the key registered for that algorithm *without* a `kid` (constructed without a `keyId`). This lets you register a single "catch-all" key alongside specific ones.
-3. **`noVerify()` fallback** — if no key is found and `noVerify()` was configured on the builder, signature verification is skipped entirely.
+2. **Algo-only fallback** — if the token has a `kid` but no exact match exists, use the key registered for that
+   algorithm *without* a `kid` (constructed without a `keyId`). This lets you register a single "catch-all" key
+   alongside specific ones.
+3. **`noVerify()` fallback** — if no key is found and `noVerify()` was configured on the builder, signature verification
+   is skipped entirely.
 
 ```kotlin
 val specificKey = SigningAlgorithm.RS256.parsePublicKey(pem2024, keyId = "key-2024")
@@ -463,7 +472,8 @@ val parser = Jwt.parser()
 
 ## Parsing Claims
 
-Access standard claims via extension properties. Mandatory variants throw `MissingClaimException` if the claim is absent; `OrNull` variants return `null`:
+Access standard claims via extension properties. Mandatory variants throw `MissingClaimException` if the claim is
+absent; `OrNull` variants return `null`:
 
 ```kotlin
 val payload = jws.payload
@@ -514,7 +524,8 @@ Unsecured JWTs are rejected by default. There are two distinct opt-in mechanisms
 
 ### `allowUnsecured(true)` — accept `alg=none` tokens
 
-Permits tokens where `alg=none` was used at creation time. All other algorithms still require a key configured via `verifyWith()`.
+Permits tokens where `alg=none` was used at creation time. All other algorithms still require a key configured via
+`verifyWith()`.
 
 ```kotlin
 // Create an unsecured JWT
@@ -535,7 +546,8 @@ val parsed = parser.parseSigned(token)
 
 ### `noVerify()` — skip signature verification entirely
 
-Accepts any token regardless of algorithm without verifying its signature. Use only in contexts where authenticity is not required (e.g. inspecting an already-trusted token's claims).
+Accepts any token regardless of algorithm without verifying its signature. Use only in contexts where authenticity is
+not required (e.g. inspecting an already-trusted token's claims).
 
 ```kotlin
 val parser = Jwt.parser()
@@ -562,7 +574,8 @@ when (instance) {
 
 ## Custom Payload Types
 
-Implement a plain `@Serializable` data class. Use `@SerialName` to map fields to JWT claim names. Fields should have default values so deserialization works when a claim is absent. Unmapped claims are silently ignored.
+Implement a plain `@Serializable` data class. Use `@SerialName` to map fields to JWT claim names. Fields should have
+default values so deserialization works when a claim is absent. Unmapped claims are silently ignored.
 
 You can reference standard claim name constants from `JwtPayload.SUB`, `JwtPayload.ISS`, etc.
 
@@ -624,7 +637,8 @@ KJWT uses two opt-in annotations to communicate the stability of its API surface
 
 ### `@ExperimentalKJWTApi`
 
-Marks APIs that are functional but whose design may change before they are promoted to stable. Using an annotated declaration produces a **compiler warning** unless you opt in.
+Marks APIs that are functional but whose design may change before they are promoted to stable. Using an annotated
+declaration produces a **compiler warning** unless you opt in.
 
 Opt in for a single call site with the annotation:
 
@@ -650,6 +664,8 @@ kotlin {
 
 ### `@InternalKJWTApi`
 
-Marks APIs intended only for use within the KJWT library itself. Using an annotated declaration produces a **compiler error** — these APIs may change or be removed without notice and are not part of the public contract.
+Marks APIs intended only for use within the KJWT library itself. Using an annotated declaration produces a **compiler
+error** — these APIs may change or be removed without notice and are not part of the public contract.
 
-Do not opt in to `@InternalKJWTApi` in application or library code. If you find yourself needing something that is marked internal, open an issue so it can be considered for promotion to a stable API.
+Do not opt in to `@InternalKJWTApi` in application or library code. If you find yourself needing something that is
+marked internal, open an issue so it can be considered for promotion to a stable API.

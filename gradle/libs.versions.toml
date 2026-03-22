@@ -19,7 +19,7 @@ cryptography-provider-web = { module = "dev.whyoleg.cryptography:cryptography-pr
 
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson"}
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 
 kotest-plugin = { module = "io.kotest:io.kotest.gradle.plugin", version.ref = "kotest" }
 kotest-engine = { module = "io.kotest:kotest-framework-engine", version.ref = "kotest" }

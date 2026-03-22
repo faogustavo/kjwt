@@ -8,12 +8,6 @@ insert_final_newline = true
 max_line_length = 120
 tab_width = 4
 
-[{*.html,*.js,*.css}]
-indent_size = 2
-
-[*.yml]
-indent_size = 2
-
 [{*.kt,*.kts}]
 ij_kotlin_allow_trailing_comma = true
 ij_kotlin_else_on_new_line = false
@@ -44,6 +38,12 @@ trim_trailing_whitespace = false
 
 [gradlew.bat]
 end_of_line = crlf
+
+[{*.html,*.js,*.css}]
+indent_size = 2
+
+[{*.yml,*.xml}]
+indent_size = 2
 
 [{*.bash,*.sh,*.zsh}]
 indent_size = 2

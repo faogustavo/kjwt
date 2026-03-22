@@ -7,13 +7,13 @@ import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
 import co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
 import io.kotest.core.spec.style.FunSpec
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonObject
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonObject
 
 // ---- Custom payload type used in all tests in this file ----
 

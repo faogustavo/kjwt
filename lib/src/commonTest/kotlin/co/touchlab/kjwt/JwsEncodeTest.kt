@@ -13,12 +13,12 @@ import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
 import co.touchlab.kjwt.model.registry.SigningKey
 import dev.whyoleg.cryptography.algorithms.EC
 import io.kotest.core.spec.style.FunSpec
+import kotlinx.serialization.json.JsonPrimitive
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.hours
-import kotlinx.serialization.json.JsonPrimitive
 
 class JwsEncodeTest :
     FunSpec({

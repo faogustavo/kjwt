@@ -28,8 +28,7 @@ public class JwtPayload internal constructor(
 
     internal constructor(base64Encoded: String) : this(
         base64Encoded = base64Encoded,
-        jsonData =
-        JwtJson.decodeBase64Url(
+        jsonData = JwtJson.decodeBase64Url(
             deserializer = JsonObject.serializer(),
             base64UrlString = base64Encoded,
             name = "payload",
