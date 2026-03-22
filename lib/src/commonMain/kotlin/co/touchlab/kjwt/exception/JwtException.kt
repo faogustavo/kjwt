@@ -4,28 +4,43 @@ import co.touchlab.kjwt.model.JwtHeader
 import co.touchlab.kjwt.model.JwtPayload
 
 /** Base class for all exceptions thrown by the KJWT library. */
-public open class JwtException(message: String, cause: Throwable? = null) : Exception(message, cause)
+public open class JwtException(
+    message: String,
+    cause: Throwable? = null,
+) : Exception(message, cause)
 
 /**
  * Thrown when a JWT string is structurally invalid, such as having the wrong number of parts, containing invalid
  * Base64URL encoding, or being unparseable as JSON.
  */
-public class MalformedJwtException(message: String, cause: Throwable? = null) : JwtException(message, cause)
+public class MalformedJwtException(
+    message: String,
+    cause: Throwable? = null,
+) : JwtException(message, cause)
 
 /**
  * Thrown when a JWK JSON object is structurally invalid or is missing one or more required fields needed to
  * reconstruct the key.
  */
-public class MalformedJwkException(message: String, cause: Throwable? = null) : JwtException(message, cause)
+public class MalformedJwkException(
+    message: String,
+    cause: Throwable? = null,
+) : JwtException(message, cause)
 
 /**
  * Thrown when signature verification of a JWS token fails or when decryption of a JWE token fails, indicating the
  * token may have been tampered with or was encrypted with a different key.
  */
-public class SignatureException(message: String, cause: Throwable? = null) : JwtException(message, cause)
+public class SignatureException(
+    message: String,
+    cause: Throwable? = null,
+) : JwtException(message, cause)
 
 /** Thrown when a token uses an algorithm, key type, or feature that is not supported by this library. */
-public class UnsupportedJwtException(message: String, cause: Throwable? = null) : JwtException(message, cause)
+public class UnsupportedJwtException(
+    message: String,
+    cause: Throwable? = null,
+) : JwtException(message, cause)
 
 /** Thrown when a JWT's `exp` (expiration time) claim indicates the token has already expired. */
 public class ExpiredJwtException(

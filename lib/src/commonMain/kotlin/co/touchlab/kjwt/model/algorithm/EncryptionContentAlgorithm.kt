@@ -11,7 +11,9 @@ import dev.whyoleg.cryptography.algorithms.SHA384
 import dev.whyoleg.cryptography.algorithms.SHA512
 import kotlin.random.Random
 
-public sealed class EncryptionContentAlgorithm(public val id: String) {
+public sealed class EncryptionContentAlgorithm(
+    public val id: String,
+) {
     /** AES-128 in GCM mode (`A128GCM`) content encryption algorithm. */
     public data object A128GCM : AesGCMBased("A128GCM")
 
@@ -50,7 +52,9 @@ public sealed class EncryptionContentAlgorithm(public val id: String) {
      *
      * Uses AES in Galois/Counter Mode, which provides both confidentiality and integrity.
      */
-    public sealed class AesGCMBased(id: String) : EncryptionContentAlgorithm(id) {
+    public sealed class AesGCMBased(
+        id: String,
+    ) : EncryptionContentAlgorithm(id) {
         public companion object {
             private const val GCM_IV_SIZE = 12
             private const val GCM_TAG_SIZE = 16
@@ -60,11 +64,13 @@ public sealed class EncryptionContentAlgorithm(public val id: String) {
             cek: ByteArray,
             plaintext: ByteArray,
             aad: ByteArray,
-            encryptedKey: ByteArray
+            encryptedKey: ByteArray,
         ): JweEncryptResult {
-            val aesKey = CryptographyProvider.Companion.Default.get(AES.GCM)
-                .keyDecoder()
-                .decodeFromByteArray(AES.Key.Format.RAW, cek)
+            val aesKey =
+                CryptographyProvider.Companion.Default
+                    .get(AES.GCM)
+                    .keyDecoder()
+                    .decodeFromByteArray(AES.Key.Format.RAW, cek)
 
             val cipher = aesKey.cipher()
             val iv = Random.Default.nextBytes(GCM_IV_SIZE)
@@ -83,11 +89,13 @@ public sealed class EncryptionContentAlgorithm(public val id: String) {
             iv: ByteArray,
             ciphertext: ByteArray,
             tag: ByteArray,
-            aad: ByteArray
+            aad: ByteArray,
         ): ByteArray {
-            val aesKey = CryptographyProvider.Companion.Default.get(AES.GCM)
-                .keyDecoder()
-                .decodeFromByteArray(AES.Key.Format.RAW, cek)
+            val aesKey =
+                CryptographyProvider.Companion.Default
+                    .get(AES.GCM)
+                    .keyDecoder()
+                    .decodeFromByteArray(AES.Key.Format.RAW, cek)
             // Recombine ciphertext || tag before passing to the cipher
             return aesKey.cipher().decryptWithIv(iv, ciphertext + tag, aad)
         }
@@ -98,7 +106,9 @@ public sealed class EncryptionContentAlgorithm(public val id: String) {
      *
      * Uses AES in CBC mode combined with an HMAC tag for authenticated encryption per RFC 7516.
      */
-    public sealed class AesCBCBased(id: String) : EncryptionContentAlgorithm(id) {
+    public sealed class AesCBCBased(
+        id: String,
+    ) : EncryptionContentAlgorithm(id) {
         public companion object {
             private const val CBC_IV_SIZE = 16
         }
@@ -107,7 +117,7 @@ public sealed class EncryptionContentAlgorithm(public val id: String) {
             cek: ByteArray,
             plaintext: ByteArray,
             aad: ByteArray,
-            encryptedKey: ByteArray
+            encryptedKey: ByteArray,
         ): JweEncryptResult {
             val half = cek.size / 2
             val macKey = cek.copyOfRange(0, half)
@@ -115,9 +125,11 @@ public sealed class EncryptionContentAlgorithm(public val id: String) {
 
             val iv = Random.Default.nextBytes(CBC_IV_SIZE)
 
-            val aesKey = CryptographyProvider.Companion.Default.get(AES.CBC)
-                .keyDecoder()
-                .decodeFromByteArray(AES.Key.Format.RAW, encKey)
+            val aesKey =
+                CryptographyProvider.Companion.Default
+                    .get(AES.CBC)
+                    .keyDecoder()
+                    .decodeFromByteArray(AES.Key.Format.RAW, encKey)
             val ciphertext = aesKey.cipher().encryptWithIv(iv, plaintext)
 
             val tag = computeCbcHmacTag(macKey, aad, iv, ciphertext)
@@ -130,7 +142,7 @@ public sealed class EncryptionContentAlgorithm(public val id: String) {
             iv: ByteArray,
             ciphertext: ByteArray,
             tag: ByteArray,
-            aad: ByteArray
+            aad: ByteArray,
         ): ByteArray {
             val half = cek.size / 2
             val macKey = cek.copyOfRange(0, half)
@@ -141,9 +153,11 @@ public sealed class EncryptionContentAlgorithm(public val id: String) {
                 "JWE authentication tag verification failed"
             }
 
-            val aesKey = CryptographyProvider.Companion.Default.get(AES.CBC)
-                .keyDecoder()
-                .decodeFromByteArray(AES.Key.Format.RAW, encKey)
+            val aesKey =
+                CryptographyProvider.Companion.Default
+                    .get(AES.CBC)
+                    .keyDecoder()
+                    .decodeFromByteArray(AES.Key.Format.RAW, encKey)
             return aesKey.cipher().decryptWithIv(iv, ciphertext)
         }
 
@@ -158,15 +172,18 @@ public sealed class EncryptionContentAlgorithm(public val id: String) {
             val alBytes = ByteArray(8) { i -> ((al shr (56 - i * 8)) and 0xFF).toByte() }
             val macInput = aad + iv + ciphertext + alBytes
 
-            val (hmacDigest, tagLen) = when (this) {
-                A128CbcHs256 -> Pair(SHA256, 16)
-                A192CbcHs384 -> Pair(SHA384, 24)
-                A256CbcHs512 -> Pair(SHA512, 32)
-            }
+            val (hmacDigest, tagLen) =
+                when (this) {
+                    A128CbcHs256 -> Pair(SHA256, 16)
+                    A192CbcHs384 -> Pair(SHA384, 24)
+                    A256CbcHs512 -> Pair(SHA512, 32)
+                }
 
-            val hmacKey = CryptographyProvider.Companion.Default.get(HMAC.Companion)
-                .keyDecoder(hmacDigest)
-                .decodeFromByteArray(HMAC.Key.Format.RAW, macKey)
+            val hmacKey =
+                CryptographyProvider.Companion.Default
+                    .get(HMAC.Companion)
+                    .keyDecoder(hmacDigest)
+                    .decodeFromByteArray(HMAC.Key.Format.RAW, macKey)
             val fullMac = hmacKey.signatureGenerator().generateSignature(macInput)
 
             // Per RFC 7516: truncate to the first T_LEN bytes
@@ -185,12 +202,19 @@ public sealed class EncryptionContentAlgorithm(public val id: String) {
         Random.Default.nextBytes(
             when (this) {
                 A128GCM -> 16
+
                 A192GCM -> 24
+
                 A256GCM -> 32
-                A128CbcHs256 -> 32 // 16 mac + 16 enc
-                A192CbcHs384 -> 48 // 24 mac + 24 enc
+
+                A128CbcHs256 -> 32
+
+                // 16 mac + 16 enc
+                A192CbcHs384 -> 48
+
+                // 24 mac + 24 enc
                 A256CbcHs512 -> 64 // 32 mac + 32 enc
-            }
+            },
         )
 
     public companion object {

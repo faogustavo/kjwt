@@ -23,7 +23,11 @@ kotlin {
 
     sourceSets {
         all {
-            languageSettings.optIn("kotlin.time.ExperimentalTime")
+            languageSettings {
+                optIn("co.touchlab.kjwt.annotations.InternalKJWTApi")
+                optIn("co.touchlab.kjwt.annotations.ExperimentalKJWTApi")
+                optIn("kotlin.time.ExperimentalTime")
+            }
         }
     }
 }

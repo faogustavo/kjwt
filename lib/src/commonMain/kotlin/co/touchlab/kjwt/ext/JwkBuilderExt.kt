@@ -1,5 +1,6 @@
 package co.touchlab.kjwt.ext
 
+import co.touchlab.kjwt.annotations.ExperimentalKJWTApi
 import co.touchlab.kjwt.builder.JwtBuilder
 import co.touchlab.kjwt.model.JwtInstance
 import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
@@ -20,6 +21,7 @@ import co.touchlab.kjwt.model.jwk.Jwk
  *   Defaults to the JWK's own `kid` field.
  * @return The signed [JwtInstance.Jws] token.
  */
+@ExperimentalKJWTApi
 public suspend fun JwtBuilder.signWith(
     algorithm: SigningAlgorithm.HashBased,
     jwk: Jwk.Oct,
@@ -39,6 +41,7 @@ public suspend fun JwtBuilder.signWith(
  *   Defaults to the JWK's own `kid` field.
  * @return The signed [JwtInstance.Jws] token.
  */
+@ExperimentalKJWTApi
 public suspend fun JwtBuilder.signWith(
     algorithm: SigningAlgorithm.PKCS1Based,
     jwk: Jwk.Rsa,
@@ -58,6 +61,7 @@ public suspend fun JwtBuilder.signWith(
  *   Defaults to the JWK's own `kid` field.
  * @return The signed [JwtInstance.Jws] token.
  */
+@ExperimentalKJWTApi
 public suspend fun JwtBuilder.signWith(
     algorithm: SigningAlgorithm.PSSBased,
     jwk: Jwk.Rsa,
@@ -77,6 +81,7 @@ public suspend fun JwtBuilder.signWith(
  *   Defaults to the JWK's own `kid` field.
  * @return The signed [JwtInstance.Jws] token.
  */
+@ExperimentalKJWTApi
 public suspend fun JwtBuilder.signWith(
     algorithm: SigningAlgorithm.ECDSABased,
     jwk: Jwk.Ec,
@@ -97,11 +102,10 @@ public suspend fun JwtBuilder.signWith(
  *   Defaults to the JWK's own `kid` field.
  * @return The encrypted [JwtInstance.Jwe] token.
  */
-@OptIn(dev.whyoleg.cryptography.DelicateCryptographyApi::class)
+@ExperimentalKJWTApi
 public suspend fun JwtBuilder.encryptWith(
     jwk: Jwk.Rsa,
     keyAlgorithm: EncryptionAlgorithm.OAEPBased,
     contentAlgorithm: EncryptionContentAlgorithm,
     keyId: String? = jwk.kid,
-): JwtInstance.Jwe =
-    encryptWith(jwk.toRsaOaepPublicKey(keyAlgorithm.digest), keyAlgorithm, contentAlgorithm, keyId)
+): JwtInstance.Jwe = encryptWith(jwk.toRsaOaepPublicKey(keyAlgorithm.digest), keyAlgorithm, contentAlgorithm, keyId)

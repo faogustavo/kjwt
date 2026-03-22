@@ -85,8 +85,7 @@ public sealed class EncryptionKey<PublicKey : Key, PrivateKey : Key> {
             return result
         }
 
-        override fun toString(): String =
-            "EncryptionOnlyKey(identifier=$identifier, publicKey=$publicKey)"
+        override fun toString(): String = "EncryptionOnlyKey(identifier=$identifier, publicKey=$publicKey)"
     }
 
     /**
@@ -124,8 +123,7 @@ public sealed class EncryptionKey<PublicKey : Key, PrivateKey : Key> {
             return result
         }
 
-        override fun toString(): String =
-            "DecryptionOnlyKey(identifier=$identifier, privateKey=$privateKey)"
+        override fun toString(): String = "DecryptionOnlyKey(identifier=$identifier, privateKey=$privateKey)"
     }
 
     /**
@@ -174,15 +172,16 @@ public sealed class EncryptionKey<PublicKey : Key, PrivateKey : Key> {
         ciphertext: ByteArray,
         tag: ByteArray,
         aad: ByteArray,
-    ): ByteArray = identifier.algorithm.decrypt(
-        key = privateKey,
-        contentAlgorithm = contentAlgorithm,
-        encryptedKey = encryptedKey,
-        iv = iv,
-        ciphertext = ciphertext,
-        tag = tag,
-        aad = aad
-    )
+    ): ByteArray =
+        identifier.algorithm.decrypt(
+            key = privateKey,
+            contentAlgorithm = contentAlgorithm,
+            encryptedKey = encryptedKey,
+            iv = iv,
+            ciphertext = ciphertext,
+            tag = tag,
+            aad = aad,
+        )
 
     internal suspend fun encrypt(
         contentAlgorithm: EncryptionContentAlgorithm,
@@ -198,13 +197,17 @@ public sealed class EncryptionKey<PublicKey : Key, PrivateKey : Key> {
         require(this !is EncryptionKeyPair || other !is EncryptionKeyPair) { "Cannot merge when one key is complete" }
 
         return when (this) {
-            is EncryptionOnlyKey if other is DecryptionOnlyKey ->
+            is EncryptionOnlyKey if other is DecryptionOnlyKey -> {
                 EncryptionKeyPair(identifier, publicKey, other.privateKey)
+            }
 
-            is DecryptionOnlyKey if other is EncryptionKeyPair ->
+            is DecryptionOnlyKey if other is EncryptionKeyPair -> {
                 EncryptionKeyPair(identifier, other.publicKey, privateKey)
+            }
 
-            else -> error("Cannot merge given keys")
+            else -> {
+                error("Cannot merge given keys")
+            }
         }
     }
 }

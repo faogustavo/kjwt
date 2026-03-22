@@ -1,5 +1,6 @@
 package co.touchlab.kjwt.model.jwk
 
+import co.touchlab.kjwt.annotations.ExperimentalKJWTApi
 import co.touchlab.kjwt.serializers.JwkEcSerializer
 import co.touchlab.kjwt.serializers.JwkEcThumbprintSerializer
 import co.touchlab.kjwt.serializers.JwkOctSerializer
@@ -11,6 +12,7 @@ import co.touchlab.kjwt.serializers.JwkThumbprintSerializer
 import kotlinx.serialization.Serializable
 
 @Serializable(with = JwkSerializer::class)
+@ExperimentalKJWTApi
 public sealed class Jwk {
     /**
      * The `use` parameter (RFC 7517 §4.2); indicates the intended use of the public key ("sig" for signature or "enc"
@@ -150,7 +152,9 @@ public sealed class Jwk {
          * Thumbprint computed from the symmetric key material `k` (the raw key bytes encoded as base64url).
          */
         @Serializable(with = JwkOctThumbprintSerializer::class)
-        public data class OctThumbprint(val k: String) : Thumbprint()
+        public data class OctThumbprint(
+            val k: String,
+        ) : Thumbprint()
 
         public companion object {
             public const val KTY: String = "oct"

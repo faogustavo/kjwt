@@ -50,8 +50,7 @@ public fun Dir.key(
 public fun Dir.newKey(
     keySize: BinarySize = 256.bits,
     keyId: String? = null,
-): EncryptionKey.EncryptionKeyPair<SimpleKey, SimpleKey> =
-    key(Random.nextBytes(keySize.inBytes), keyId)
+): EncryptionKey.EncryptionKeyPair<SimpleKey, SimpleKey> = key(Random.nextBytes(keySize.inBytes), keyId)
 
 // ---- OAEPBased ---------------------------------------------------------
 
@@ -73,9 +72,11 @@ public suspend fun OAEPBased.newKey(
     publicExponent: BigInt = 65537.toBigInt(),
     cryptographyProvider: CryptographyProvider = CryptographyProvider.Default,
 ): EncryptionKey.EncryptionKeyPair<RSA.OAEP.PublicKey, RSA.OAEP.PrivateKey> {
-    val rsaKeyPair = cryptographyProvider.get(RSA.OAEP)
-        .keyPairGenerator(keySize, digest, publicExponent)
-        .generateKey()
+    val rsaKeyPair =
+        cryptographyProvider
+            .get(RSA.OAEP)
+            .keyPairGenerator(keySize, digest, publicExponent)
+            .generateKey()
 
     return EncryptionKey.EncryptionKeyPair(
         EncryptionKey.Identifier(this, keyId),
@@ -102,9 +103,11 @@ public suspend fun OAEPBased.parsePublicKey(
     format: RSA.PublicKey.Format = RSA.PublicKey.Format.PEM,
     cryptographyProvider: CryptographyProvider = CryptographyProvider.Default,
 ): EncryptionKey.EncryptionOnlyKey<RSA.OAEP.PublicKey, RSA.OAEP.PrivateKey> {
-    val parsedKey = cryptographyProvider.get(RSA.OAEP)
-        .publicKeyDecoder(digest)
-        .decodeFromByteArray(format, key)
+    val parsedKey =
+        cryptographyProvider
+            .get(RSA.OAEP)
+            .publicKeyDecoder(digest)
+            .decodeFromByteArray(format, key)
 
     return EncryptionKey.EncryptionOnlyKey(
         EncryptionKey.Identifier(this, keyId),
@@ -130,9 +133,11 @@ public suspend fun OAEPBased.parsePrivateKey(
     format: RSA.PrivateKey.Format = RSA.PrivateKey.Format.PEM,
     cryptographyProvider: CryptographyProvider = CryptographyProvider.Default,
 ): EncryptionKey.DecryptionOnlyKey<RSA.OAEP.PublicKey, RSA.OAEP.PrivateKey> {
-    val parsedKey = cryptographyProvider.get(RSA.OAEP)
-        .privateKeyDecoder(digest)
-        .decodeFromByteArray(format, key)
+    val parsedKey =
+        cryptographyProvider
+            .get(RSA.OAEP)
+            .privateKeyDecoder(digest)
+            .decodeFromByteArray(format, key)
 
     return EncryptionKey.DecryptionOnlyKey(
         EncryptionKey.Identifier(this, keyId),
@@ -162,13 +167,17 @@ public suspend fun OAEPBased.parseKeyPair(
     privateKeyFormat: RSA.PrivateKey.Format = RSA.PrivateKey.Format.PEM,
     cryptographyProvider: CryptographyProvider = CryptographyProvider.Default,
 ): EncryptionKey.EncryptionKeyPair<RSA.OAEP.PublicKey, RSA.OAEP.PrivateKey> {
-    val parsedPublicKey = cryptographyProvider.get(RSA.OAEP)
-        .publicKeyDecoder(digest)
-        .decodeFromByteArray(publicKeyFormat, publicKey)
+    val parsedPublicKey =
+        cryptographyProvider
+            .get(RSA.OAEP)
+            .publicKeyDecoder(digest)
+            .decodeFromByteArray(publicKeyFormat, publicKey)
 
-    val parsedPrivateKey = cryptographyProvider.get(RSA.OAEP)
-        .privateKeyDecoder(digest)
-        .decodeFromByteArray(privateKeyFormat, privateKey)
+    val parsedPrivateKey =
+        cryptographyProvider
+            .get(RSA.OAEP)
+            .privateKeyDecoder(digest)
+            .decodeFromByteArray(privateKeyFormat, privateKey)
 
     return EncryptionKey.EncryptionKeyPair(
         EncryptionKey.Identifier(this, keyId),

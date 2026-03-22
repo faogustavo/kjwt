@@ -615,3 +615,41 @@ val parser = Jwt.parser()
 
 val jwe = parser.parseEncrypted(token)
 ```
+
+---
+
+## API Stability Annotations
+
+KJWT uses two opt-in annotations to communicate the stability of its API surface.
+
+### `@ExperimentalKJWTApi`
+
+Marks APIs that are functional but whose design may change before they are promoted to stable. Using an annotated declaration produces a **compiler warning** unless you opt in.
+
+Opt in for a single call site with the annotation:
+
+```kotlin
+@OptIn(ExperimentalKJWTApi::class)
+fun myFunction() {
+    val registry = JwtKeyRegistry()
+    // ...
+}
+```
+
+Or suppress warnings for a whole module in `build.gradle.kts`:
+
+```kotlin
+kotlin {
+    sourceSets {
+        commonMain {
+            languageSettings.optIn("co.touchlab.kjwt.annotations.ExperimentalKJWTApi")
+        }
+    }
+}
+```
+
+### `@InternalKJWTApi`
+
+Marks APIs intended only for use within the KJWT library itself. Using an annotated declaration produces a **compiler error** — these APIs may change or be removed without notice and are not part of the public contract.
+
+Do not opt in to `@InternalKJWTApi` in application or library code. If you find yourself needing something that is marked internal, open an issue so it can be considered for promotion to a stable API.

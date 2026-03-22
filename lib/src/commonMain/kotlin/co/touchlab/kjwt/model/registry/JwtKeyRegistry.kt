@@ -1,5 +1,7 @@
 package co.touchlab.kjwt.model.registry
 
+import co.touchlab.kjwt.annotations.ExperimentalKJWTApi
+import co.touchlab.kjwt.annotations.InternalKJWTApi
 import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
 import dev.whyoleg.cryptography.materials.key.Key
@@ -50,10 +52,17 @@ import dev.whyoleg.cryptography.materials.key.Key
  * @see co.touchlab.kjwt.builder.JwtBuilder.signWith
  * @see co.touchlab.kjwt.builder.JwtBuilder.encryptWith
  */
-public class JwtKeyRegistry {
-    private var delegateKeyRegistry: JwtKeyRegistry? = null
-    private val signingKeys = mutableMapOf<SigningKey.Identifier<*, *>, SigningKey<*, *>>()
-    private val encryptionKeys = mutableMapOf<EncryptionKey.Identifier<*, *>, EncryptionKey<*, *>>()
+@ExperimentalKJWTApi
+public interface JwtKeyRegistry {
+    /**
+     * The registry to fall back to when a key is not found locally.
+     *
+     * When set, [findBestSigningKey] and [findBestEncryptionKey] forward the look-up to this
+     * registry after exhausting all locally registered keys. Use [delegateTo] to set this value
+     * safely — it guards against cyclic delegation chains.
+     */
+    @InternalKJWTApi
+    public var delegateKeyRegistry: JwtKeyRegistry?
 
     /**
      * Registers a [SigningKey] in this registry.
@@ -67,17 +76,7 @@ public class JwtKeyRegistry {
      * @throws IllegalArgumentException if a key with the same identifier is already registered
      *   and the two keys cannot be merged (e.g. two verify-only keys for the same identifier)
      */
-    public fun <PublicKey : Key, PrivateKey : Key> registerSigningKey(key: SigningKey<PublicKey, PrivateKey>) {
-        signingKeys[key.identifier] = try {
-            key.mergeWith(signingKeys[key.identifier] as? SigningKey<PublicKey, PrivateKey>)
-        } catch (error: IllegalArgumentException) {
-            throw IllegalArgumentException(
-                "Signing key with for '${key.identifier.algorithm.id}' " +
-                    "identified by '${key.identifier.keyId}' already registered",
-                error
-            )
-        }
-    }
+    public fun <PublicKey : Key, PrivateKey : Key> registerSigningKey(key: SigningKey<PublicKey, PrivateKey>)
 
     /**
      * Registers an [EncryptionKey] in this registry.
@@ -91,19 +90,101 @@ public class JwtKeyRegistry {
      * @throws IllegalArgumentException if a key with the same identifier is already registered
      *   and the two keys cannot be merged (e.g. two decryption-only keys for the same identifier)
      */
-    internal fun <PublicKey : Key, PrivateKey : Key> registerEncryptionKey(key: EncryptionKey<PublicKey, PrivateKey>) {
-        encryptionKeys[key.identifier] = try {
-            key.mergeWith(encryptionKeys[key.identifier] as? EncryptionKey<PublicKey, PrivateKey>)
-        } catch (error: IllegalArgumentException) {
-            throw IllegalArgumentException(
-                "Decryption key with for '${key.identifier.algorithm.id}' " +
-                    "identified by '${key.identifier.keyId}' already registered",
-                error
-            )
-        }
+    public fun <PublicKey : Key, PrivateKey : Key> registerEncryptionKey(key: EncryptionKey<PublicKey, PrivateKey>)
+
+    /**
+     * Sets [other] as the delegate registry for this registry.
+     *
+     * After this call, any key look-up that finds no local match will be forwarded to [other]
+     * (and transitively to its own delegate, if any). The entire delegation chain is checked for
+     * cycles before the delegate is assigned.
+     *
+     * @param other the registry to delegate to
+     * @throws IllegalArgumentException if adding [other] as a delegate would create a cycle
+     */
+    public fun delegateTo(other: JwtKeyRegistry)
+
+    /**
+     * Returns the best available signing key for [algorithm] and the optional [keyId].
+     *
+     * Look-up order:
+     * 1. A key registered with both [algorithm] and [keyId] (exact match).
+     * 2. A key registered with [algorithm] and no key ID (algorithm-only fallback), when [keyId]
+     *    is non-null and has no exact match.
+     * 3. The [delegateKeyRegistry], if one is set.
+     *
+     * @param algorithm the signing algorithm the key must support
+     * @param keyId optional key ID to narrow the look-up
+     * @return the matching [SigningKey], or `null` if none is found
+     */
+    public fun <PublicKey : Key, PrivateKey : Key> findBestSigningKey(
+        algorithm: SigningAlgorithm<PublicKey, PrivateKey>,
+        keyId: String?,
+    ): SigningKey<PublicKey, PrivateKey>?
+
+    /**
+     * Returns the best available encryption key for [algorithm] and the optional [keyId].
+     *
+     * Look-up order:
+     * 1. A key registered with both [algorithm] and [keyId] (exact match).
+     * 2. A key registered with [algorithm] and no key ID (algorithm-only fallback), when [keyId]
+     *    is non-null and has no exact match.
+     * 3. The [delegateKeyRegistry], if one is set.
+     *
+     * @param algorithm the encryption algorithm the key must support
+     * @param keyId optional key ID to narrow the look-up
+     * @return the matching [EncryptionKey], or `null` if none is found
+     */
+    public fun <PublicKey : Key, PrivateKey : Key> findBestEncryptionKey(
+        algorithm: EncryptionAlgorithm<PublicKey, PrivateKey>,
+        keyId: String?,
+    ): EncryptionKey<PublicKey, PrivateKey>?
+}
+
+/**
+ * Creates a new in-memory [JwtKeyRegistry].
+ *
+ * The returned registry stores all keys in memory for the lifetime of the object. It supports
+ * both signing and encryption keys, key-ID–based look-up, algorithm-only fallback, and
+ * delegation to another registry via [JwtKeyRegistry.delegateTo].
+ *
+ * @return a new, empty [JwtKeyRegistry] backed by in-memory storage
+ */
+@ExperimentalKJWTApi
+public fun JwtKeyRegistry(): JwtKeyRegistry = MemoryJwtKeyRegistry()
+
+internal class MemoryJwtKeyRegistry : JwtKeyRegistry {
+    override var delegateKeyRegistry: JwtKeyRegistry? = null
+    private val signingKeys = mutableMapOf<SigningKey.Identifier<*, *>, SigningKey<*, *>>()
+    private val encryptionKeys = mutableMapOf<EncryptionKey.Identifier<*, *>, EncryptionKey<*, *>>()
+
+    override fun <PublicKey : Key, PrivateKey : Key> registerSigningKey(key: SigningKey<PublicKey, PrivateKey>) {
+        signingKeys[key.identifier] =
+            try {
+                key.mergeWith(signingKeys[key.identifier] as? SigningKey<PublicKey, PrivateKey>)
+            } catch (error: IllegalArgumentException) {
+                throw IllegalArgumentException(
+                    "Signing key with for '${key.identifier.algorithm.id}' " +
+                        "identified by '${key.identifier.keyId}' already registered",
+                    error,
+                )
+            }
     }
 
-    internal fun delegateTo(other: JwtKeyRegistry) {
+    override fun <PublicKey : Key, PrivateKey : Key> registerEncryptionKey(key: EncryptionKey<PublicKey, PrivateKey>) {
+        encryptionKeys[key.identifier] =
+            try {
+                key.mergeWith(encryptionKeys[key.identifier] as? EncryptionKey<PublicKey, PrivateKey>)
+            } catch (error: IllegalArgumentException) {
+                throw IllegalArgumentException(
+                    "Decryption key with for '${key.identifier.algorithm.id}' " +
+                        "identified by '${key.identifier.keyId}' already registered",
+                    error,
+                )
+            }
+    }
+
+    override fun delegateTo(other: JwtKeyRegistry) {
         var cursor: JwtKeyRegistry? = other
         while (cursor != null) {
             require(cursor !== this) {
@@ -114,7 +195,7 @@ public class JwtKeyRegistry {
         delegateKeyRegistry = other
     }
 
-    internal fun <PublicKey : Key, PrivateKey : Key> findBestSigningKey(
+    override fun <PublicKey : Key, PrivateKey : Key> findBestSigningKey(
         algorithm: SigningAlgorithm<PublicKey, PrivateKey>,
         keyId: String?,
     ): SigningKey<PublicKey, PrivateKey>? {
@@ -131,7 +212,7 @@ public class JwtKeyRegistry {
         return delegateKeyRegistry?.findBestSigningKey(algorithm, keyId)
     }
 
-    internal fun <PublicKey : Key, PrivateKey : Key> findBestEncryptionKey(
+    override fun <PublicKey : Key, PrivateKey : Key> findBestEncryptionKey(
         algorithm: EncryptionAlgorithm<PublicKey, PrivateKey>,
         keyId: String?,
     ): EncryptionKey<PublicKey, PrivateKey>? {

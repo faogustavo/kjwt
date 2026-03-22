@@ -16,33 +16,38 @@ public object JwaSerializer : KSerializer<Jwa<*, *>> {
 
     override fun serialize(
         encoder: Encoder,
-        value: Jwa<*, *>
+        value: Jwa<*, *>,
     ) {
         encoder.encodeString(value.id)
     }
 
-    override fun deserialize(decoder: Decoder): Jwa<*, *> =
-        Jwa.fromId(decoder.decodeString())
+    override fun deserialize(decoder: Decoder): Jwa<*, *> = Jwa.fromId(decoder.decodeString())
 }
 
 public object EncryptionAlgorithmSerializer : KSerializer<EncryptionAlgorithm<*, *>> {
     override val descriptor: SerialDescriptor = JwaSerializer.descriptor
 
-    override fun serialize(encoder: Encoder, value: EncryptionAlgorithm<*, *>) {
+    override fun serialize(
+        encoder: Encoder,
+        value: EncryptionAlgorithm<*, *>,
+    ) {
         encoder.encodeString(value.id)
     }
 
-    override fun deserialize(decoder: Decoder): EncryptionAlgorithm<*, *> =
-        EncryptionAlgorithm.fromId(decoder.decodeString())
+    override fun deserialize(decoder: Decoder): EncryptionAlgorithm<*, *> = EncryptionAlgorithm.fromId(
+        decoder.decodeString()
+    )
 }
 
 public object SigningAlgorithmSerializer : KSerializer<SigningAlgorithm<*, *>> {
     override val descriptor: SerialDescriptor = JwaSerializer.descriptor
 
-    override fun serialize(encoder: Encoder, value: SigningAlgorithm<*, *>) {
+    override fun serialize(
+        encoder: Encoder,
+        value: SigningAlgorithm<*, *>,
+    ) {
         encoder.encodeString(value.id)
     }
 
-    override fun deserialize(decoder: Decoder): SigningAlgorithm<*, *> =
-        SigningAlgorithm.fromId(decoder.decodeString())
+    override fun deserialize(decoder: Decoder): SigningAlgorithm<*, *> = SigningAlgorithm.fromId(decoder.decodeString())
 }

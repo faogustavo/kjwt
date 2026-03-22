@@ -20,8 +20,10 @@ import kotlin.time.Instant
  * @throws co.touchlab.kjwt.exception.MissingClaimException if the claim is absent.
  * @see getClaimOrNull
  */
-public inline fun <reified T> JwtPayload.getClaim(name: String): T =
-    getClaim(kotlinx.serialization.serializer<T>(), name)
+public inline fun <reified T> JwtPayload.getClaim(name: String): T = getClaim(
+    kotlinx.serialization.serializer<T>(),
+    name
+)
 
 /**
  * Returns the value of the named claim deserialized to type [T], or `null` if the claim is absent.
@@ -30,8 +32,10 @@ public inline fun <reified T> JwtPayload.getClaim(name: String): T =
  * @return the claim value deserialized as [T], or `null` if absent.
  * @see getClaim
  */
-public inline fun <reified T> JwtPayload.getClaimOrNull(name: String): T? =
-    getClaimOrNull(kotlinx.serialization.serializer<T>(), name)
+public inline fun <reified T> JwtPayload.getClaimOrNull(name: String): T? = getClaimOrNull(
+    kotlinx.serialization.serializer<T>(),
+    name
+)
 
 /**
  * Returns the `iss` (issuer) claim value.

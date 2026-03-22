@@ -24,7 +24,9 @@ import kotlin.time.Clock
 /**
  * Thread-safe JWT parser. Obtain via [JwtParserBuilder.build].
  */
-public class JwtParser internal constructor(private val config: JwtParserBuilder) {
+public class JwtParser internal constructor(
+    private val config: JwtParserBuilder,
+) {
     /**
      * Parses and validates a JWS compact token, returning the signed JwtInstance.
      *
@@ -42,11 +44,12 @@ public class JwtParser internal constructor(private val config: JwtParserBuilder
 
         val header = JwtHeader(parts[0])
 
-        val algorithm: SigningAlgorithm<*, *> = try {
-            SigningAlgorithm.fromId(header.algorithm)
-        } catch (e: IllegalArgumentException) {
-            throw UnsupportedJwtException("Unsupported algorithm: '${header.algorithm}'", e)
-        }
+        val algorithm: SigningAlgorithm<*, *> =
+            try {
+                SigningAlgorithm.fromId(header.algorithm)
+            } catch (e: IllegalArgumentException) {
+                throw UnsupportedJwtException("Unsupported algorithm: '${header.algorithm}'", e)
+            }
 
         if (algorithm == SigningAlgorithm.None && !config.allowUnsecured) {
             throw UnsupportedJwtException(
@@ -58,9 +61,10 @@ public class JwtParser internal constructor(private val config: JwtParserBuilder
         val signature = parts[2]
 
         if (algorithm != SigningAlgorithm.None && !config.skipVerification) {
-            val verifier = checkNotNull(
-                config.keyRegistry.findBestSigningKey(algorithm, header.keyIdOrNull)
-            ) { "No verification key configured. Call verifyWith() or noVerify() on the parser builder." }
+            val verifier =
+                checkNotNull(
+                    config.keyRegistry.findBestSigningKey(algorithm, header.keyIdOrNull),
+                ) { "No verification key configured. Call verifyWith() or noVerify() on the parser builder." }
 
             val signingInput = "${parts[0]}.${parts[1]}".encodeToByteArray()
             val signature = signature.decodeBase64Url()
@@ -87,20 +91,23 @@ public class JwtParser internal constructor(private val config: JwtParserBuilder
 
         val header = JwtHeader(parts[0])
 
-        val keyAlgorithm = try {
-            EncryptionAlgorithm.fromId(header.algorithm)
-        } catch (e: IllegalArgumentException) {
-            throw UnsupportedJwtException("Unsupported JWE key algorithm: '${header.algorithm}'", e)
-        }
-        val contentAlgorithm = try {
-            EncryptionContentAlgorithm.fromId(header.encryption)
-        } catch (e: IllegalArgumentException) {
-            throw UnsupportedJwtException("Unsupported JWE content algorithm: '${header.encryption}'", e)
-        }
+        val keyAlgorithm =
+            try {
+                EncryptionAlgorithm.fromId(header.algorithm)
+            } catch (e: IllegalArgumentException) {
+                throw UnsupportedJwtException("Unsupported JWE key algorithm: '${header.algorithm}'", e)
+            }
+        val contentAlgorithm =
+            try {
+                EncryptionContentAlgorithm.fromId(header.encryption)
+            } catch (e: IllegalArgumentException) {
+                throw UnsupportedJwtException("Unsupported JWE content algorithm: '${header.encryption}'", e)
+            }
 
-        val decryptor = requireNotNull(config.keyRegistry.findBestEncryptionKey(keyAlgorithm, header.keyIdOrNull)) {
-            "No decryption key configured. Call decryptWith() on the parser builder."
-        }
+        val decryptor =
+            requireNotNull(config.keyRegistry.findBestEncryptionKey(keyAlgorithm, header.keyIdOrNull)) {
+                "No decryption key configured. Call decryptWith() on the parser builder."
+            }
 
         // AAD is the ASCII bytes of the raw base64url header string (part[0])
         val aad = parts[0].encodeToByteArray()
@@ -109,18 +116,19 @@ public class JwtParser internal constructor(private val config: JwtParserBuilder
         val ciphertext = parts[3]
         val tag = parts[4]
 
-        val plaintext = try {
-            decryptor.decrypt(
-                contentAlgorithm = contentAlgorithm,
-                encryptedKey = encryptedKey.decodeBase64Url(),
-                iv = iv.decodeBase64Url(),
-                ciphertext = ciphertext.decodeBase64Url(),
-                tag = tag.decodeBase64Url(),
-                aad = aad
-            )
-        } catch (e: Throwable) {
-            throw SignatureException("JWE decryption or authentication tag verification failed", e)
-        }
+        val plaintext =
+            try {
+                decryptor.decrypt(
+                    contentAlgorithm = contentAlgorithm,
+                    encryptedKey = encryptedKey.decodeBase64Url(),
+                    iv = iv.decodeBase64Url(),
+                    ciphertext = ciphertext.decodeBase64Url(),
+                    tag = tag.decodeBase64Url(),
+                    aad = aad,
+                )
+            } catch (e: Throwable) {
+                throw SignatureException("JWE decryption or authentication tag verification failed", e)
+            }
 
         val claims = JwtPayload(plaintext.encodeBase64Url())
 
@@ -150,7 +158,10 @@ public class JwtParser internal constructor(private val config: JwtParserBuilder
     }
 
     // ---- Private helpers ----
-    private fun validateTimeClaims(claims: JwtPayload, header: JwtHeader) {
+    private fun validateTimeClaims(
+        claims: JwtPayload,
+        header: JwtHeader,
+    ) {
         val now = Clock.System.now()
         val skew = config.clockSkewSeconds
 
@@ -167,7 +178,10 @@ public class JwtParser internal constructor(private val config: JwtParserBuilder
         }
     }
 
-    private fun validateJwtClaimsAndHeader(claims: JwtPayload, header: JwtHeader) {
+    private fun validateJwtClaimsAndHeader(
+        claims: JwtPayload,
+        header: JwtHeader,
+    ) {
         config.validators.forEach { validate -> validate(claims, header) }
     }
 }

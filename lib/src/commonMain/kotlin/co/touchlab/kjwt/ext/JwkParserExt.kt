@@ -1,13 +1,10 @@
 package co.touchlab.kjwt.ext
 
+import co.touchlab.kjwt.annotations.ExperimentalKJWTApi
 import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
 import co.touchlab.kjwt.model.jwk.Jwk
 import co.touchlab.kjwt.parser.JwtParserBuilder
-import dev.whyoleg.cryptography.algorithms.SHA1
-import dev.whyoleg.cryptography.algorithms.SHA256
-import dev.whyoleg.cryptography.algorithms.SHA384
-import dev.whyoleg.cryptography.algorithms.SHA512
 
 // ---------------------------------------------------------------------------
 // verifyWith — HMAC (oct)
@@ -22,18 +19,12 @@ import dev.whyoleg.cryptography.algorithms.SHA512
  *   `kid` header matches. Defaults to the JWK's own `kid` field.
  * @return This builder, configured with the HMAC verification key.
  */
+@ExperimentalKJWTApi
 public suspend fun JwtParserBuilder.verifyWith(
     algorithm: SigningAlgorithm.HashBased,
     jwk: Jwk.Oct,
     keyId: String? = jwk.kid,
-): JwtParserBuilder {
-    val digest = when (algorithm) {
-        SigningAlgorithm.HS256 -> SHA256
-        SigningAlgorithm.HS384 -> SHA384
-        SigningAlgorithm.HS512 -> SHA512
-    }
-    return verifyWith(algorithm, jwk.toHmacKey(digest), keyId)
-}
+): JwtParserBuilder = verifyWith(algorithm, jwk.toHmacKey(algorithm.digest), keyId)
 
 // ---------------------------------------------------------------------------
 // verifyWith — RSA PKCS1 (RS*)
@@ -48,18 +39,12 @@ public suspend fun JwtParserBuilder.verifyWith(
  *   `kid` header matches. Defaults to the JWK's own `kid` field.
  * @return This builder, configured with the RSA PKCS#1 verification key.
  */
+@ExperimentalKJWTApi
 public suspend fun JwtParserBuilder.verifyWith(
     algorithm: SigningAlgorithm.PKCS1Based,
     jwk: Jwk.Rsa,
     keyId: String? = jwk.kid,
-): JwtParserBuilder {
-    val digest = when (algorithm) {
-        SigningAlgorithm.RS256 -> SHA256
-        SigningAlgorithm.RS384 -> SHA384
-        SigningAlgorithm.RS512 -> SHA512
-    }
-    return verifyWith(algorithm, jwk.toRsaPkcs1PublicKey(digest), keyId)
-}
+): JwtParserBuilder = verifyWith(algorithm, jwk.toRsaPkcs1PublicKey(algorithm.digest), keyId)
 
 // ---------------------------------------------------------------------------
 // verifyWith — RSA PSS (PS*)
@@ -74,18 +59,12 @@ public suspend fun JwtParserBuilder.verifyWith(
  *   `kid` header matches. Defaults to the JWK's own `kid` field.
  * @return This builder, configured with the RSA PSS verification key.
  */
+@ExperimentalKJWTApi
 public suspend fun JwtParserBuilder.verifyWith(
     algorithm: SigningAlgorithm.PSSBased,
     jwk: Jwk.Rsa,
     keyId: String? = jwk.kid,
-): JwtParserBuilder {
-    val digest = when (algorithm) {
-        SigningAlgorithm.PS256 -> SHA256
-        SigningAlgorithm.PS384 -> SHA384
-        SigningAlgorithm.PS512 -> SHA512
-    }
-    return verifyWith(algorithm, jwk.toRsaPssPublicKey(digest), keyId)
-}
+): JwtParserBuilder = verifyWith(algorithm, jwk.toRsaPssPublicKey(algorithm.digest), keyId)
 
 // ---------------------------------------------------------------------------
 // verifyWith — ECDSA (ES*)
@@ -100,6 +79,7 @@ public suspend fun JwtParserBuilder.verifyWith(
  *   `kid` header matches. Defaults to the JWK's own `kid` field.
  * @return This builder, configured with the ECDSA verification key.
  */
+@ExperimentalKJWTApi
 public suspend fun JwtParserBuilder.verifyWith(
     algorithm: SigningAlgorithm.ECDSABased,
     jwk: Jwk.Ec,
@@ -119,15 +99,9 @@ public suspend fun JwtParserBuilder.verifyWith(
  *   `kid` header matches. Defaults to the JWK's own `kid` field.
  * @return This builder, configured with the RSA OAEP decryption key.
  */
-@OptIn(dev.whyoleg.cryptography.DelicateCryptographyApi::class)
+@ExperimentalKJWTApi
 public suspend fun JwtParserBuilder.decryptWith(
     algorithm: EncryptionAlgorithm.OAEPBased,
     jwk: Jwk.Rsa,
     keyId: String? = jwk.kid,
-): JwtParserBuilder {
-    val digest = when (algorithm) {
-        EncryptionAlgorithm.RsaOaep -> SHA1
-        EncryptionAlgorithm.RsaOaep256 -> SHA256
-    }
-    return decryptWith(algorithm, jwk.toRsaOaepPrivateKey(digest), keyId)
-}
+): JwtParserBuilder = decryptWith(algorithm, jwk.toRsaOaepPrivateKey(algorithm.digest), keyId)

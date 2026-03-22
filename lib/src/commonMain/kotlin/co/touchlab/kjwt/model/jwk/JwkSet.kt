@@ -1,5 +1,6 @@
 package co.touchlab.kjwt.model.jwk
 
+import co.touchlab.kjwt.annotations.ExperimentalKJWTApi
 import kotlinx.serialization.Serializable
 
 /**
@@ -8,6 +9,7 @@ import kotlinx.serialization.Serializable
  * Typically served from a JWKS discovery endpoint (e.g. `/.well-known/jwks.json`).
  */
 @Serializable
+@ExperimentalKJWTApi
 public data class JwkSet(
     /**
      * The list of JWK values contained in this key set (RFC 7517 §5.1 `keys` parameter).

@@ -87,8 +87,7 @@ public sealed class SigningKey<PublicKey : Key, PrivateKey : Key> {
             return result
         }
 
-        override fun toString(): String =
-            "SigningOnlyKey(identifier=$identifier, privateKey=$privateKey)"
+        override fun toString(): String = "SigningOnlyKey(identifier=$identifier, privateKey=$privateKey)"
     }
 
     /**
@@ -126,8 +125,7 @@ public sealed class SigningKey<PublicKey : Key, PrivateKey : Key> {
             return result
         }
 
-        override fun toString(): String =
-            "VerifyOnlyKey(publicKey=$publicKey, identifier=$identifier)"
+        override fun toString(): String = "VerifyOnlyKey(publicKey=$publicKey, identifier=$identifier)"
     }
 
     /**
@@ -169,14 +167,17 @@ public sealed class SigningKey<PublicKey : Key, PrivateKey : Key> {
             "SigningKeyPair(identifier=$identifier, publicKey=$publicKey, privateKey=$privateKey)"
     }
 
-    internal suspend fun verify(signingInput: ByteArray, signature: ByteArray): Boolean = try {
-        identifier.algorithm.verify(publicKey, signingInput, signature)
-    } catch (_: Throwable) {
-        false
-    }
+    internal suspend fun verify(
+        signingInput: ByteArray,
+        signature: ByteArray,
+    ): Boolean =
+        try {
+            identifier.algorithm.verify(publicKey, signingInput, signature)
+        } catch (_: Throwable) {
+            false
+        }
 
-    internal suspend fun sign(signingInput: ByteArray): ByteArray =
-        identifier.algorithm.sign(privateKey, signingInput)
+    internal suspend fun sign(signingInput: ByteArray): ByteArray = identifier.algorithm.sign(privateKey, signingInput)
 
     internal fun mergeWith(other: SigningKey<PublicKey, PrivateKey>?): SigningKey<PublicKey, PrivateKey> {
         if (other == null) return this
@@ -186,13 +187,17 @@ public sealed class SigningKey<PublicKey : Key, PrivateKey : Key> {
         require(this !is SigningKeyPair || other !is SigningKeyPair) { "Cannot merge when one key is complete" }
 
         return when (this) {
-            is SigningOnlyKey if other is VerifyOnlyKey ->
+            is SigningOnlyKey if other is VerifyOnlyKey -> {
                 SigningKeyPair(identifier, other.publicKey, privateKey)
+            }
 
-            is VerifyOnlyKey if other is SigningOnlyKey ->
+            is VerifyOnlyKey if other is SigningOnlyKey -> {
                 SigningKeyPair(identifier, publicKey, other.privateKey)
+            }
 
-            else -> error("Cannot merge given keys")
+            else -> {
+                error("Cannot merge given keys")
+            }
         }
     }
 }

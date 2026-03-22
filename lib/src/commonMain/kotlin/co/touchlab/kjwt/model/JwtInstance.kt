@@ -15,8 +15,10 @@ public sealed class JwtInstance {
      *
      * @return the payload deserialized into an instance of [T]
      */
-    public inline fun <reified T> getPayload(): T =
-        JwtJson.decodeFromJsonElement(kotlinx.serialization.serializer<T>(), payload.jsonData)
+    public inline fun <reified T> getPayload(): T = JwtJson.decodeFromJsonElement(
+        kotlinx.serialization.serializer<T>(),
+        payload.jsonData
+    )
 
     /** Represents a JWE (encrypted) token with five compact-serialization parts. */
     public class Jwe internal constructor(
@@ -40,17 +42,18 @@ public sealed class JwtInstance {
          *
          * @return the compact JWE token string
          */
-        override fun compact(): String = buildString {
-            append(aad)
-            append('.')
-            append(encryptedKey)
-            append('.')
-            append(iv)
-            append('.')
-            append(cipherText)
-            append('.')
-            append(tag)
-        }
+        override fun compact(): String =
+            buildString {
+                append(aad)
+                append('.')
+                append(encryptedKey)
+                append('.')
+                append(iv)
+                append('.')
+                append(cipherText)
+                append('.')
+                append(tag)
+            }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
@@ -87,7 +90,7 @@ public sealed class JwtInstance {
         internal constructor(
             header: JwtHeader,
             payload: JwtPayload,
-            signature: String
+            signature: String,
         ) : this(
             payload = payload,
             signatures = listOf(Signature(header, signature)),
@@ -107,8 +110,7 @@ public sealed class JwtInstance {
          *
          * @return the compact JWS token string
          */
-        override fun compact(): String =
-            "$header.$payload.$signature"
+        override fun compact(): String = "$header.$payload.$signature"
 
         override fun equals(other: Any?): Boolean {
             if (this === other) return true

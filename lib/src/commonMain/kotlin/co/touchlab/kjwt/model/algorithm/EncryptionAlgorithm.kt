@@ -38,7 +38,7 @@ public sealed class EncryptionAlgorithm<PublicKey : Key, PrivateKey : Key>(
 
         override suspend fun getContentEncryptionKey(
             key: SimpleKey,
-            encryptedKey: ByteArray
+            encryptedKey: ByteArray,
         ): ByteArray = key.value
     }
 
@@ -82,12 +82,14 @@ public sealed class EncryptionAlgorithm<PublicKey : Key, PrivateKey : Key>(
      */
     public sealed class OAEPBased(
         id: String,
-    ) : EncryptionAlgorithm<RSA.OAEP.PublicKey, RSA.OAEP.PrivateKey>(id), Jwa.UsesHashingAlgorithm {
+    ) : EncryptionAlgorithm<RSA.OAEP.PublicKey, RSA.OAEP.PrivateKey>(id),
+        Jwa.UsesHashingAlgorithm {
         override val digest: CryptographyAlgorithmId<Digest>
-            get() = when (this) {
-                RsaOaep -> SHA1
-                RsaOaep256 -> SHA256
-            }
+            get() =
+                when (this) {
+                    RsaOaep -> SHA1
+                    RsaOaep256 -> SHA256
+                }
 
         override suspend fun generateContentEncryptionKey(
             key: RSA.OAEP.PublicKey,
@@ -100,7 +102,7 @@ public sealed class EncryptionAlgorithm<PublicKey : Key, PrivateKey : Key>(
 
         override suspend fun getContentEncryptionKey(
             key: RSA.OAEP.PrivateKey,
-            encryptedKey: ByteArray
+            encryptedKey: ByteArray,
         ): ByteArray = key.decryptor().decrypt(encryptedKey)
     }
 

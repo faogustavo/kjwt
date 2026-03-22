@@ -2,33 +2,29 @@ package co.touchlab.kjwt.internal
 
 import co.touchlab.kjwt.exception.MalformedJwtException
 import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 
 @PublishedApi
-internal val JwtJson: Json = Json {
-    ignoreUnknownKeys = true
-    explicitNulls = false
-}
-
-internal fun <T> Json.encodeToBase64Url(serializer: KSerializer<T>, value: T): String =
-    encodeToString(serializer, value)
-        .encodeToByteArray()
-        .encodeBase64Url()
+internal val JwtJson: Json =
+    Json {
+        ignoreUnknownKeys = true
+        explicitNulls = false
+    }
 
 internal fun <T> Json.decodeBase64Url(
     deserializer: DeserializationStrategy<T>,
     base64UrlString: String,
-    name: String? = null
+    name: String? = null,
 ): T {
-    val bytes = try {
-        base64UrlString.decodeBase64Url()
-    } catch (e: Throwable) {
-        throw MalformedJwtException(
-            "Invalid base64url encoding in JWT" + (if (name != null) " $name" else ""),
-            e
-        )
-    }
+    val bytes =
+        try {
+            base64UrlString.decodeBase64Url()
+        } catch (e: Throwable) {
+            throw MalformedJwtException(
+                "Invalid base64url encoding in JWT" + (if (name != null) " $name" else ""),
+                e,
+            )
+        }
 
     return try {
         decodeFromString(deserializer, bytes.decodeToString())

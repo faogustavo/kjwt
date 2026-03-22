@@ -46,5 +46,6 @@ import co.touchlab.kjwt.parser.JwtParserBuilder
  */
 public object Jwt {
     public fun builder(): JwtBuilder = JwtBuilder()
+
     public fun parser(): JwtParserBuilder = JwtParserBuilder()
 }

@@ -30,15 +30,16 @@ public suspend fun JwtBuilder.signWith(
     keyFormat: HMAC.Key.Format,
     keyId: String? = null,
 ): JwtInstance.Jws {
-    val parsedKey = CryptographyProvider.Default.get(HMAC)
-        .keyDecoder(
-            when (algorithm) {
-                SigningAlgorithm.HS256 -> SHA256
-                SigningAlgorithm.HS384 -> SHA384
-                SigningAlgorithm.HS512 -> SHA512
-            }
-        )
-        .decodeFromByteArray(keyFormat, key.encodeToByteArray())
+    val parsedKey =
+        CryptographyProvider.Default
+            .get(HMAC)
+            .keyDecoder(
+                when (algorithm) {
+                    SigningAlgorithm.HS256 -> SHA256
+                    SigningAlgorithm.HS384 -> SHA384
+                    SigningAlgorithm.HS512 -> SHA512
+                },
+            ).decodeFromByteArray(keyFormat, key.encodeToByteArray())
 
     return signWith(algorithm, parsedKey, keyId)
 }
@@ -58,15 +59,16 @@ public suspend fun JwtBuilder.signWith(
     keyFormat: RSA.PrivateKey.Format,
     keyId: String? = null,
 ): JwtInstance.Jws {
-    val parsedKey = CryptographyProvider.Default.get(RSA.PKCS1)
-        .privateKeyDecoder(
-            when (algorithm) {
-                SigningAlgorithm.RS256 -> SHA256
-                SigningAlgorithm.RS384 -> SHA384
-                SigningAlgorithm.RS512 -> SHA512
-            }
-        )
-        .decodeFromByteArray(keyFormat, key.encodeToByteArray())
+    val parsedKey =
+        CryptographyProvider.Default
+            .get(RSA.PKCS1)
+            .privateKeyDecoder(
+                when (algorithm) {
+                    SigningAlgorithm.RS256 -> SHA256
+                    SigningAlgorithm.RS384 -> SHA384
+                    SigningAlgorithm.RS512 -> SHA512
+                },
+            ).decodeFromByteArray(keyFormat, key.encodeToByteArray())
 
     return signWith(algorithm, parsedKey, keyId)
 }
@@ -86,15 +88,16 @@ public suspend fun JwtBuilder.signWith(
     keyFormat: RSA.PrivateKey.Format,
     keyId: String? = null,
 ): JwtInstance.Jws {
-    val parsedKey = CryptographyProvider.Default.get(RSA.PSS)
-        .privateKeyDecoder(
-            when (algorithm) {
-                SigningAlgorithm.PS256 -> SHA256
-                SigningAlgorithm.PS384 -> SHA384
-                SigningAlgorithm.PS512 -> SHA512
-            }
-        )
-        .decodeFromByteArray(keyFormat, key.encodeToByteArray())
+    val parsedKey =
+        CryptographyProvider.Default
+            .get(RSA.PSS)
+            .privateKeyDecoder(
+                when (algorithm) {
+                    SigningAlgorithm.PS256 -> SHA256
+                    SigningAlgorithm.PS384 -> SHA384
+                    SigningAlgorithm.PS512 -> SHA512
+                },
+            ).decodeFromByteArray(keyFormat, key.encodeToByteArray())
 
     return signWith(algorithm, parsedKey, keyId)
 }
@@ -114,9 +117,11 @@ public suspend fun JwtBuilder.signWith(
     keyFormat: EC.PrivateKey.Format,
     keyId: String? = null,
 ): JwtInstance.Jws {
-    val parsedKey = CryptographyProvider.Default.get(ECDSA)
-        .privateKeyDecoder(algorithm.curve)
-        .decodeFromByteArray(keyFormat, key.encodeToByteArray())
+    val parsedKey =
+        CryptographyProvider.Default
+            .get(ECDSA)
+            .privateKeyDecoder(algorithm.curve)
+            .decodeFromByteArray(keyFormat, key.encodeToByteArray())
 
     return signWith(algorithm, parsedKey, keyId)
 }

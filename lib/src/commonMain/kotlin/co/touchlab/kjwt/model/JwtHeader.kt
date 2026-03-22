@@ -31,11 +31,12 @@ public class JwtHeader internal constructor(
 
     internal constructor(base64Encoded: String) : this(
         base64Encoded = base64Encoded,
-        jsonData = JwtJson.decodeBase64Url(
+        jsonData =
+        JwtJson.decodeBase64Url(
             deserializer = JsonObject.serializer(),
             base64UrlString = base64Encoded,
-            name = "header"
-        )
+            name = "header",
+        ),
     )
 
     /**
@@ -52,8 +53,7 @@ public class JwtHeader internal constructor(
      * @param name the header parameter name to look up
      * @return `true` if the header is present, `false` otherwise
      */
-    public fun hasHeader(name: String): Boolean =
-        jsonData.containsKey(name)
+    public fun hasHeader(name: String): Boolean = jsonData.containsKey(name)
 
     /**
      * Returns the value of the named header parameter deserialized using the given [serializer].
@@ -63,8 +63,10 @@ public class JwtHeader internal constructor(
      * @return the deserialized header value
      * @throws NullPointerException if the header parameter is absent
      */
-    public fun <T> getHeader(serializer: DeserializationStrategy<T>, name: String): T =
-        getHeaderOrNull(serializer, name) ?: throw NullPointerException("Header '$name' not found")
+    public fun <T> getHeader(
+        serializer: DeserializationStrategy<T>,
+        name: String,
+    ): T = getHeaderOrNull(serializer, name) ?: throw NullPointerException("Header '$name' not found")
 
     /**
      * Returns the value of the named header parameter deserialized using the given [serializer], or `null` if absent.
@@ -73,7 +75,10 @@ public class JwtHeader internal constructor(
      * @param name the header parameter name
      * @return the deserialized header value, or `null` if the parameter is not present
      */
-    public fun <T> getHeaderOrNull(serializer: DeserializationStrategy<T>, name: String): T? {
+    public fun <T> getHeaderOrNull(
+        serializer: DeserializationStrategy<T>,
+        name: String,
+    ): T? {
         val element = jsonData[name] ?: return null
         return JwtJson.decodeFromJsonElement(serializer, element)
     }
@@ -93,9 +98,10 @@ public class JwtHeader internal constructor(
 
     /** Builder for constructing a [JwtHeader] with standard and extra parameters. */
     public class Builder {
-        private val content: MutableMap<String, JsonElement> = mutableMapOf(
-            TYP to JsonPrimitive("JWT")
-        )
+        private val content: MutableMap<String, JsonElement> =
+            mutableMapOf(
+                TYP to JsonPrimitive("JWT"),
+            )
 
         /** The token type (`typ`) header parameter; defaults to `"JWT"`. */
         public var type: String? = "JWT"
@@ -117,7 +123,10 @@ public class JwtHeader internal constructor(
          * @param name the header parameter name
          * @param value the header value, or `null` to remove the parameter
          */
-        public fun extra(name: String, value: JsonElement?) {
+        public fun extra(
+            name: String,
+            value: JsonElement?,
+        ) {
             if (value == null) {
                 content.remove(name)
             } else {
@@ -132,7 +141,11 @@ public class JwtHeader internal constructor(
          * @param serializer the serialization strategy for [T]
          * @param value the header value, or `null` to remove the parameter
          */
-        public fun <T> extra(name: String, serializer: SerializationStrategy<T>, value: T?) {
+        public fun <T> extra(
+            name: String,
+            serializer: SerializationStrategy<T>,
+            value: T?,
+        ) {
             extra(name, value?.let { JwtJson.encodeToJsonElement(serializer, it) })
         }
 
@@ -142,15 +155,21 @@ public class JwtHeader internal constructor(
          * @param name the header parameter name
          * @param value the header value
          */
-        public inline fun <reified T> extra(name: String, value: T) {
+        public inline fun <reified T> extra(
+            name: String,
+            value: T,
+        ) {
             extra(name, kotlinx.serialization.serializer<T>(), value)
         }
 
-        internal fun build(algorithm: SigningAlgorithm<*, *>, keyId: String?) = JwtHeader(
+        internal fun build(
+            algorithm: SigningAlgorithm<*, *>,
+            keyId: String?,
+        ) = JwtHeader(
             buildToJson {
                 put(ALG, algorithm.id)
                 if (keyId != null) put(KID, keyId)
-            }
+            },
         )
 
         internal fun build(
@@ -162,13 +181,14 @@ public class JwtHeader internal constructor(
                 put(ALG, keyAlgorithm.id)
                 put(ENC, contentAlgorithm.id)
                 if (keyId != null) put(KID, keyId)
-            }
+            },
         )
 
-        private fun buildToJson(builder: JsonObjectBuilder.() -> Unit) = buildJsonObject {
-            content.forEach { (name, value) -> put(name, value) }
-            builder()
-        }
+        private fun buildToJson(builder: JsonObjectBuilder.() -> Unit) =
+            buildJsonObject {
+                content.forEach { (name, value) -> put(name, value) }
+                builder()
+            }
     }
 
     public companion object {

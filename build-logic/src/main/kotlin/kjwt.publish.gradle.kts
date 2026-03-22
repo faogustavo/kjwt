@@ -49,7 +49,6 @@ mavenPublishing {
             }
         }
 
-
         developers {
             developer {
                 id.set("faogustavo")

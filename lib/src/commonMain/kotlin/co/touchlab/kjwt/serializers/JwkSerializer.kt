@@ -19,11 +19,11 @@ private fun JsonObject.requireString(key: String): String =
     (this[key] as? JsonPrimitive)?.content
         ?: throw MalformedJwkException("Missing required JWK field: '$key'")
 
-private fun JsonObject.optString(key: String): String? =
-    (this[key] as? JsonPrimitive)?.content
+private fun JsonObject.optString(key: String): String? = (this[key] as? JsonPrimitive)?.content
 
-private fun JsonObject.optStringList(key: String): List<String>? =
-    (this[key] as? JsonArray)?.map { (it as JsonPrimitive).content }
+private fun JsonObject.optStringList(key: String): List<String>? = (this[key] as? JsonArray)?.map {
+    (it as JsonPrimitive).content
+}
 
 // ---------------------------------------------------------------------------
 // RSA
@@ -33,7 +33,10 @@ public object JwkRsaSerializer : KSerializer<Jwk.Rsa> {
     private val delegate = JsonObject.serializer()
     override val descriptor: SerialDescriptor = delegate.descriptor
 
-    override fun serialize(encoder: Encoder, value: Jwk.Rsa) {
+    override fun serialize(
+        encoder: Encoder,
+        value: Jwk.Rsa,
+    ) {
         encoder.encodeSerializableValue(
             delegate,
             buildJsonObject {
@@ -50,7 +53,7 @@ public object JwkRsaSerializer : KSerializer<Jwk.Rsa> {
                 value.keyOps?.let { ops -> put("key_ops", JsonArray(ops.map { JsonPrimitive(it) })) }
                 value.alg?.let { put("alg", JsonPrimitive(it)) }
                 value.kid?.let { put("kid", JsonPrimitive(it)) }
-            }
+            },
         )
     }
 
@@ -81,7 +84,10 @@ public object JwkEcSerializer : KSerializer<Jwk.Ec> {
     private val delegate = JsonObject.serializer()
     override val descriptor: SerialDescriptor = delegate.descriptor
 
-    override fun serialize(encoder: Encoder, value: Jwk.Ec) {
+    override fun serialize(
+        encoder: Encoder,
+        value: Jwk.Ec,
+    ) {
         encoder.encodeSerializableValue(
             delegate,
             buildJsonObject {
@@ -94,7 +100,7 @@ public object JwkEcSerializer : KSerializer<Jwk.Ec> {
                 value.keyOps?.let { ops -> put("key_ops", JsonArray(ops.map { JsonPrimitive(it) })) }
                 value.alg?.let { put("alg", JsonPrimitive(it)) }
                 value.kid?.let { put("kid", JsonPrimitive(it)) }
-            }
+            },
         )
     }
 
@@ -121,7 +127,10 @@ public object JwkOctSerializer : KSerializer<Jwk.Oct> {
     private val delegate = JsonObject.serializer()
     override val descriptor: SerialDescriptor = delegate.descriptor
 
-    override fun serialize(encoder: Encoder, value: Jwk.Oct) {
+    override fun serialize(
+        encoder: Encoder,
+        value: Jwk.Oct,
+    ) {
         encoder.encodeSerializableValue(
             delegate,
             buildJsonObject {
@@ -131,7 +140,7 @@ public object JwkOctSerializer : KSerializer<Jwk.Oct> {
                 value.keyOps?.let { ops -> put("key_ops", JsonArray(ops.map { JsonPrimitive(it) })) }
                 value.alg?.let { put("alg", JsonPrimitive(it)) }
                 value.kid?.let { put("kid", JsonPrimitive(it)) }
-            }
+            },
         )
     }
 
@@ -155,7 +164,10 @@ public object JwkSerializer : KSerializer<Jwk> {
     private val delegate = JsonObject.serializer()
     override val descriptor: SerialDescriptor = delegate.descriptor
 
-    override fun serialize(encoder: Encoder, value: Jwk) {
+    override fun serialize(
+        encoder: Encoder,
+        value: Jwk,
+    ) {
         when (value) {
             is Jwk.Rsa -> encoder.encodeSerializableValue(JwkRsaSerializer, value)
             is Jwk.Ec -> encoder.encodeSerializableValue(JwkEcSerializer, value)
@@ -164,12 +176,14 @@ public object JwkSerializer : KSerializer<Jwk> {
     }
 
     override fun deserialize(decoder: Decoder): Jwk {
-        val input = decoder as? JsonDecoder
-            ?: throw SerializationException("JwkSerializer requires JSON input")
+        val input =
+            decoder as? JsonDecoder
+                ?: throw SerializationException("JwkSerializer requires JSON input")
         val obj = input.decodeJsonElement().jsonObject
         return when (
-            val kty = (obj["kty"] as? JsonPrimitive)?.content
-                ?: throw MalformedJwkException("Missing 'kty' in JWK")
+            val kty =
+                (obj["kty"] as? JsonPrimitive)?.content
+                    ?: throw MalformedJwkException("Missing 'kty' in JWK")
         ) {
             Jwk.Rsa.KTY -> input.json.decodeFromJsonElement(JwkRsaSerializer, obj)
             Jwk.Ec.KTY -> input.json.decodeFromJsonElement(JwkEcSerializer, obj)
@@ -187,14 +201,17 @@ public object JwkRsaThumbprintSerializer : KSerializer<Jwk.Rsa.RSAThumbprint> {
     private val delegate = JsonObject.serializer()
     override val descriptor: SerialDescriptor = delegate.descriptor
 
-    override fun serialize(encoder: Encoder, value: Jwk.Rsa.RSAThumbprint) {
+    override fun serialize(
+        encoder: Encoder,
+        value: Jwk.Rsa.RSAThumbprint,
+    ) {
         encoder.encodeSerializableValue(
             delegate,
             buildJsonObject {
                 put("e", JsonPrimitive(value.e))
                 put("kty", JsonPrimitive(Jwk.Rsa.KTY))
                 put("n", JsonPrimitive(value.n))
-            }
+            },
         )
     }
 
@@ -215,7 +232,10 @@ public object JwkEcThumbprintSerializer : KSerializer<Jwk.Ec.ECThumbprint> {
     private val delegate = JsonObject.serializer()
     override val descriptor: SerialDescriptor = delegate.descriptor
 
-    override fun serialize(encoder: Encoder, value: Jwk.Ec.ECThumbprint) {
+    override fun serialize(
+        encoder: Encoder,
+        value: Jwk.Ec.ECThumbprint,
+    ) {
         encoder.encodeSerializableValue(
             delegate,
             buildJsonObject {
@@ -223,7 +243,7 @@ public object JwkEcThumbprintSerializer : KSerializer<Jwk.Ec.ECThumbprint> {
                 put("kty", JsonPrimitive(Jwk.Ec.KTY))
                 put("x", JsonPrimitive(value.x))
                 put("y", JsonPrimitive(value.y))
-            }
+            },
         )
     }
 
@@ -245,13 +265,16 @@ public object JwkOctThumbprintSerializer : KSerializer<Jwk.Oct.OctThumbprint> {
     private val delegate = JsonObject.serializer()
     override val descriptor: SerialDescriptor = delegate.descriptor
 
-    override fun serialize(encoder: Encoder, value: Jwk.Oct.OctThumbprint) {
+    override fun serialize(
+        encoder: Encoder,
+        value: Jwk.Oct.OctThumbprint,
+    ) {
         encoder.encodeSerializableValue(
             delegate,
             buildJsonObject {
                 put("k", JsonPrimitive(value.k))
                 put("kty", JsonPrimitive(Jwk.Oct.KTY))
-            }
+            },
         )
     }
 
@@ -271,7 +294,10 @@ public object JwkThumbprintSerializer : KSerializer<Jwk.Thumbprint> {
     private val delegate = JsonObject.serializer()
     override val descriptor: SerialDescriptor = delegate.descriptor
 
-    override fun serialize(encoder: Encoder, value: Jwk.Thumbprint) {
+    override fun serialize(
+        encoder: Encoder,
+        value: Jwk.Thumbprint,
+    ) {
         when (value) {
             is Jwk.Rsa.RSAThumbprint -> encoder.encodeSerializableValue(JwkRsaThumbprintSerializer, value)
             is Jwk.Ec.ECThumbprint -> encoder.encodeSerializableValue(JwkEcThumbprintSerializer, value)
@@ -280,12 +306,14 @@ public object JwkThumbprintSerializer : KSerializer<Jwk.Thumbprint> {
     }
 
     override fun deserialize(decoder: Decoder): Jwk.Thumbprint {
-        val input = decoder as? JsonDecoder
-            ?: throw SerializationException("JwkThumbprintSerializer requires JSON input")
+        val input =
+            decoder as? JsonDecoder
+                ?: throw SerializationException("JwkThumbprintSerializer requires JSON input")
         val obj = input.decodeJsonElement().jsonObject
         return when (
-            val kty = (obj["kty"] as? JsonPrimitive)?.content
-                ?: throw MalformedJwkException("Missing 'kty' in JWK thumbprint")
+            val kty =
+                (obj["kty"] as? JsonPrimitive)?.content
+                    ?: throw MalformedJwkException("Missing 'kty' in JWK thumbprint")
         ) {
             Jwk.Rsa.KTY -> input.json.decodeFromJsonElement(JwkRsaThumbprintSerializer, obj)
             Jwk.Ec.KTY -> input.json.decodeFromJsonElement(JwkEcThumbprintSerializer, obj)

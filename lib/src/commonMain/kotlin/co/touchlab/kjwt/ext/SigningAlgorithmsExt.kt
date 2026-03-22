@@ -29,9 +29,11 @@ public suspend fun HashBased.newKey(
     keyId: String? = null,
     cryptographyProvider: CryptographyProvider = CryptographyProvider.Default,
 ): SigningKey.SigningKeyPair<HMAC.Key, HMAC.Key> {
-    val macKey = cryptographyProvider.get(HMAC)
-        .keyGenerator(digest)
-        .generateKey()
+    val macKey =
+        cryptographyProvider
+            .get(HMAC)
+            .keyGenerator(digest)
+            .generateKey()
 
     return SigningKey.SigningKeyPair(identifier(keyId), macKey, macKey)
 }
@@ -54,9 +56,11 @@ public suspend fun HashBased.parse(
     format: HMAC.Key.Format = HMAC.Key.Format.RAW,
     cryptographyProvider: CryptographyProvider = CryptographyProvider.Default,
 ): SigningKey.SigningKeyPair<HMAC.Key, HMAC.Key> {
-    val macKey = cryptographyProvider.get(HMAC)
-        .keyDecoder(digest)
-        .decodeFromByteArray(format, key)
+    val macKey =
+        cryptographyProvider
+            .get(HMAC)
+            .keyDecoder(digest)
+            .decodeFromByteArray(format, key)
 
     return SigningKey.SigningKeyPair(identifier(keyId), macKey, macKey)
 }
@@ -79,14 +83,16 @@ public suspend fun PKCS1Based.newKey(
     publicExponent: BigInt = 65537.toBigInt(),
     cryptographyProvider: CryptographyProvider = CryptographyProvider.Default,
 ): SigningKey.SigningKeyPair<RSA.PKCS1.PublicKey, RSA.PKCS1.PrivateKey> {
-    val rsaKeyPair = cryptographyProvider.get(RSA.PKCS1)
-        .keyPairGenerator(keySize, digest, publicExponent)
-        .generateKey()
+    val rsaKeyPair =
+        cryptographyProvider
+            .get(RSA.PKCS1)
+            .keyPairGenerator(keySize, digest, publicExponent)
+            .generateKey()
 
     return SigningKey.SigningKeyPair(
         identifier(keyId),
         rsaKeyPair.publicKey,
-        rsaKeyPair.privateKey
+        rsaKeyPair.privateKey,
     )
 }
 
@@ -108,9 +114,11 @@ public suspend fun PKCS1Based.parsePublicKey(
     format: RSA.PublicKey.Format = RSA.PublicKey.Format.PEM,
     cryptographyProvider: CryptographyProvider = CryptographyProvider.Default,
 ): SigningKey.VerifyOnlyKey<RSA.PKCS1.PublicKey, RSA.PKCS1.PrivateKey> {
-    val parsedKey = cryptographyProvider.get(RSA.PKCS1)
-        .publicKeyDecoder(digest)
-        .decodeFromByteArray(format, key)
+    val parsedKey =
+        cryptographyProvider
+            .get(RSA.PKCS1)
+            .publicKeyDecoder(digest)
+            .decodeFromByteArray(format, key)
 
     return SigningKey.VerifyOnlyKey(
         identifier(keyId),
@@ -136,9 +144,11 @@ public suspend fun PKCS1Based.parsePrivateKey(
     format: RSA.PrivateKey.Format = RSA.PrivateKey.Format.PEM,
     cryptographyProvider: CryptographyProvider = CryptographyProvider.Default,
 ): SigningKey.SigningOnlyKey<RSA.PKCS1.PublicKey, RSA.PKCS1.PrivateKey> {
-    val parsedKey = cryptographyProvider.get(RSA.PKCS1)
-        .privateKeyDecoder(digest)
-        .decodeFromByteArray(format, key)
+    val parsedKey =
+        cryptographyProvider
+            .get(RSA.PKCS1)
+            .privateKeyDecoder(digest)
+            .decodeFromByteArray(format, key)
 
     return SigningKey.SigningOnlyKey(
         identifier(keyId),
@@ -168,13 +178,17 @@ public suspend fun PKCS1Based.parseKeyPair(
     privateKeyFormat: RSA.PrivateKey.Format = RSA.PrivateKey.Format.PEM,
     cryptographyProvider: CryptographyProvider = CryptographyProvider.Default,
 ): SigningKey.SigningKeyPair<RSA.PKCS1.PublicKey, RSA.PKCS1.PrivateKey> {
-    val parsedPublicKey = cryptographyProvider.get(RSA.PKCS1)
-        .publicKeyDecoder(digest)
-        .decodeFromByteArray(publicKeyFormat, publicKey)
+    val parsedPublicKey =
+        cryptographyProvider
+            .get(RSA.PKCS1)
+            .publicKeyDecoder(digest)
+            .decodeFromByteArray(publicKeyFormat, publicKey)
 
-    val parsedPrivateKey = cryptographyProvider.get(RSA.PKCS1)
-        .privateKeyDecoder(digest)
-        .decodeFromByteArray(privateKeyFormat, privateKey)
+    val parsedPrivateKey =
+        cryptographyProvider
+            .get(RSA.PKCS1)
+            .privateKeyDecoder(digest)
+            .decodeFromByteArray(privateKeyFormat, privateKey)
 
     return SigningKey.SigningKeyPair(
         identifier(keyId),
@@ -201,14 +215,16 @@ public suspend fun PSSBased.newKey(
     publicExponent: BigInt = 65537.toBigInt(),
     cryptographyProvider: CryptographyProvider = CryptographyProvider.Default,
 ): SigningKey.SigningKeyPair<RSA.PSS.PublicKey, RSA.PSS.PrivateKey> {
-    val rsaKeyPair = cryptographyProvider.get(RSA.PSS)
-        .keyPairGenerator(keySize, digest, publicExponent)
-        .generateKey()
+    val rsaKeyPair =
+        cryptographyProvider
+            .get(RSA.PSS)
+            .keyPairGenerator(keySize, digest, publicExponent)
+            .generateKey()
 
     return SigningKey.SigningKeyPair(
         identifier(keyId),
         rsaKeyPair.publicKey,
-        rsaKeyPair.privateKey
+        rsaKeyPair.privateKey,
     )
 }
 
@@ -230,9 +246,11 @@ public suspend fun PSSBased.parsePublicKey(
     format: RSA.PublicKey.Format = RSA.PublicKey.Format.PEM,
     cryptographyProvider: CryptographyProvider = CryptographyProvider.Default,
 ): SigningKey.VerifyOnlyKey<RSA.PSS.PublicKey, RSA.PSS.PrivateKey> {
-    val parsedKey = cryptographyProvider.get(RSA.PSS)
-        .publicKeyDecoder(digest)
-        .decodeFromByteArray(format, key)
+    val parsedKey =
+        cryptographyProvider
+            .get(RSA.PSS)
+            .publicKeyDecoder(digest)
+            .decodeFromByteArray(format, key)
 
     return SigningKey.VerifyOnlyKey(
         identifier(keyId),
@@ -258,9 +276,11 @@ public suspend fun PSSBased.parsePrivateKey(
     format: RSA.PrivateKey.Format = RSA.PrivateKey.Format.PEM,
     cryptographyProvider: CryptographyProvider = CryptographyProvider.Default,
 ): SigningKey.SigningOnlyKey<RSA.PSS.PublicKey, RSA.PSS.PrivateKey> {
-    val parsedKey = cryptographyProvider.get(RSA.PSS)
-        .privateKeyDecoder(digest)
-        .decodeFromByteArray(format, key)
+    val parsedKey =
+        cryptographyProvider
+            .get(RSA.PSS)
+            .privateKeyDecoder(digest)
+            .decodeFromByteArray(format, key)
 
     return SigningKey.SigningOnlyKey(
         identifier(keyId),
@@ -290,13 +310,17 @@ public suspend fun PSSBased.parseKeyPair(
     privateKeyFormat: RSA.PrivateKey.Format = RSA.PrivateKey.Format.PEM,
     cryptographyProvider: CryptographyProvider = CryptographyProvider.Default,
 ): SigningKey.SigningKeyPair<RSA.PSS.PublicKey, RSA.PSS.PrivateKey> {
-    val parsedPublicKey = cryptographyProvider.get(RSA.PSS)
-        .publicKeyDecoder(digest)
-        .decodeFromByteArray(publicKeyFormat, publicKey)
+    val parsedPublicKey =
+        cryptographyProvider
+            .get(RSA.PSS)
+            .publicKeyDecoder(digest)
+            .decodeFromByteArray(publicKeyFormat, publicKey)
 
-    val parsedPrivateKey = cryptographyProvider.get(RSA.PSS)
-        .privateKeyDecoder(digest)
-        .decodeFromByteArray(privateKeyFormat, privateKey)
+    val parsedPrivateKey =
+        cryptographyProvider
+            .get(RSA.PSS)
+            .privateKeyDecoder(digest)
+            .decodeFromByteArray(privateKeyFormat, privateKey)
 
     return SigningKey.SigningKeyPair(
         identifier(keyId),
@@ -319,14 +343,16 @@ public suspend fun ECDSABased.newKey(
     keyId: String? = null,
     cryptographyProvider: CryptographyProvider = CryptographyProvider.Default,
 ): SigningKey.SigningKeyPair<ECDSA.PublicKey, ECDSA.PrivateKey> {
-    val rsaKeyPair = cryptographyProvider.get(ECDSA)
-        .keyPairGenerator(curve)
-        .generateKey()
+    val rsaKeyPair =
+        cryptographyProvider
+            .get(ECDSA)
+            .keyPairGenerator(curve)
+            .generateKey()
 
     return SigningKey.SigningKeyPair(
         identifier(keyId),
         rsaKeyPair.publicKey,
-        rsaKeyPair.privateKey
+        rsaKeyPair.privateKey,
     )
 }
 
@@ -348,9 +374,11 @@ public suspend fun ECDSABased.parsePublicKey(
     format: EC.PublicKey.Format = EC.PublicKey.Format.RAW,
     cryptographyProvider: CryptographyProvider = CryptographyProvider.Default,
 ): SigningKey.VerifyOnlyKey<ECDSA.PublicKey, ECDSA.PrivateKey> {
-    val parsedKey = cryptographyProvider.get(ECDSA)
-        .publicKeyDecoder(curve)
-        .decodeFromByteArray(format, key)
+    val parsedKey =
+        cryptographyProvider
+            .get(ECDSA)
+            .publicKeyDecoder(curve)
+            .decodeFromByteArray(format, key)
 
     return SigningKey.VerifyOnlyKey(
         identifier(keyId),
@@ -376,9 +404,11 @@ public suspend fun ECDSABased.parsePrivateKey(
     format: EC.PrivateKey.Format = EC.PrivateKey.Format.RAW,
     cryptographyProvider: CryptographyProvider = CryptographyProvider.Default,
 ): SigningKey.SigningOnlyKey<ECDSA.PublicKey, ECDSA.PrivateKey> {
-    val parsedKey = cryptographyProvider.get(ECDSA)
-        .privateKeyDecoder(curve)
-        .decodeFromByteArray(format, key)
+    val parsedKey =
+        cryptographyProvider
+            .get(ECDSA)
+            .privateKeyDecoder(curve)
+            .decodeFromByteArray(format, key)
 
     return SigningKey.SigningOnlyKey(
         identifier(keyId),
@@ -408,13 +438,17 @@ public suspend fun ECDSABased.parseKeyPair(
     privateKeyFormat: EC.PrivateKey.Format = EC.PrivateKey.Format.RAW,
     cryptographyProvider: CryptographyProvider = CryptographyProvider.Default,
 ): SigningKey.SigningKeyPair<ECDSA.PublicKey, ECDSA.PrivateKey> {
-    val parsedPublicKey = cryptographyProvider.get(ECDSA)
-        .publicKeyDecoder(curve)
-        .decodeFromByteArray(publicKeyFormat, publicKey)
+    val parsedPublicKey =
+        cryptographyProvider
+            .get(ECDSA)
+            .publicKeyDecoder(curve)
+            .decodeFromByteArray(publicKeyFormat, publicKey)
 
-    val parsedPrivateKey = cryptographyProvider.get(ECDSA)
-        .privateKeyDecoder(curve)
-        .decodeFromByteArray(privateKeyFormat, privateKey)
+    val parsedPrivateKey =
+        cryptographyProvider
+            .get(ECDSA)
+            .privateKeyDecoder(curve)
+            .decodeFromByteArray(privateKeyFormat, privateKey)
 
     return SigningKey.SigningKeyPair(
         identifier(keyId),

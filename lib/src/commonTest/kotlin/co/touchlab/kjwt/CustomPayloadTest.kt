@@ -26,88 +26,105 @@ data class UserClaims(
     private val jsonData: JsonObject = JsonObject(emptyMap()),
 )
 
-class CustomPayloadTest : FunSpec({
+class CustomPayloadTest :
+    FunSpec({
 
-    context("JWS") {
+        context("JWS") {
 
-        test("parse signed Jwt custom type direct property access") {
-            val key = hs256Key()
-            val token = Jwt.builder()
-                .subject("user-42")
-                .claim("role", "admin")
-                .claim("level", 7)
-                .signWith(SigningAlgorithm.HS256, key)
-                .compact()
+            test("parse signed Jwt custom type direct property access") {
+                val key = hs256Key()
+                val token =
+                    Jwt
+                        .builder()
+                        .subject("user-42")
+                        .claim("role", "admin")
+                        .claim("level", 7)
+                        .signWith(SigningAlgorithm.HS256, key)
+                        .compact()
 
-            val jws = Jwt.parser()
-                .verifyWith(SigningAlgorithm.HS256, key)
-                .build()
-                .parseSigned(token)
+                val jws =
+                    Jwt
+                        .parser()
+                        .verifyWith(SigningAlgorithm.HS256, key)
+                        .build()
+                        .parseSigned(token)
 
-            val payload = jws.getPayload<UserClaims>()
-            assertEquals("user-42", payload.subject)
-            assertEquals("admin", payload.role)
-            assertEquals(7, payload.level)
+                val payload = jws.getPayload<UserClaims>()
+                assertEquals("user-42", payload.subject)
+                assertEquals("admin", payload.role)
+                assertEquals(7, payload.level)
+            }
+
+            test("parse signed Jwt custom type missing optional field is null") {
+                val key = hs256Key()
+                // Token has no "role" or "level" claims
+                val token =
+                    Jwt
+                        .builder()
+                        .subject("minimal-user")
+                        .signWith(SigningAlgorithm.HS256, key)
+                        .compact()
+
+                val jws =
+                    Jwt
+                        .parser()
+                        .verifyWith(SigningAlgorithm.HS256, key)
+                        .build()
+                        .parseSigned(token)
+
+                val payload = jws.getPayload<UserClaims>()
+                assertEquals("minimal-user", payload.subject)
+                assertNull(payload.role)
+                assertNull(payload.level)
+            }
         }
 
-        test("parse signed Jwt custom type missing optional field is null") {
-            val key = hs256Key()
-            // Token has no "role" or "level" claims
-            val token = Jwt.builder()
-                .subject("minimal-user")
-                .signWith(SigningAlgorithm.HS256, key)
-                .compact()
+        context("JWE") {
 
-            val jws = Jwt.parser()
-                .verifyWith(SigningAlgorithm.HS256, key)
-                .build()
-                .parseSigned(token)
+            test("parse encrypted Jwt custom type direct property access") {
+                val cek = aesSimpleKey(128)
+                val token =
+                    Jwt
+                        .builder()
+                        .subject("enc-user")
+                        .claim("role", "operator")
+                        .claim("level", 3)
+                        .encryptWith(cek, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A128GCM)
+                        .compact()
 
-            val payload = jws.getPayload<UserClaims>()
-            assertEquals("minimal-user", payload.subject)
-            assertNull(payload.role)
-            assertNull(payload.level)
+                val jwe =
+                    Jwt
+                        .parser()
+                        .decryptWith(EncryptionAlgorithm.Dir, cek)
+                        .build()
+                        .parseEncrypted(token)
+
+                val payload = jwe.getPayload<UserClaims>()
+                assertEquals("enc-user", payload.subject)
+                assertEquals("operator", payload.role)
+                assertEquals(3, payload.level)
+            }
+
+            test("parse encrypted Jwt custom type expiration validation not expired") {
+                val cek = aesSimpleKey(128)
+                val expiry = Clock.System.now() + 1.hours
+                val token =
+                    Jwt
+                        .builder()
+                        .subject("enc-timed-user")
+                        .expiration(expiry)
+                        .encryptWith(cek, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A128GCM)
+                        .compact()
+
+                val jwe =
+                    Jwt
+                        .parser()
+                        .decryptWith(EncryptionAlgorithm.Dir, cek)
+                        .build()
+                        .parseEncrypted(token)
+
+                val payload = jwe.getPayload<UserClaims>()
+                assertEquals(expiry.epochSeconds, payload.expSeconds)
+            }
         }
-    }
-
-    context("JWE") {
-
-        test("parse encrypted Jwt custom type direct property access") {
-            val cek = aesSimpleKey(128)
-            val token = Jwt.builder()
-                .subject("enc-user")
-                .claim("role", "operator")
-                .claim("level", 3)
-                .encryptWith(cek, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A128GCM)
-                .compact()
-
-            val jwe = Jwt.parser()
-                .decryptWith(EncryptionAlgorithm.Dir, cek)
-                .build()
-                .parseEncrypted(token)
-
-            val payload = jwe.getPayload<UserClaims>()
-            assertEquals("enc-user", payload.subject)
-            assertEquals("operator", payload.role)
-            assertEquals(3, payload.level)
-        }
-
-        test("parse encrypted Jwt custom type expiration validation not expired") {
-            val cek = aesSimpleKey(128)
-            val expiry = Clock.System.now() + 1.hours
-            val token = Jwt.builder()
-                .subject("enc-timed-user")
-                .expiration(expiry)
-                .encryptWith(cek, EncryptionAlgorithm.Dir, EncryptionContentAlgorithm.A128GCM)
-                .compact()
-
-            val jwe = Jwt.parser()
-                .decryptWith(EncryptionAlgorithm.Dir, cek)
-                .build()
-                .parseEncrypted(token)
-
-            val payload = jwe.getPayload<UserClaims>()
-            assertEquals(expiry.epochSeconds, payload.expSeconds)
-        }
-    }
-})
+    })

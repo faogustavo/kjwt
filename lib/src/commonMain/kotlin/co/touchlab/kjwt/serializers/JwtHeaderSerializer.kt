@@ -11,7 +11,10 @@ public object JwtHeaderSerializer : KSerializer<JwtHeader> {
     private val delegate = JsonObject.serializer()
     override val descriptor: SerialDescriptor = delegate.descriptor
 
-    override fun serialize(encoder: Encoder, value: JwtHeader) {
+    override fun serialize(
+        encoder: Encoder,
+        value: JwtHeader,
+    ) {
         encoder.encodeSerializableValue(delegate, value.jsonData)
     }
 

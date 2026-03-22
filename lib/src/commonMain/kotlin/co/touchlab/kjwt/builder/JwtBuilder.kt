@@ -140,8 +140,10 @@ public class JwtBuilder {
      * @param value the claim value as a [JsonElement]
      * @return this builder for chaining
      */
-    public fun claim(name: String, value: JsonElement): JwtBuilder =
-        apply { payloadBuilder.claim(name, value) }
+    public fun claim(
+        name: String,
+        value: JsonElement,
+    ): JwtBuilder = apply { payloadBuilder.claim(name, value) }
 
     /**
      * Sets a typed claim using an explicit [SerializationStrategy].
@@ -151,8 +153,11 @@ public class JwtBuilder {
      * @param value the claim value, or `null` to remove the claim
      * @return this builder for chaining
      */
-    public fun <T> claim(name: String, serializer: SerializationStrategy<T>, value: T?): JwtBuilder =
-        apply { payloadBuilder.claim(name, serializer, value) }
+    public fun <T> claim(
+        name: String,
+        serializer: SerializationStrategy<T>,
+        value: T?,
+    ): JwtBuilder = apply { payloadBuilder.claim(name, serializer, value) }
 
     /**
      * Sets a typed claim, inferring the serializer from the reified type [T].
@@ -161,8 +166,10 @@ public class JwtBuilder {
      * @param value the claim value
      * @return this builder for chaining
      */
-    public inline fun <reified T> claim(name: String, value: T): JwtBuilder =
-        apply { payloadBuilder.claim(name, value) }
+    public inline fun <reified T> claim(
+        name: String,
+        value: T,
+    ): JwtBuilder = apply { payloadBuilder.claim(name, value) }
 
     /**
      * Configures multiple claims at once using a DSL block applied to [JwtPayload.Builder].
@@ -170,8 +177,7 @@ public class JwtBuilder {
      * @param block the configuration block
      * @return this builder for chaining
      */
-    public fun claims(block: JwtPayload.Builder.() -> Unit): JwtBuilder =
-        apply { payloadBuilder.block() }
+    public fun claims(block: JwtPayload.Builder.() -> Unit): JwtBuilder = apply { payloadBuilder.block() }
 
     /**
      * Configures JOSE header fields using a DSL block applied to [JwtHeader.Builder].
@@ -179,8 +185,7 @@ public class JwtBuilder {
      * @param block the configuration block
      * @return this builder for chaining
      */
-    public fun header(block: JwtHeader.Builder.() -> Unit): JwtBuilder =
-        apply { headerBuilder.block() }
+    public fun header(block: JwtHeader.Builder.() -> Unit): JwtBuilder = apply { headerBuilder.block() }
 
     /**
      * Builds and returns a JWS compact serialization: `header.payload.signature`.
@@ -196,8 +201,7 @@ public class JwtBuilder {
         algorithm: SigningAlgorithm<PublicKey, PrivateKey>,
         key: PrivateKey,
         keyId: String? = null,
-    ): JwtInstance.Jws =
-        signWithSigningKey(SigningKey.SigningOnlyKey(Identifier(algorithm, keyId), key))
+    ): JwtInstance.Jws = signWithSigningKey(SigningKey.SigningOnlyKey(Identifier(algorithm, keyId), key))
 
     /**
      * Looks up the private key from [registry] and builds a JWS compact serialization.
@@ -227,9 +231,10 @@ public class JwtBuilder {
             return build()
         }
 
-        val key = requireNotNull(registry.findBestSigningKey(algorithm, keyId)) {
-            "No signing key configured for ${algorithm.id}."
-        }
+        val key =
+            requireNotNull(registry.findBestSigningKey(algorithm, keyId)) {
+                "No signing key configured for ${algorithm.id}."
+            }
 
         require(key.canSign) { "The signing key for $keyId does not support signing" }
 
@@ -281,8 +286,7 @@ public class JwtBuilder {
      * @return the resulting [JwtInstance.Jws] with an empty signature segment
      * @see co.touchlab.kjwt.parser.JwtParserBuilder.allowUnsecured
      */
-    public suspend fun build(): JwtInstance.Jws =
-        signWith(SigningAlgorithm.None, SimpleKey.Empty)
+    public suspend fun build(): JwtInstance.Jws = signWith(SigningAlgorithm.None, SimpleKey.Empty)
 
     /**
      * Builds and returns a JWE compact serialization:
@@ -299,10 +303,11 @@ public class JwtBuilder {
         keyAlgorithm: EncryptionAlgorithm<PublicKey, PrivateKey>,
         contentAlgorithm: EncryptionContentAlgorithm,
         keyId: String? = null,
-    ): JwtInstance.Jwe = encryptWithEncryptionKey(
-        key = EncryptionKey.EncryptionOnlyKey(EncryptionKey.Identifier(keyAlgorithm, keyId), key),
-        contentAlgorithm = contentAlgorithm
-    )
+    ): JwtInstance.Jwe =
+        encryptWithEncryptionKey(
+            key = EncryptionKey.EncryptionOnlyKey(EncryptionKey.Identifier(keyAlgorithm, keyId), key),
+            contentAlgorithm = contentAlgorithm,
+        )
 
     /**
      * Looks up the public key from [registry] and builds a JWE compact serialization.
@@ -327,9 +332,10 @@ public class JwtBuilder {
         contentAlgorithm: EncryptionContentAlgorithm,
         keyId: String? = null,
     ): JwtInstance.Jwe {
-        val key = requireNotNull(registry.findBestEncryptionKey(keyAlgorithm, keyId)) {
-            "No signing key configured for ${keyAlgorithm.id}."
-        }
+        val key =
+            requireNotNull(registry.findBestEncryptionKey(keyAlgorithm, keyId)) {
+                "No signing key configured for ${keyAlgorithm.id}."
+            }
 
         require(key.canEncrypt) { "The signing key for $keyId does not support encryption." }
 
@@ -386,7 +392,7 @@ public class JwtBuilder {
             encryptedKey = result.encryptedKey.encodeBase64Url(),
             iv = result.iv.encodeBase64Url(),
             cipherText = result.ciphertext.encodeBase64Url(),
-            tag = result.tag.encodeBase64Url()
+            tag = result.tag.encodeBase64Url(),
         )
     }
 }

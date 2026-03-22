@@ -28,11 +28,12 @@ public class JwtPayload internal constructor(
 
     internal constructor(base64Encoded: String) : this(
         base64Encoded = base64Encoded,
-        jsonData = JwtJson.decodeBase64Url(
+        jsonData =
+        JwtJson.decodeBase64Url(
             deserializer = JsonObject.serializer(),
             base64UrlString = base64Encoded,
-            name = "payload"
-        )
+            name = "payload",
+        ),
     )
 
     /**
@@ -41,8 +42,7 @@ public class JwtPayload internal constructor(
      * @param name the claim name to look up
      * @return `true` if the claim is present, `false` otherwise
      */
-    public fun hasClaim(name: String): Boolean =
-        jsonData.containsKey(name)
+    public fun hasClaim(name: String): Boolean = jsonData.containsKey(name)
 
     /**
      * Returns the value of the named claim, deserialized using the given [serializer].
@@ -52,8 +52,10 @@ public class JwtPayload internal constructor(
      * @return the deserialized claim value
      * @throws NullPointerException if the claim is absent
      */
-    public fun <T> getClaim(serializer: DeserializationStrategy<T>, name: String): T =
-        getClaimOrNull(serializer, name) ?: throw NullPointerException(name)
+    public fun <T> getClaim(
+        serializer: DeserializationStrategy<T>,
+        name: String,
+    ): T = getClaimOrNull(serializer, name) ?: throw NullPointerException(name)
 
     /**
      * Returns the value of the named claim deserialized using the given [serializer], or `null` if absent.
@@ -62,7 +64,10 @@ public class JwtPayload internal constructor(
      * @param name the claim name
      * @return the deserialized claim value, or `null` if the claim is not present
      */
-    public fun <T> getClaimOrNull(serializer: DeserializationStrategy<T>, name: String): T? {
+    public fun <T> getClaimOrNull(
+        serializer: DeserializationStrategy<T>,
+        name: String,
+    ): T? {
         val element = jsonData[name] ?: return null
         return JwtJson.decodeFromJsonElement(serializer, element)
     }
@@ -148,7 +153,10 @@ public class JwtPayload internal constructor(
          * @param name the claim name
          * @param value the claim value, or `null` to remove the claim
          */
-        public fun claim(name: String, value: JsonElement?) {
+        public fun claim(
+            name: String,
+            value: JsonElement?,
+        ) {
             if (value != null) {
                 content[name] = value
             } else {
@@ -163,7 +171,11 @@ public class JwtPayload internal constructor(
          * @param serializer the serialization strategy for [T]
          * @param value the claim value, or `null` to remove the claim
          */
-        public fun <T> claim(name: String, serializer: SerializationStrategy<T>, value: T?) {
+        public fun <T> claim(
+            name: String,
+            serializer: SerializationStrategy<T>,
+            value: T?,
+        ) {
             claim(name, value?.let { JwtJson.encodeToJsonElement(serializer, it) })
         }
 
@@ -173,7 +185,10 @@ public class JwtPayload internal constructor(
          * @param name the claim name
          * @param value the claim value
          */
-        public inline fun <reified T> claim(name: String, value: T) {
+        public inline fun <reified T> claim(
+            name: String,
+            value: T,
+        ) {
             claim(name, kotlinx.serialization.serializer<T>(), value)
         }
 

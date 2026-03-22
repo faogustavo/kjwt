@@ -10,8 +10,10 @@ import co.touchlab.kjwt.model.JwtHeader
  * @throws co.touchlab.kjwt.exception.MissingHeaderException if the header is absent.
  * @see getHeaderOrNull
  */
-public inline fun <reified T> JwtHeader.getHeader(name: String): T =
-    getHeader(kotlinx.serialization.serializer<T>(), name)
+public inline fun <reified T> JwtHeader.getHeader(name: String): T = getHeader(
+    kotlinx.serialization.serializer<T>(),
+    name
+)
 
 /**
  * Returns the value of the named header deserialized to type [T], or `null` if the header is absent.
@@ -20,8 +22,10 @@ public inline fun <reified T> JwtHeader.getHeader(name: String): T =
  * @return the header value deserialized as [T], or `null` if absent.
  * @see getHeader
  */
-public inline fun <reified T> JwtHeader.getHeaderOrNull(name: String): T? =
-    getHeaderOrNull(kotlinx.serialization.serializer<T>(), name)
+public inline fun <reified T> JwtHeader.getHeaderOrNull(name: String): T? = getHeaderOrNull(
+    kotlinx.serialization.serializer<T>(),
+    name
+)
 
 /**
  * Returns the `enc` (encryption algorithm) header value.
