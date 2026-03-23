@@ -3,6 +3,7 @@ $dokka.linkExtension:html
 
 module:kjwt
 co.touchlab.kjwt
+co.touchlab.kjwt.annotations
 co.touchlab.kjwt.builder
 co.touchlab.kjwt.cryptography
 co.touchlab.kjwt.exception
