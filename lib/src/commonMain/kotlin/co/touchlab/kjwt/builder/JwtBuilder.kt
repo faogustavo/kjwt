@@ -45,7 +45,9 @@ import kotlin.uuid.ExperimentalUuidApi
 public class JwtBuilder {
     @PublishedApi
     internal val payloadBuilder: JwtPayload.Builder = JwtPayload.Builder()
-    private val headerBuilder: JwtHeader.Builder = JwtHeader.Builder()
+
+    @PublishedApi
+    internal val headerBuilder: JwtHeader.Builder = JwtHeader.Builder()
 
     /**
      * Sets the issuer (`iss`) claim.
@@ -169,7 +171,7 @@ public class JwtBuilder {
     public inline fun <reified T> claim(
         name: String,
         value: T,
-    ): JwtBuilder = apply { payloadBuilder.claim(name, value) }
+    ): JwtBuilder = claim(name, kotlinx.serialization.serializer<T>(), value)
 
     /**
      * Configures multiple claims at once using a DSL block applied to [JwtPayload.Builder].
@@ -178,6 +180,60 @@ public class JwtBuilder {
      * @return this builder for chaining
      */
     public fun claims(block: JwtPayload.Builder.() -> Unit): JwtBuilder = apply { payloadBuilder.block() }
+
+    /**
+     * Sets the token type (`typ`) header parameter.
+     *
+     * @param typ the token type; defaults to `"JWT"`
+     * @return this builder for chaining
+     */
+    public fun type(typ: String): JwtBuilder = apply { headerBuilder.type = typ }
+
+    /**
+     * Sets the content type (`cty`) header parameter.
+     *
+     * @param cty the content type
+     * @return this builder for chaining
+     */
+    public fun contentType(cty: String): JwtBuilder = apply { headerBuilder.contentType = cty }
+
+    /**
+     * Sets a raw extra header parameter using a pre-built [JsonElement].
+     *
+     * @param name the header parameter name
+     * @param value the header value as a [JsonElement]
+     * @return this builder for chaining
+     */
+    public fun header(
+        name: String,
+        value: JsonElement,
+    ): JwtBuilder = apply { headerBuilder.extra(name, value) }
+
+    /**
+     * Sets a typed extra header parameter using an explicit [SerializationStrategy].
+     *
+     * @param name the header parameter name
+     * @param serializer the serialization strategy for [T]
+     * @param value the header value, or `null` to remove the parameter
+     * @return this builder for chaining
+     */
+    public fun <T> header(
+        name: String,
+        serializer: SerializationStrategy<T>,
+        value: T?,
+    ): JwtBuilder = apply { headerBuilder.extra(name, serializer, value) }
+
+    /**
+     * Sets a typed extra header parameter, inferring the serializer from the reified type [T].
+     *
+     * @param name the header parameter name
+     * @param value the header value
+     * @return this builder for chaining
+     */
+    public inline fun <reified T> header(
+        name: String,
+        value: T,
+    ): JwtBuilder = header(name, kotlinx.serialization.serializer<T>(), value)
 
     /**
      * Configures JOSE header fields using a DSL block applied to [JwtHeader.Builder].
