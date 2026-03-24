@@ -1,5 +1,6 @@
 package co.touchlab.kjwt.ext
 
+import co.touchlab.kjwt.internal.JwtJson
 import co.touchlab.kjwt.model.JwtPayload
 import co.touchlab.kjwt.model.JwtPayload.Companion.AUD
 import co.touchlab.kjwt.model.JwtPayload.Companion.EXP
@@ -10,32 +11,37 @@ import co.touchlab.kjwt.model.JwtPayload.Companion.NBF
 import co.touchlab.kjwt.model.JwtPayload.Companion.SUB
 import co.touchlab.kjwt.serializers.AudienceDeserializer
 import co.touchlab.kjwt.serializers.InstantEpochSecondsSerializer
+import kotlinx.serialization.json.Json
 import kotlin.time.Instant
 
 /**
  * Returns the value of the named claim, deserializing it to type [T] using a reified serializer.
  *
  * @param name the name of the claim to retrieve.
+ * @param jsonInstance the [Json] instance to use for deserialization; defaults to the library's
+ *   internal [JwtJson] configuration (`ignoreUnknownKeys = true`, `explicitNulls = false`)
  * @return the claim value deserialized as [T].
  * @throws co.touchlab.kjwt.exception.MissingClaimException if the claim is absent.
  * @see getClaimOrNull
  */
-public inline fun <reified T> JwtPayload.getClaim(name: String): T = getClaim(
-    kotlinx.serialization.serializer<T>(),
-    name
-)
+public inline fun <reified T> JwtPayload.getClaim(
+    name: String,
+    jsonInstance: Json = JwtJson,
+): T = getClaim(kotlinx.serialization.serializer<T>(), name, jsonInstance)
 
 /**
  * Returns the value of the named claim deserialized to type [T], or `null` if the claim is absent.
  *
  * @param name the name of the claim to retrieve.
+ * @param jsonInstance the [Json] instance to use for deserialization; defaults to the library's
+ *   internal [JwtJson] configuration (`ignoreUnknownKeys = true`, `explicitNulls = false`)
  * @return the claim value deserialized as [T], or `null` if absent.
  * @see getClaim
  */
-public inline fun <reified T> JwtPayload.getClaimOrNull(name: String): T? = getClaimOrNull(
-    kotlinx.serialization.serializer<T>(),
-    name
-)
+public inline fun <reified T> JwtPayload.getClaimOrNull(
+    name: String,
+    jsonInstance: Json = JwtJson,
+): T? = getClaimOrNull(kotlinx.serialization.serializer<T>(), name, jsonInstance)
 
 /**
  * Returns the `iss` (issuer) claim value.

@@ -5,6 +5,7 @@ import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
 import co.touchlab.kjwt.model.jwk.Jwk
 import co.touchlab.kjwt.parser.JwtParserBuilder
+import dev.whyoleg.cryptography.CryptographyProvider
 
 // ---------------------------------------------------------------------------
 // verifyWith — HMAC (oct)
@@ -24,7 +25,8 @@ public suspend fun JwtParserBuilder.verifyWith(
     algorithm: SigningAlgorithm.HashBased,
     jwk: Jwk.Oct,
     keyId: String? = jwk.kid,
-): JwtParserBuilder = verifyWith(algorithm, jwk.toHmacKey(algorithm.digest), keyId)
+    cryptoProvider: CryptographyProvider = CryptographyProvider.Default,
+): JwtParserBuilder = verifyWith(algorithm, jwk.toHmacKey(algorithm.digest, cryptoProvider), keyId)
 
 // ---------------------------------------------------------------------------
 // verifyWith — RSA PKCS1 (RS*)
@@ -44,7 +46,8 @@ public suspend fun JwtParserBuilder.verifyWith(
     algorithm: SigningAlgorithm.PKCS1Based,
     jwk: Jwk.Rsa,
     keyId: String? = jwk.kid,
-): JwtParserBuilder = verifyWith(algorithm, jwk.toRsaPkcs1PublicKey(algorithm.digest), keyId)
+    cryptoProvider: CryptographyProvider = CryptographyProvider.Default,
+): JwtParserBuilder = verifyWith(algorithm, jwk.toRsaPkcs1PublicKey(algorithm.digest, cryptoProvider), keyId)
 
 // ---------------------------------------------------------------------------
 // verifyWith — RSA PSS (PS*)
@@ -64,7 +67,8 @@ public suspend fun JwtParserBuilder.verifyWith(
     algorithm: SigningAlgorithm.PSSBased,
     jwk: Jwk.Rsa,
     keyId: String? = jwk.kid,
-): JwtParserBuilder = verifyWith(algorithm, jwk.toRsaPssPublicKey(algorithm.digest), keyId)
+    cryptoProvider: CryptographyProvider = CryptographyProvider.Default,
+): JwtParserBuilder = verifyWith(algorithm, jwk.toRsaPssPublicKey(algorithm.digest, cryptoProvider), keyId)
 
 // ---------------------------------------------------------------------------
 // verifyWith — ECDSA (ES*)
@@ -84,7 +88,8 @@ public suspend fun JwtParserBuilder.verifyWith(
     algorithm: SigningAlgorithm.ECDSABased,
     jwk: Jwk.Ec,
     keyId: String? = jwk.kid,
-): JwtParserBuilder = verifyWith(algorithm, jwk.toEcdsaPublicKey(), keyId)
+    cryptoProvider: CryptographyProvider = CryptographyProvider.Default,
+): JwtParserBuilder = verifyWith(algorithm, jwk.toEcdsaPublicKey(cryptoProvider), keyId)
 
 // ---------------------------------------------------------------------------
 // decryptWith — RSA-OAEP / RSA-OAEP-256
@@ -104,4 +109,5 @@ public suspend fun JwtParserBuilder.decryptWith(
     algorithm: EncryptionAlgorithm.OAEPBased,
     jwk: Jwk.Rsa,
     keyId: String? = jwk.kid,
-): JwtParserBuilder = decryptWith(algorithm, jwk.toRsaOaepPrivateKey(algorithm.digest), keyId)
+    cryptoProvider: CryptographyProvider = CryptographyProvider.Default,
+): JwtParserBuilder = decryptWith(algorithm, jwk.toRsaOaepPrivateKey(algorithm.digest, cryptoProvider), keyId)

@@ -1,5 +1,6 @@
 package co.touchlab.kjwt.serializers
 
+import co.touchlab.kjwt.internal.encodeBase64Url
 import co.touchlab.kjwt.model.JwtHeader
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -20,6 +21,9 @@ public object JwtHeaderSerializer : KSerializer<JwtHeader> {
 
     override fun deserialize(decoder: Decoder): JwtHeader {
         val obj = decoder.decodeSerializableValue(delegate)
-        return JwtHeader(obj)
+        return JwtHeader(
+            obj.toString().encodeToByteArray().encodeBase64Url(),
+            obj
+        )
     }
 }

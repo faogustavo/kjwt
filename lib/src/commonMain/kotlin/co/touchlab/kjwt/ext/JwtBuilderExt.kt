@@ -19,6 +19,8 @@ import dev.whyoleg.cryptography.algorithms.RSA
  * @param key the HMAC key material encoded as a String.
  * @param keyFormat the format in which [key] is encoded.
  * @param keyId optional key ID to embed in the token header's `kid` field. Defaults to `null`.
+ * @param cryptoProvider the [CryptographyProvider] used to decode the key; defaults to
+ *   [CryptographyProvider.Default]
  * @return the signed [JwtInstance.Jws] token.
  */
 public suspend fun JwtBuilder.signWith(
@@ -26,9 +28,10 @@ public suspend fun JwtBuilder.signWith(
     key: String,
     keyFormat: HMAC.Key.Format,
     keyId: String? = null,
+    cryptoProvider: CryptographyProvider = CryptographyProvider.Default,
 ): JwtInstance.Jws {
     val parsedKey =
-        CryptographyProvider.Default
+        cryptoProvider
             .get(HMAC)
             .keyDecoder(algorithm.digest)
             .decodeFromByteArray(keyFormat, key.encodeToByteArray())
@@ -43,6 +46,8 @@ public suspend fun JwtBuilder.signWith(
  * @param key the RSA private key material encoded as a String.
  * @param keyFormat the format in which [key] is encoded.
  * @param keyId optional key ID to embed in the token header's `kid` field. Defaults to `null`.
+ * @param cryptoProvider the [CryptographyProvider] used to decode the key; defaults to
+ *   [CryptographyProvider.Default]
  * @return the signed [JwtInstance.Jws] token.
  */
 public suspend fun JwtBuilder.signWith(
@@ -50,9 +55,10 @@ public suspend fun JwtBuilder.signWith(
     key: String,
     keyFormat: RSA.PrivateKey.Format,
     keyId: String? = null,
+    cryptoProvider: CryptographyProvider = CryptographyProvider.Default,
 ): JwtInstance.Jws {
     val parsedKey =
-        CryptographyProvider.Default
+        cryptoProvider
             .get(RSA.PKCS1)
             .privateKeyDecoder(algorithm.digest)
             .decodeFromByteArray(keyFormat, key.encodeToByteArray())
@@ -67,6 +73,8 @@ public suspend fun JwtBuilder.signWith(
  * @param key the RSA private key material encoded as a String.
  * @param keyFormat the format in which [key] is encoded.
  * @param keyId optional key ID to embed in the token header's `kid` field. Defaults to `null`.
+ * @param cryptoProvider the [CryptographyProvider] used to decode the key; defaults to
+ *   [CryptographyProvider.Default]
  * @return the signed [JwtInstance.Jws] token.
  */
 public suspend fun JwtBuilder.signWith(
@@ -74,9 +82,10 @@ public suspend fun JwtBuilder.signWith(
     key: String,
     keyFormat: RSA.PrivateKey.Format,
     keyId: String? = null,
+    cryptoProvider: CryptographyProvider = CryptographyProvider.Default,
 ): JwtInstance.Jws {
     val parsedKey =
-        CryptographyProvider.Default
+        cryptoProvider
             .get(RSA.PSS)
             .privateKeyDecoder(algorithm.digest)
             .decodeFromByteArray(keyFormat, key.encodeToByteArray())
@@ -91,6 +100,8 @@ public suspend fun JwtBuilder.signWith(
  * @param key the EC private key material encoded as a String.
  * @param keyFormat the format in which [key] is encoded.
  * @param keyId optional key ID to embed in the token header's `kid` field. Defaults to `null`.
+ * @param cryptoProvider the [CryptographyProvider] used to decode the key; defaults to
+ *   [CryptographyProvider.Default]
  * @return the signed [JwtInstance.Jws] token.
  */
 public suspend fun JwtBuilder.signWith(
@@ -98,9 +109,10 @@ public suspend fun JwtBuilder.signWith(
     key: String,
     keyFormat: EC.PrivateKey.Format,
     keyId: String? = null,
+    cryptoProvider: CryptographyProvider = CryptographyProvider.Default,
 ): JwtInstance.Jws {
     val parsedKey =
-        CryptographyProvider.Default
+        cryptoProvider
             .get(ECDSA)
             .privateKeyDecoder(algorithm.curve)
             .decodeFromByteArray(keyFormat, key.encodeToByteArray())

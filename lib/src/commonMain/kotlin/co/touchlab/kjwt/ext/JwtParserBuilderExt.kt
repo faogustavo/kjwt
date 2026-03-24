@@ -18,6 +18,8 @@ import dev.whyoleg.cryptography.algorithms.RSA
  * @param keyFormat the format in which [key] is encoded.
  * @param keyId optional key ID to associate with this verifier; when set, only tokens whose `kid`
  *   header matches will use this key. Defaults to `null` (matches any token).
+ * @param cryptoProvider the [CryptographyProvider] used to decode the key; defaults to
+ *   [CryptographyProvider.Default]
  * @return this builder for chaining.
  */
 public suspend fun JwtParserBuilder.verifyWith(
@@ -25,9 +27,10 @@ public suspend fun JwtParserBuilder.verifyWith(
     key: String,
     keyFormat: HMAC.Key.Format,
     keyId: String? = null,
+    cryptoProvider: CryptographyProvider = CryptographyProvider.Default,
 ): JwtParserBuilder {
     val parsedKey =
-        CryptographyProvider.Default
+        cryptoProvider
             .get(HMAC)
             .keyDecoder(algorithm.digest)
             .decodeFromByteArray(keyFormat, key.encodeToByteArray())
@@ -43,6 +46,8 @@ public suspend fun JwtParserBuilder.verifyWith(
  * @param keyFormat the format in which [key] is encoded.
  * @param keyId optional key ID to associate with this verifier; when set, only tokens whose `kid`
  *   header matches will use this key. Defaults to `null` (matches any token).
+ * @param cryptoProvider the [CryptographyProvider] used to decode the key; defaults to
+ *   [CryptographyProvider.Default]
  * @return this builder for chaining.
  */
 public suspend fun JwtParserBuilder.verifyWith(
@@ -50,9 +55,10 @@ public suspend fun JwtParserBuilder.verifyWith(
     key: String,
     keyFormat: RSA.PublicKey.Format,
     keyId: String? = null,
+    cryptoProvider: CryptographyProvider = CryptographyProvider.Default,
 ): JwtParserBuilder {
     val parsedKey =
-        CryptographyProvider.Default
+        cryptoProvider
             .get(RSA.PKCS1)
             .publicKeyDecoder(algorithm.digest)
             .decodeFromByteArray(keyFormat, key.encodeToByteArray())
@@ -68,6 +74,8 @@ public suspend fun JwtParserBuilder.verifyWith(
  * @param keyFormat the format in which [key] is encoded.
  * @param keyId optional key ID to associate with this verifier; when set, only tokens whose `kid`
  *   header matches will use this key. Defaults to `null` (matches any token).
+ * @param cryptoProvider the [CryptographyProvider] used to decode the key; defaults to
+ *   [CryptographyProvider.Default]
  * @return this builder for chaining.
  */
 public suspend fun JwtParserBuilder.verifyWith(
@@ -75,9 +83,10 @@ public suspend fun JwtParserBuilder.verifyWith(
     key: String,
     keyFormat: RSA.PublicKey.Format,
     keyId: String? = null,
+    cryptoProvider: CryptographyProvider = CryptographyProvider.Default,
 ): JwtParserBuilder {
     val parsedKey =
-        CryptographyProvider.Default
+        cryptoProvider
             .get(RSA.PSS)
             .publicKeyDecoder(algorithm.digest)
             .decodeFromByteArray(keyFormat, key.encodeToByteArray())
@@ -93,6 +102,8 @@ public suspend fun JwtParserBuilder.verifyWith(
  * @param keyFormat the format in which [key] is encoded.
  * @param keyId optional key ID to associate with this verifier; when set, only tokens whose `kid`
  *   header matches will use this key. Defaults to `null` (matches any token).
+ * @param cryptoProvider the [CryptographyProvider] used to decode the key; defaults to
+ *   [CryptographyProvider.Default]
  * @return this builder for chaining.
  */
 public suspend fun JwtParserBuilder.verifyWith(
@@ -100,9 +111,10 @@ public suspend fun JwtParserBuilder.verifyWith(
     key: String,
     keyFormat: EC.PublicKey.Format,
     keyId: String? = null,
+    cryptoProvider: CryptographyProvider = CryptographyProvider.Default,
 ): JwtParserBuilder {
     val parsedKey =
-        CryptographyProvider.Default
+        cryptoProvider
             .get(ECDSA)
             .publicKeyDecoder(algorithm.curve)
             .decodeFromByteArray(keyFormat, key.encodeToByteArray())

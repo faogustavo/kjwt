@@ -1,31 +1,37 @@
 package co.touchlab.kjwt.ext
 
+import co.touchlab.kjwt.internal.JwtJson
 import co.touchlab.kjwt.model.JwtHeader
+import kotlinx.serialization.json.Json
 
 /**
  * Returns the value of the named header, deserializing it to type [T] using a reified serializer.
  *
  * @param name the name of the header to retrieve.
+ * @param jsonInstance the [Json] instance to use for deserialization; defaults to the library's
+ *   internal [JwtJson] configuration (`ignoreUnknownKeys = true`, `explicitNulls = false`)
  * @return the header value deserialized as [T].
  * @throws co.touchlab.kjwt.exception.MissingHeaderException if the header is absent.
  * @see getHeaderOrNull
  */
-public inline fun <reified T> JwtHeader.getHeader(name: String): T = getHeader(
-    kotlinx.serialization.serializer<T>(),
-    name
-)
+public inline fun <reified T> JwtHeader.getHeader(
+    name: String,
+    jsonInstance: Json = JwtJson,
+): T = getHeader(kotlinx.serialization.serializer<T>(), name, jsonInstance)
 
 /**
  * Returns the value of the named header deserialized to type [T], or `null` if the header is absent.
  *
  * @param name the name of the header to retrieve.
+ * @param jsonInstance the [Json] instance to use for deserialization; defaults to the library's
+ *   internal [JwtJson] configuration (`ignoreUnknownKeys = true`, `explicitNulls = false`)
  * @return the header value deserialized as [T], or `null` if absent.
  * @see getHeader
  */
-public inline fun <reified T> JwtHeader.getHeaderOrNull(name: String): T? = getHeaderOrNull(
-    kotlinx.serialization.serializer<T>(),
-    name
-)
+public inline fun <reified T> JwtHeader.getHeaderOrNull(
+    name: String,
+    jsonInstance: Json = JwtJson,
+): T? = getHeaderOrNull(kotlinx.serialization.serializer<T>(), name, jsonInstance)
 
 /**
  * Returns the `enc` (encryption algorithm) header value.

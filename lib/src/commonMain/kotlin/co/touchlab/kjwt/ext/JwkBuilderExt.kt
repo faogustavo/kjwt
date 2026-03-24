@@ -7,6 +7,7 @@ import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
 import co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
 import co.touchlab.kjwt.model.jwk.Jwk
+import dev.whyoleg.cryptography.CryptographyProvider
 
 // ---------------------------------------------------------------------------
 // signWith — HMAC (oct)
@@ -26,7 +27,8 @@ public suspend fun JwtBuilder.signWith(
     algorithm: SigningAlgorithm.HashBased,
     jwk: Jwk.Oct,
     keyId: String? = jwk.kid,
-): JwtInstance.Jws = signWith(algorithm, jwk.toHmacKey(algorithm.digest), keyId)
+    cryptoProvider: CryptographyProvider = CryptographyProvider.Default,
+): JwtInstance.Jws = signWith(algorithm, jwk.toHmacKey(algorithm.digest, cryptoProvider), keyId)
 
 // ---------------------------------------------------------------------------
 // signWith — RSA PKCS1 (RS*)
@@ -46,7 +48,8 @@ public suspend fun JwtBuilder.signWith(
     algorithm: SigningAlgorithm.PKCS1Based,
     jwk: Jwk.Rsa,
     keyId: String? = jwk.kid,
-): JwtInstance.Jws = signWith(algorithm, jwk.toRsaPkcs1PrivateKey(algorithm.digest), keyId)
+    cryptoProvider: CryptographyProvider = CryptographyProvider.Default,
+): JwtInstance.Jws = signWith(algorithm, jwk.toRsaPkcs1PrivateKey(algorithm.digest, cryptoProvider), keyId)
 
 // ---------------------------------------------------------------------------
 // signWith — RSA PSS (PS*)
@@ -66,7 +69,8 @@ public suspend fun JwtBuilder.signWith(
     algorithm: SigningAlgorithm.PSSBased,
     jwk: Jwk.Rsa,
     keyId: String? = jwk.kid,
-): JwtInstance.Jws = signWith(algorithm, jwk.toRsaPssPrivateKey(algorithm.digest), keyId)
+    cryptoProvider: CryptographyProvider = CryptographyProvider.Default,
+): JwtInstance.Jws = signWith(algorithm, jwk.toRsaPssPrivateKey(algorithm.digest, cryptoProvider), keyId)
 
 // ---------------------------------------------------------------------------
 // signWith — ECDSA (ES*)
@@ -86,7 +90,8 @@ public suspend fun JwtBuilder.signWith(
     algorithm: SigningAlgorithm.ECDSABased,
     jwk: Jwk.Ec,
     keyId: String? = jwk.kid,
-): JwtInstance.Jws = signWith(algorithm, jwk.toEcdsaPrivateKey(), keyId)
+    cryptoProvider: CryptographyProvider = CryptographyProvider.Default,
+): JwtInstance.Jws = signWith(algorithm, jwk.toEcdsaPrivateKey(cryptoProvider), keyId)
 
 // ---------------------------------------------------------------------------
 // encryptWith — RSA-OAEP / RSA-OAEP-256
@@ -108,4 +113,6 @@ public suspend fun JwtBuilder.encryptWith(
     keyAlgorithm: EncryptionAlgorithm.OAEPBased,
     contentAlgorithm: EncryptionContentAlgorithm,
     keyId: String? = jwk.kid,
-): JwtInstance.Jwe = encryptWith(jwk.toRsaOaepPublicKey(keyAlgorithm.digest), keyAlgorithm, contentAlgorithm, keyId)
+    cryptoProvider: CryptographyProvider = CryptographyProvider.Default,
+): JwtInstance.Jwe =
+    encryptWith(jwk.toRsaOaepPublicKey(keyAlgorithm.digest, cryptoProvider), keyAlgorithm, contentAlgorithm, keyId)

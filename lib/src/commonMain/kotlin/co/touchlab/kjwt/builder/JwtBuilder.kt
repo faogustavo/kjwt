@@ -385,8 +385,8 @@ public class JwtBuilder(
         key: SigningKey<PublicKey, PrivateKey>,
         keyId: String? = key.identifier.keyId,
     ): JwtInstance.Jws {
-        val header = headerBuilder.build(key.identifier.algorithm, keyId)
-        val payload = payloadBuilder.build()
+        val header = headerBuilder.build(key.identifier.algorithm, keyId, jsonInstance)
+        val payload = payloadBuilder.build(jsonInstance)
 
         val signingInput = "$header.$payload".encodeToByteArray()
         val signature = if (key.identifier.algorithm == SigningAlgorithm.None) ByteArray(0) else key.sign(signingInput)
@@ -491,8 +491,8 @@ public class JwtBuilder(
         contentAlgorithm: EncryptionContentAlgorithm,
         keyId: String? = key.identifier.keyId,
     ): JwtInstance.Jwe {
-        val header = headerBuilder.build(key.identifier.algorithm, contentAlgorithm, keyId)
-        val payload = payloadBuilder.build()
+        val header = headerBuilder.build(key.identifier.algorithm, contentAlgorithm, keyId, jsonInstance)
+        val payload = payloadBuilder.build(jsonInstance)
 
         val headerB64 = jsonInstance.encodeToBase64Url(header)
         val aad = headerB64.encodeToByteArray()

@@ -25,8 +25,8 @@ public class JwtHeader internal constructor(
     internal val base64Encoded: String,
     @PublishedApi internal val jsonData: JsonObject,
 ) {
-    internal constructor(jsonData: JsonObject) : this(
-        base64Encoded = jsonData.encodeToBase64Url(),
+    internal constructor(jsonData: JsonObject, jsonInstance: Json) : this(
+        base64Encoded = jsonInstance.encodeToBase64Url(jsonData),
         jsonData = jsonData,
     )
 
@@ -207,23 +207,27 @@ public class JwtHeader internal constructor(
         internal fun build(
             algorithm: SigningAlgorithm<*, *>,
             keyId: String?,
+            jsonInstance: Json,
         ) = JwtHeader(
             buildToJson {
                 put(ALG, algorithm.id)
                 if (keyId != null) put(KID, keyId)
             },
+            jsonInstance,
         )
 
         internal fun build(
             keyAlgorithm: EncryptionAlgorithm<*, *>,
             contentAlgorithm: EncryptionContentAlgorithm,
             keyId: String?,
+            jsonInstance: Json,
         ) = JwtHeader(
             buildToJson {
                 put(ALG, keyAlgorithm.id)
                 put(ENC, contentAlgorithm.id)
                 if (keyId != null) put(KID, keyId)
             },
+            jsonInstance,
         )
 
         private fun buildToJson(builder: JsonObjectBuilder.() -> Unit) =

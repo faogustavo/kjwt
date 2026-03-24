@@ -22,12 +22,12 @@ public class JwtPayload internal constructor(
     internal val base64Encoded: String,
     @PublishedApi internal val jsonData: JsonObject,
 ) {
-    internal constructor(jsonData: JsonObject) : this(
-        base64Encoded = JwtJson.encodeToBase64Url(jsonData),
+    internal constructor(jsonData: JsonObject, jsonInstance: Json) : this(
+        base64Encoded = jsonInstance.encodeToBase64Url(jsonData),
         jsonData = jsonData,
     )
 
-    internal constructor(base64Encoded: String, jsonInstance: Json = JwtJson) : this(
+    internal constructor(base64Encoded: String, jsonInstance: Json) : this(
         base64Encoded = base64Encoded,
         jsonData = jsonInstance.decodeBase64Url(
             deserializer = JsonObject.serializer(),
@@ -259,7 +259,7 @@ public class JwtPayload internal constructor(
             id = Uuid.random().toString()
         }
 
-        internal fun build() = JwtPayload(JsonObject(content))
+        internal fun build(jsonInstance: Json) = JwtPayload(JsonObject(content), jsonInstance)
     }
 
     public companion object {

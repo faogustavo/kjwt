@@ -16,6 +16,7 @@ import co.touchlab.kjwt.ext.notBefore
 import co.touchlab.kjwt.ext.notBeforeOrNull
 import co.touchlab.kjwt.ext.subject
 import co.touchlab.kjwt.ext.subjectOrNull
+import co.touchlab.kjwt.internal.JwtJson
 import co.touchlab.kjwt.model.JwtPayload
 import io.kotest.core.spec.style.FunSpec
 import kotlin.test.assertEquals
@@ -25,14 +26,14 @@ import kotlin.test.assertNull
 class ClaimsTest :
     FunSpec({
 
-        fun emptyClaims() = JwtPayload.Builder().build()
+        fun emptyClaims() = JwtPayload.Builder().build(JwtJson)
 
         fun claimsWithSubject() =
             JwtPayload
                 .Builder()
                 .apply {
                     subject = "test-subject"
-                }.build()
+                }.build(JwtJson)
 
         context("registered claims missing throws NullPointerException") {
 
