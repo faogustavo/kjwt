@@ -1,4 +1,4 @@
-package co.touchlab.kjwt.processor.crypto
+package co.touchlab.kjwt.cryptography.processors
 
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
 import co.touchlab.kjwt.model.registry.SigningKey

@@ -1,6 +1,8 @@
 package co.touchlab.kjwt.builder
 
 import co.touchlab.kjwt.cryptography.SimpleKey
+import co.touchlab.kjwt.cryptography.processors.CryptographyKotlinEncryptionProcessor
+import co.touchlab.kjwt.cryptography.processors.CryptographyKotlinIntegrityProcessor
 import co.touchlab.kjwt.internal.encodeBase64Url
 import co.touchlab.kjwt.internal.encodeToBase64Url
 import co.touchlab.kjwt.model.JwtHeader
@@ -16,8 +18,6 @@ import co.touchlab.kjwt.model.registry.SigningKey
 import co.touchlab.kjwt.model.registry.SigningKey.Identifier
 import co.touchlab.kjwt.processor.JweProcessor
 import co.touchlab.kjwt.processor.JwsProcessor
-import co.touchlab.kjwt.processor.crypto.CryptographyKotlinEncryptionProcessor
-import co.touchlab.kjwt.processor.crypto.CryptographyKotlinIntegrityProcessor
 import dev.whyoleg.cryptography.materials.key.Key
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json
