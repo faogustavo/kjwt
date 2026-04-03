@@ -2,6 +2,10 @@ package co.touchlab.kjwt.ext
 
 import co.touchlab.kjwt.Jwt
 import co.touchlab.kjwt.cryptography.SimpleKey
+import co.touchlab.kjwt.cryptography.ext.decryptWith
+import co.touchlab.kjwt.cryptography.ext.encryptWith
+import co.touchlab.kjwt.cryptography.ext.signWith
+import co.touchlab.kjwt.cryptography.ext.verifyWith
 import co.touchlab.kjwt.ecKeyPair
 import co.touchlab.kjwt.hs256Key
 import co.touchlab.kjwt.hs256Secret

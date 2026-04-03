@@ -1,4 +1,4 @@
-package co.touchlab.kjwt.ext
+package co.touchlab.kjwt.cryptography.ext
 
 import co.touchlab.kjwt.cryptography.registry.SigningKey
 import co.touchlab.kjwt.cryptography.toCryptographyKotlin

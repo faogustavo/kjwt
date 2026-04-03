@@ -21,6 +21,9 @@ public class CryptographyKotlinIntegrityProcessor(
     override val algorithm: SigningAlgorithm
         get() = key.identifier.algorithm
 
+    override val keyId: String?
+        get() = key.identifier.keyId
+
     override suspend fun sign(data: ByteArray): ByteArray {
         val privateKey = key.privateKey
         val algorithm = key.identifier.algorithm

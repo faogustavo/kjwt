@@ -1,5 +1,8 @@
 package co.touchlab.kjwt
 
+import co.touchlab.kjwt.cryptography.ext.decryptWith
+import co.touchlab.kjwt.cryptography.ext.signWith
+import co.touchlab.kjwt.cryptography.ext.verifyWith
 import co.touchlab.kjwt.exception.MalformedJwtException
 import co.touchlab.kjwt.exception.SignatureException
 import co.touchlab.kjwt.exception.UnsupportedJwtException

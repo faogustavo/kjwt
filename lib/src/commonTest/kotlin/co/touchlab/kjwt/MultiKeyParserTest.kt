@@ -1,7 +1,11 @@
 package co.touchlab.kjwt
 
-import co.touchlab.kjwt.ext.key
-import co.touchlab.kjwt.ext.parse
+import co.touchlab.kjwt.cryptography.ext.decryptWith
+import co.touchlab.kjwt.cryptography.ext.encryptWith
+import co.touchlab.kjwt.cryptography.ext.signWith
+import co.touchlab.kjwt.cryptography.ext.verifyWith
+import co.touchlab.kjwt.cryptography.ext.key
+import co.touchlab.kjwt.cryptography.ext.parse
 import co.touchlab.kjwt.ext.subjectOrNull
 import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
 import co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm

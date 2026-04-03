@@ -1,12 +1,14 @@
 package co.touchlab.kjwt.jwk
 
 import co.touchlab.kjwt.Jwt
+import co.touchlab.kjwt.cryptography.ext.signWith
+import co.touchlab.kjwt.cryptography.ext.verifyWith
 import co.touchlab.kjwt.ecKeyPair
 import co.touchlab.kjwt.ext.subjectOrNull
-import co.touchlab.kjwt.ext.toEcdsaPrivateKey
-import co.touchlab.kjwt.ext.toEcdsaPublicKey
-import co.touchlab.kjwt.ext.toHmacKey
-import co.touchlab.kjwt.ext.toRsaPkcs1PrivateKey
+import co.touchlab.kjwt.cryptography.ext.toEcdsaPrivateKey
+import co.touchlab.kjwt.cryptography.ext.toEcdsaPublicKey
+import co.touchlab.kjwt.cryptography.ext.toHmacKey
+import co.touchlab.kjwt.cryptography.ext.toRsaPkcs1PrivateKey
 import co.touchlab.kjwt.internal.encodeBase64Url
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
 import co.touchlab.kjwt.model.jwk.Jwk

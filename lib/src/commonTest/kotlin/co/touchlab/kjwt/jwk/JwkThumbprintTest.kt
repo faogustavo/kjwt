@@ -1,6 +1,6 @@
 package co.touchlab.kjwt.jwk
 
-import co.touchlab.kjwt.ext.hashed
+import co.touchlab.kjwt.cryptography.ext.hashed
 import co.touchlab.kjwt.model.jwk.Jwk
 import io.kotest.core.spec.style.FunSpec
 import kotlin.test.assertEquals

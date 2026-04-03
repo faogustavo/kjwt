@@ -1,10 +1,10 @@
 package co.touchlab.kjwt.jwk
 
 import co.touchlab.kjwt.Jwt
+import co.touchlab.kjwt.cryptography.ext.signWith
+import co.touchlab.kjwt.cryptography.ext.verifyWith
 import co.touchlab.kjwt.decodeTokenHeader
-import co.touchlab.kjwt.ext.signWith
 import co.touchlab.kjwt.ext.subjectOrNull
-import co.touchlab.kjwt.ext.verifyWith
 import co.touchlab.kjwt.hs256Secret
 import co.touchlab.kjwt.hs384Secret
 import co.touchlab.kjwt.hs512Secret

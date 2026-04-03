@@ -112,4 +112,20 @@ public interface JwtKeyRegistry {
         algorithm: EncryptionAlgorithm,
         keyId: String?,
     ): JweProcessor?
+
+    /**
+     * Registers a [JwsProcessor] in this registry under its algorithm and optional [keyId].
+     *
+     * @param processor the processor to register
+     * @param keyId optional key ID; `null` acts as a catch-all for the given algorithm
+     */
+    public fun registerJwsProcessor(processor: JwsProcessor, keyId: String? = processor.keyId)
+
+    /**
+     * Registers a [JweProcessor] in this registry under its algorithm and optional [keyId].
+     *
+     * @param processor the processor to register
+     * @param keyId optional key ID; `null` acts as a catch-all for the given algorithm
+     */
+    public fun registerJweProcessor(processor: JweProcessor, keyId: String? = processor.keyId)
 }

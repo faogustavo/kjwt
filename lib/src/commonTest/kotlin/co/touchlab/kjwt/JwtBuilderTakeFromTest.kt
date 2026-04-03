@@ -1,5 +1,9 @@
 package co.touchlab.kjwt
 
+import co.touchlab.kjwt.cryptography.ext.decryptWith
+import co.touchlab.kjwt.cryptography.ext.encryptWith
+import co.touchlab.kjwt.cryptography.ext.signWith
+import co.touchlab.kjwt.cryptography.ext.verifyWith
 import co.touchlab.kjwt.ext.audience
 import co.touchlab.kjwt.ext.getClaim
 import co.touchlab.kjwt.ext.getClaimOrNull

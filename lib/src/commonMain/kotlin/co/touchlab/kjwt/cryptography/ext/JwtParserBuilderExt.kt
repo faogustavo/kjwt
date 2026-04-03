@@ -1,16 +1,91 @@
-package co.touchlab.kjwt.ext
+package co.touchlab.kjwt.cryptography.ext
 
 import co.touchlab.kjwt.annotations.DelicateKJWTApi
 import co.touchlab.kjwt.cryptography.SimpleKey
+import co.touchlab.kjwt.cryptography.registry.EncryptionKey
+import co.touchlab.kjwt.cryptography.registry.SigningKey
 import co.touchlab.kjwt.cryptography.toCryptographyKotlin
 import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
+import co.touchlab.kjwt.model.algorithm.SigningAlgorithm.ECDSABased
+import co.touchlab.kjwt.model.algorithm.SigningAlgorithm.MACBased
+import co.touchlab.kjwt.model.algorithm.SigningAlgorithm.PKCS1Based
+import co.touchlab.kjwt.model.algorithm.SigningAlgorithm.PSSBased
 import co.touchlab.kjwt.parser.JwtParserBuilder
 import dev.whyoleg.cryptography.CryptographyProvider
 import dev.whyoleg.cryptography.algorithms.EC
 import dev.whyoleg.cryptography.algorithms.ECDSA
 import dev.whyoleg.cryptography.algorithms.HMAC
 import dev.whyoleg.cryptography.algorithms.RSA
+import dev.whyoleg.cryptography.materials.key.Key
+
+/** Registers an HMAC (HS256/384/512) symmetric key for signature verification. */
+@OptIn(DelicateKJWTApi::class)
+public fun JwtParserBuilder.verifyWith(
+    algorithm: MACBased,
+    key: HMAC.Key,
+    keyId: String? = null,
+): JwtParserBuilder = verifyWith(algorithm as SigningAlgorithm, key, keyId)
+
+/** Registers an RSA PKCS#1 (RS256/384/512) public key for signature verification. */
+@OptIn(DelicateKJWTApi::class)
+public fun JwtParserBuilder.verifyWith(
+    algorithm: PKCS1Based,
+    key: RSA.PKCS1.PublicKey,
+    keyId: String? = null,
+): JwtParserBuilder = verifyWith(algorithm as SigningAlgorithm, key, keyId)
+
+/** Registers an RSA PSS (PS256/384/512) public key for signature verification. */
+@OptIn(DelicateKJWTApi::class)
+public fun JwtParserBuilder.verifyWith(
+    algorithm: PSSBased,
+    key: RSA.PSS.PublicKey,
+    keyId: String? = null,
+): JwtParserBuilder = verifyWith(algorithm as SigningAlgorithm, key, keyId)
+
+/** Registers an ECDSA (ES256/384/512) public key for signature verification. */
+@OptIn(DelicateKJWTApi::class)
+public fun JwtParserBuilder.verifyWith(
+    algorithm: ECDSABased,
+    key: ECDSA.PublicKey,
+    keyId: String? = null,
+): JwtParserBuilder = verifyWith(algorithm as SigningAlgorithm, key, keyId)
+
+@DelicateKJWTApi
+public fun JwtParserBuilder.verifyWith(algorithm: SigningAlgorithm, key: Key, keyId: String? = null): JwtParserBuilder =
+    verifyWith(
+        SigningKey.VerifyOnlyKey(
+            identifier = SigningKey.Identifier(algorithm, keyId),
+            publicKey = key,
+        ),
+    )
+
+/**
+ * Registers a pre-built [SigningKey.VerifyOnlyKey] for JWS signature verification.
+ *
+ * The algorithm and `kid` are taken from [key]'s [SigningKey.Identifier].
+ *
+ * @param key the verify-only signing key to register
+ * @return this builder for chaining
+ */
+@OptIn(DelicateKJWTApi::class)
+public fun JwtParserBuilder.verifyWith(
+    key: SigningKey.VerifyOnlyKey,
+): JwtParserBuilder = registerSigningKey(key)
+
+/**
+ * Registers a pre-built [SigningKey.SigningKeyPair] for JWS signature verification.
+ *
+ * The algorithm and `kid` are taken from [key]'s [SigningKey.Identifier]. Both the public and
+ * private key material are stored, but only the public key is used for verification.
+ *
+ * @param key the signing key pair to register
+ * @return this builder for chaining
+ */
+@OptIn(DelicateKJWTApi::class)
+public fun JwtParserBuilder.verifyWith(
+    key: SigningKey.SigningKeyPair,
+): JwtParserBuilder = registerSigningKey(key)
 
 /**
  * Registers an HMAC verification key decoded from a String.
@@ -124,6 +199,70 @@ public suspend fun JwtParserBuilder.verifyWith(
 
     return verifyWith(algorithm, parsedKey, keyId)
 }
+
+@DelicateKJWTApi
+public fun JwtParserBuilder.registerSigningKey(key: SigningKey): JwtParserBuilder =
+    verifyWith(keyRegistry.findBestJwsProcessorAndMerge(key))
+
+/** Registers a direct (`dir`) symmetric key for JWE decryption. */
+@OptIn(DelicateKJWTApi::class)
+public fun JwtParserBuilder.decryptWith(
+    algorithm: EncryptionAlgorithm.Dir,
+    privateKey: SimpleKey,
+    keyId: String? = null,
+): JwtParserBuilder = decryptWith(algorithm as EncryptionAlgorithm, privateKey, keyId)
+
+/** Registers an RSA-OAEP (RSA-OAEP / RSA-OAEP-256) private key for JWE decryption. */
+@OptIn(DelicateKJWTApi::class)
+public fun JwtParserBuilder.decryptWith(
+    algorithm: EncryptionAlgorithm.OAEPBased,
+    privateKey: RSA.OAEP.PrivateKey,
+    keyId: String? = null,
+): JwtParserBuilder = decryptWith(algorithm as EncryptionAlgorithm, privateKey, keyId)
+
+@DelicateKJWTApi
+public fun JwtParserBuilder.decryptWith(
+    algorithm: EncryptionAlgorithm,
+    privateKey: Key,
+    keyId: String? = null,
+): JwtParserBuilder =
+    decryptWith(
+        EncryptionKey.DecryptionOnlyKey(
+            identifier = EncryptionKey.Identifier(algorithm, keyId),
+            privateKey = privateKey,
+        ),
+    )
+
+/**
+ * Registers a pre-built [EncryptionKey.DecryptionOnlyKey] for JWE token decryption.
+ *
+ * The algorithm and `kid` are taken from [key]'s [EncryptionKey.Identifier].
+ *
+ * @param key the decryption-only encryption key to register
+ * @return this builder for chaining
+ */
+@OptIn(DelicateKJWTApi::class)
+public fun JwtParserBuilder.decryptWith(
+    key: EncryptionKey.DecryptionOnlyKey,
+): JwtParserBuilder = registerEncryptionKey(key)
+
+/**
+ * Registers a pre-built [EncryptionKey.EncryptionKeyPair] for JWE token decryption.
+ *
+ * The algorithm and `kid` are taken from [key]'s [EncryptionKey.Identifier]. Both the public
+ * and private key material are stored, but only the private key is used for decryption.
+ *
+ * @param key the encryption key pair to register
+ * @return this builder for chaining
+ */
+@OptIn(DelicateKJWTApi::class)
+public fun JwtParserBuilder.decryptWith(
+    key: EncryptionKey.EncryptionKeyPair,
+): JwtParserBuilder = registerEncryptionKey(key)
+
+@DelicateKJWTApi
+public fun JwtParserBuilder.registerEncryptionKey(key: EncryptionKey): JwtParserBuilder =
+    decryptWith(keyRegistry.findBestJweProcessorAndMerge(key))
 
 /**
  * Registers a direct key (`dir`) for JWE decryption from a raw [ByteArray].

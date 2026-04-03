@@ -2,6 +2,8 @@
 
 package co.touchlab.kjwt
 
+import co.touchlab.kjwt.cryptography.ext.decryptWith
+import co.touchlab.kjwt.cryptography.ext.encryptWith
 import co.touchlab.kjwt.ext.subjectOrNull
 import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
 import co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm

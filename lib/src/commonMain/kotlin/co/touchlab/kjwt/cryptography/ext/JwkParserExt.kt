@@ -1,4 +1,4 @@
-package co.touchlab.kjwt.ext
+package co.touchlab.kjwt.cryptography.ext
 
 import co.touchlab.kjwt.annotations.DelicateKJWTApi
 import co.touchlab.kjwt.annotations.ExperimentalKJWTApi

@@ -1,6 +1,6 @@
-@file:OptIn(dev.whyoleg.cryptography.DelicateCryptographyApi::class)
+@file:OptIn(DelicateCryptographyApi::class)
 
-package co.touchlab.kjwt.ext
+package co.touchlab.kjwt.cryptography.ext
 
 import co.touchlab.kjwt.cryptography.SimpleKey
 import co.touchlab.kjwt.cryptography.registry.EncryptionKey
@@ -10,6 +10,7 @@ import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm.OAEPBased
 import dev.whyoleg.cryptography.BinarySize
 import dev.whyoleg.cryptography.BinarySize.Companion.bits
 import dev.whyoleg.cryptography.CryptographyProvider
+import dev.whyoleg.cryptography.DelicateCryptographyApi
 import dev.whyoleg.cryptography.algorithms.RSA
 import dev.whyoleg.cryptography.bigint.BigInt
 import dev.whyoleg.cryptography.bigint.toBigInt

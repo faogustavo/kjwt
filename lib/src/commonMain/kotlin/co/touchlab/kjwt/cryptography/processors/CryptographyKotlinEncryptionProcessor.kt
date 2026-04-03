@@ -31,6 +31,9 @@ public class CryptographyKotlinEncryptionProcessor(
     override val algorithm: EncryptionAlgorithm
         get() = key.identifier.algorithm
 
+    override val keyId: String?
+        get() = key.identifier.keyId
+
     override suspend fun encrypt(
         data: ByteArray,
         aad: ByteArray,

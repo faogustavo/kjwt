@@ -4,6 +4,7 @@ import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
 
 public interface JwsProcessor : Signer, Verifier {
     public val algorithm: SigningAlgorithm
+    public val keyId: String?
 }
 
 public fun interface Signer {
