@@ -7,16 +7,15 @@ import co.touchlab.kjwt.processor.JwsProcessor
 import dev.whyoleg.cryptography.algorithms.ECDSA
 import dev.whyoleg.cryptography.algorithms.HMAC
 import dev.whyoleg.cryptography.algorithms.RSA
-import dev.whyoleg.cryptography.materials.key.Key
 
-public class CryptographyKotlinIntegrityProcessor<PublicKey : Key, PrivateKey : Key>(
-    internal val key: SigningKey<PublicKey, PrivateKey>,
+public class CryptographyKotlinIntegrityProcessor(
+    internal val key: SigningKey,
 ) : JwsProcessor {
     internal constructor(
-        key: SigningKey<PublicKey, PrivateKey>,
+        key: SigningKey,
         previous: JwsProcessor?,
     ) : this(
-        key.mergeWith((previous as? CryptographyKotlinIntegrityProcessor<PublicKey, PrivateKey>)?.key)
+        key.mergeWith((previous as? CryptographyKotlinIntegrityProcessor)?.key)
     )
 
     override val algorithm: SigningAlgorithm

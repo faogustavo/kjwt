@@ -87,13 +87,13 @@ fun decodeTokenPayload(token: String): String {
 // ---- SigningKey helpers (library API) ----
 
 // HMAC: parse from known test secrets for deterministic use in tests
-suspend fun hs256SigningKey(keyId: String? = null): SigningKey.SigningKeyPair<HMAC.Key, HMAC.Key> =
+suspend fun hs256SigningKey(keyId: String? = null): SigningKey.SigningKeyPair =
     SigningAlgorithm.HS256.parse(hs256Secret, keyId = keyId)
 
-suspend fun hs384SigningKey(keyId: String? = null): SigningKey.SigningKeyPair<HMAC.Key, HMAC.Key> =
+suspend fun hs384SigningKey(keyId: String? = null): SigningKey.SigningKeyPair =
     SigningAlgorithm.HS384.parse(hs384Secret, keyId = keyId)
 
-suspend fun hs512SigningKey(keyId: String? = null): SigningKey.SigningKeyPair<HMAC.Key, HMAC.Key> =
+suspend fun hs512SigningKey(keyId: String? = null): SigningKey.SigningKeyPair =
     SigningAlgorithm.HS512.parse(hs512Secret, keyId = keyId)
 
 // RSA PKCS1
@@ -123,7 +123,7 @@ suspend fun es512SigningKey(keyId: String? = null) = SigningAlgorithm.ES512.newK
 fun dirEncKey(
     bits: Int,
     keyId: String? = null,
-): EncryptionKey.EncryptionKeyPair<SimpleKey, SimpleKey> =
+): EncryptionKey.EncryptionKeyPair =
     EncryptionAlgorithm.Dir.key(Random.Default.nextBytes(bits / 8), keyId)
 
 // RSA-OAEP

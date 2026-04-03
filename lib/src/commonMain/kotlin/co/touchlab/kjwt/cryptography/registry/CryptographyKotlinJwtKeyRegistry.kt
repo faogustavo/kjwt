@@ -8,8 +8,6 @@ import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
 import co.touchlab.kjwt.model.registry.JwtKeyRegistry
 import co.touchlab.kjwt.processor.JweProcessor
 import co.touchlab.kjwt.processor.JwsProcessor
-import dev.whyoleg.cryptography.materials.key.Key
-
 /**
  * Creates a new in-memory [CryptographyKotlinJwtKeyRegistry].
  *
@@ -37,7 +35,7 @@ public interface CryptographyKotlinJwtKeyRegistry : JwtKeyRegistry {
      * @throws IllegalArgumentException if a key with the same identifier is already registered
      *   and the two keys cannot be merged (e.g. two verify-only keys for the same identifier)
      */
-    public fun <PublicKey : Key, PrivateKey : Key> registerSigningKey(key: SigningKey<PublicKey, PrivateKey>)
+    public fun registerSigningKey(key: SigningKey)
 
     /**
      * Registers an [EncryptionKey] in this registry.
@@ -52,7 +50,7 @@ public interface CryptographyKotlinJwtKeyRegistry : JwtKeyRegistry {
      * @throws IllegalArgumentException if a key with the same identifier is already registered
      *   and the two keys cannot be merged (e.g. two decryption-only keys for the same identifier)
      */
-    public fun <PublicKey : Key, PrivateKey : Key> registerEncryptionKey(key: EncryptionKey<PublicKey, PrivateKey>)
+    public fun registerEncryptionKey(key: EncryptionKey)
 }
 
 internal class MemoryJwtKeyRegistry : CryptographyKotlinJwtKeyRegistry {
@@ -60,7 +58,7 @@ internal class MemoryJwtKeyRegistry : CryptographyKotlinJwtKeyRegistry {
     private val signingKeys = mutableMapOf<SigningKey.Identifier, JwsProcessor>()
     private val encryptionKeys = mutableMapOf<EncryptionKey.Identifier, JweProcessor>()
 
-    override fun <PublicKey : Key, PrivateKey : Key> registerSigningKey(key: SigningKey<PublicKey, PrivateKey>) {
+    override fun registerSigningKey(key: SigningKey) {
         signingKeys[key.identifier] =
             try {
                 CryptographyKotlinIntegrityProcessor(key, signingKeys[key.identifier])
@@ -73,7 +71,7 @@ internal class MemoryJwtKeyRegistry : CryptographyKotlinJwtKeyRegistry {
             }
     }
 
-    override fun <PublicKey : Key, PrivateKey : Key> registerEncryptionKey(key: EncryptionKey<PublicKey, PrivateKey>) {
+    override fun registerEncryptionKey(key: EncryptionKey) {
         encryptionKeys[key.identifier] =
             try {
                 CryptographyKotlinEncryptionProcessor(key, encryptionKeys[key.identifier])

@@ -21,10 +21,10 @@ import dev.whyoleg.cryptography.materials.key.Key
  * @see CryptographyKotlinJwtKeyRegistry
  * @see co.touchlab.kjwt.parser.JwtParserBuilder.decryptWith
  */
-public sealed class EncryptionKey<PublicKey : Key, PrivateKey : Key> {
+public sealed class EncryptionKey {
     public abstract val identifier: Identifier
-    public abstract val publicKey: PublicKey
-    public abstract val privateKey: PrivateKey
+    public abstract val publicKey: Key
+    public abstract val privateKey: Key
 
     /**
      * Identifies an [EncryptionKey] within a [CryptographyKotlinJwtKeyRegistry]
@@ -52,19 +52,19 @@ public sealed class EncryptionKey<PublicKey : Key, PrivateKey : Key> {
      * (e.g. asymmetric algorithms where only the public key is available). Accessing [privateKey]
      * on this type throws.
      */
-    public class EncryptionOnlyKey<PublicKey : Key, PrivateKey : Key> internal constructor(
+    public class EncryptionOnlyKey internal constructor(
         override val identifier: Identifier,
-        override val publicKey: PublicKey,
-    ) : EncryptionKey<PublicKey, PrivateKey>() {
+        override val publicKey: Key,
+    ) : EncryptionKey() {
         @Deprecated("EncryptionOnlyKey does not have a private key", level = DeprecationLevel.ERROR)
-        override val privateKey: PrivateKey
+        override val privateKey: Key
             get() = error("EncryptionOnlyKey does not have a private key")
 
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (other == null || this::class != other::class) return false
 
-            other as EncryptionOnlyKey<*, *>
+            other as EncryptionOnlyKey
 
             if (identifier != other.identifier) return false
             if (publicKey != other.publicKey) return false
@@ -87,19 +87,19 @@ public sealed class EncryptionKey<PublicKey : Key, PrivateKey : Key> {
      * Used when tokens must be decrypted but encryption is not required (e.g. a service that only
      * consumes encrypted tokens). Accessing [publicKey] on this type throws.
      */
-    public class DecryptionOnlyKey<PublicKey : Key, PrivateKey : Key> internal constructor(
+    public class DecryptionOnlyKey internal constructor(
         override val identifier: Identifier,
-        override val privateKey: PrivateKey,
-    ) : EncryptionKey<PublicKey, PrivateKey>() {
+        override val privateKey: Key,
+    ) : EncryptionKey() {
         @Deprecated("DecryptionOnlyKey does not have a public key", level = DeprecationLevel.ERROR)
-        override val publicKey: PublicKey
+        override val publicKey: Key
             get() = error("DecryptionOnlyKey does not have a public key")
 
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (other == null || this::class != other::class) return false
 
-            other as DecryptionOnlyKey<*, *>
+            other as DecryptionOnlyKey
 
             if (identifier != other.identifier) return false
             if (privateKey != other.privateKey) return false
@@ -124,16 +124,16 @@ public sealed class EncryptionKey<PublicKey : Key, PrivateKey : Key> {
      * [CryptographyKotlinJwtKeyRegistry]. Supports both encryption and
      * decryption.
      */
-    public class EncryptionKeyPair<PublicKey : Key, PrivateKey : Key> internal constructor(
+    public class EncryptionKeyPair internal constructor(
         override val identifier: Identifier,
-        override val publicKey: PublicKey,
-        override val privateKey: PrivateKey,
-    ) : EncryptionKey<PublicKey, PrivateKey>() {
+        override val publicKey: Key,
+        override val privateKey: Key,
+    ) : EncryptionKey() {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (other == null || this::class != other::class) return false
 
-            other as EncryptionKeyPair<*, *>
+            other as EncryptionKeyPair
 
             if (identifier != other.identifier) return false
             if (publicKey != other.publicKey) return false
@@ -153,7 +153,7 @@ public sealed class EncryptionKey<PublicKey : Key, PrivateKey : Key> {
             "EncryptionKeyPair(identifier=$identifier, publicKey=$publicKey, privateKey=$privateKey)"
     }
 
-    internal fun mergeWith(other: EncryptionKey<PublicKey, PrivateKey>?): EncryptionKey<PublicKey, PrivateKey> {
+    internal fun mergeWith(other: EncryptionKey?): EncryptionKey {
         if (other == null) return this
 
         require(identifier == other.identifier) { "Cannot merge keys with different identifiers" }

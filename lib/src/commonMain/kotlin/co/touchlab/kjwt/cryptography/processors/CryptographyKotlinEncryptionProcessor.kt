@@ -16,17 +16,16 @@ import dev.whyoleg.cryptography.algorithms.RSA
 import dev.whyoleg.cryptography.algorithms.SHA256
 import dev.whyoleg.cryptography.algorithms.SHA384
 import dev.whyoleg.cryptography.algorithms.SHA512
-import dev.whyoleg.cryptography.materials.key.Key
 import kotlin.random.Random
 
-public class CryptographyKotlinEncryptionProcessor<PublicKey : Key, PrivateKey : Key>(
-    internal val key: EncryptionKey<PublicKey, PrivateKey>,
+public class CryptographyKotlinEncryptionProcessor(
+    internal val key: EncryptionKey,
 ) : JweProcessor {
     internal constructor(
-        key: EncryptionKey<PublicKey, PrivateKey>,
+        key: EncryptionKey,
         previous: JweProcessor?,
     ) : this(
-        key.mergeWith((previous as? CryptographyKotlinEncryptionProcessor<PublicKey, PrivateKey>)?.key)
+        key.mergeWith((previous as? CryptographyKotlinEncryptionProcessor)?.key)
     )
 
     override val algorithm: EncryptionAlgorithm

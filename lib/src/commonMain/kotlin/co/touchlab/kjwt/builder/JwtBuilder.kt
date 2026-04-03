@@ -1,5 +1,6 @@
 package co.touchlab.kjwt.builder
 
+import co.touchlab.kjwt.annotations.DelicateKJWTApi
 import co.touchlab.kjwt.cryptography.SimpleKey
 import co.touchlab.kjwt.cryptography.processors.CryptographyKotlinEncryptionProcessor
 import co.touchlab.kjwt.cryptography.processors.CryptographyKotlinIntegrityProcessor
@@ -15,9 +16,16 @@ import co.touchlab.kjwt.model.JwtPayload
 import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
 import co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
+import co.touchlab.kjwt.model.algorithm.SigningAlgorithm.ECDSABased
+import co.touchlab.kjwt.model.algorithm.SigningAlgorithm.MACBased
+import co.touchlab.kjwt.model.algorithm.SigningAlgorithm.PKCS1Based
+import co.touchlab.kjwt.model.algorithm.SigningAlgorithm.PSSBased
 import co.touchlab.kjwt.model.registry.JwtKeyRegistry
 import co.touchlab.kjwt.processor.JweProcessor
 import co.touchlab.kjwt.processor.JwsProcessor
+import dev.whyoleg.cryptography.algorithms.ECDSA
+import dev.whyoleg.cryptography.algorithms.HMAC
+import dev.whyoleg.cryptography.algorithms.RSA
 import dev.whyoleg.cryptography.materials.key.Key
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json
@@ -47,6 +55,7 @@ import kotlin.uuid.ExperimentalUuidApi
  *     .encryptWith(encKey, EncryptionContentAlgorithm.A256GCM)
  * ```
  */
+@Suppress("TooManyFunctions")
 public class JwtBuilder(
     internal val jsonInstance: Json,
 ) {
@@ -306,24 +315,40 @@ public class JwtBuilder(
     public inline fun <reified T> header(value: T): JwtBuilder =
         header(kotlinx.serialization.serializer<T>(), value)
 
-    /**
-     * Builds and returns a JWS compact serialization: `header.payload.signature`.
-     *
-     * For [SigningAlgorithm.None] the signature part is empty, producing `header.payload.`
-     *
-     * @param algorithm the signing algorithm to use
-     * @param key the private key (or symmetric key) used to produce the signature
-     * @param keyId optional key ID to embed in the JWT header's `kid` field. Defaults to `null`.
-     * @return the resulting [JwtInstance.Jws] compact serialization
-     */
-    public suspend fun <PrivateKey : Key> signWith(
-        algorithm: SigningAlgorithm,
-        key: PrivateKey,
+    /** Signs with an HMAC (HS256/384/512) symmetric key. */
+    public suspend fun signWith(
+        algorithm: MACBased,
+        key: HMAC.Key,
         keyId: String? = null,
-    ): JwtInstance.Jws = signWith(
-        SigningKey.SigningOnlyKey<Key, PrivateKey>(Identifier(algorithm, keyId), key),
-        keyId,
-    )
+    ): JwtInstance.Jws = signWith(SigningKey.SigningOnlyKey(Identifier(algorithm, keyId), key), keyId)
+
+    /** Signs with an RSA PKCS#1 (RS256/384/512) private key. */
+    public suspend fun signWith(
+        algorithm: PKCS1Based,
+        key: RSA.PKCS1.PrivateKey,
+        keyId: String? = null,
+    ): JwtInstance.Jws = signWith(SigningKey.SigningOnlyKey(Identifier(algorithm, keyId), key), keyId)
+
+    /** Signs with an RSA PSS (PS256/384/512) private key. */
+    public suspend fun signWith(
+        algorithm: PSSBased,
+        key: RSA.PSS.PrivateKey,
+        keyId: String? = null,
+    ): JwtInstance.Jws = signWith(SigningKey.SigningOnlyKey(Identifier(algorithm, keyId), key), keyId)
+
+    /** Signs with an ECDSA (ES256/384/512) private key. */
+    public suspend fun signWith(
+        algorithm: ECDSABased,
+        key: ECDSA.PrivateKey,
+        keyId: String? = null,
+    ): JwtInstance.Jws = signWith(SigningKey.SigningOnlyKey(Identifier(algorithm, keyId), key), keyId)
+
+    @DelicateKJWTApi
+    public suspend fun signWith(
+        algorithm: SigningAlgorithm,
+        key: Key,
+        keyId: String? = null,
+    ): JwtInstance.Jws = signWith(SigningKey.SigningOnlyKey(Identifier(algorithm, keyId), key), keyId)
 
     /**
      * Looks up the private key from [registry] and builds a JWS compact serialization.
@@ -372,8 +397,8 @@ public class JwtBuilder(
      *   key ID stored in [key]'s identifier.
      * @return the resulting [JwtInstance.Jws] compact serialization
      */
-    public suspend fun <PublicKey : Key, PrivateKey : Key> signWith(
-        key: SigningKey.SigningOnlyKey<PublicKey, PrivateKey>,
+    public suspend fun signWith(
+        key: SigningKey.SigningOnlyKey,
         keyId: String? = key.identifier.keyId,
     ): JwtInstance.Jws = signWithJwsProcessor(CryptographyKotlinIntegrityProcessor(key), keyId)
 
@@ -385,8 +410,8 @@ public class JwtBuilder(
      *   key ID stored in [key]'s identifier.
      * @return the resulting [JwtInstance.Jws] compact serialization
      */
-    public suspend fun <PublicKey : Key, PrivateKey : Key> signWith(
-        key: SigningKey.SigningKeyPair<PublicKey, PrivateKey>,
+    public suspend fun signWith(
+        key: SigningKey.SigningKeyPair,
         keyId: String? = key.identifier.keyId,
     ): JwtInstance.Jws = signWithJwsProcessor(CryptographyKotlinIntegrityProcessor(key), keyId)
 
@@ -413,31 +438,50 @@ public class JwtBuilder(
      * @return the resulting [JwtInstance.Jws] with an empty signature segment
      * @see co.touchlab.kjwt.parser.JwtParserBuilder.allowUnsecured
      */
+    @OptIn(DelicateKJWTApi::class)
     public suspend fun build(): JwtInstance.Jws = signWith(SigningAlgorithm.None, SimpleKey.Empty)
 
-    /**
-     * Builds and returns a JWE compact serialization:
-     * `header.encryptedKey.iv.ciphertext.tag`
-     *
-     * @param key the public key used to encrypt the content encryption key
-     * @param keyAlgorithm the key encryption algorithm used to wrap the content encryption key
-     * @param contentAlgorithm the content encryption algorithm used to encrypt the payload
-     * @param keyId optional key ID to embed in the JWE header's `kid` field. Defaults to `null`.
-     * @return the resulting [JwtInstance.Jwe] compact serialization
-     */
-    public suspend fun <PublicKey : Key> encryptWith(
-        key: PublicKey,
+    /** Encrypts with a direct (`dir`) symmetric key. */
+    public suspend fun encryptWith(
+        key: SimpleKey,
+        keyAlgorithm: EncryptionAlgorithm.Dir,
+        contentAlgorithm: EncryptionContentAlgorithm,
+        keyId: String? = null,
+    ): JwtInstance.Jwe = encryptWithJweProcessor(
+        processor = CryptographyKotlinEncryptionProcessor(
+            EncryptionKey.EncryptionOnlyKey(EncryptionKey.Identifier(keyAlgorithm, keyId), key)
+        ),
+        contentAlgorithm = contentAlgorithm,
+        keyId = keyId,
+    )
+
+    /** Encrypts with an RSA-OAEP (RSA-OAEP / RSA-OAEP-256) public key. */
+    public suspend fun encryptWith(
+        key: RSA.OAEP.PublicKey,
+        keyAlgorithm: EncryptionAlgorithm.OAEPBased,
+        contentAlgorithm: EncryptionContentAlgorithm,
+        keyId: String? = null,
+    ): JwtInstance.Jwe = encryptWithJweProcessor(
+        processor = CryptographyKotlinEncryptionProcessor(
+            EncryptionKey.EncryptionOnlyKey(EncryptionKey.Identifier(keyAlgorithm, keyId), key)
+        ),
+        contentAlgorithm = contentAlgorithm,
+        keyId = keyId,
+    )
+
+    @DelicateKJWTApi
+    public suspend fun encryptWith(
+        key: Key,
         keyAlgorithm: EncryptionAlgorithm,
         contentAlgorithm: EncryptionContentAlgorithm,
         keyId: String? = null,
-    ): JwtInstance.Jwe =
-        encryptWithJweProcessor(
-            processor = CryptographyKotlinEncryptionProcessor(
-                EncryptionKey.EncryptionOnlyKey<PublicKey, Key>(EncryptionKey.Identifier(keyAlgorithm, keyId), key)
-            ),
-            contentAlgorithm = contentAlgorithm,
-            keyId = keyId,
-        )
+    ): JwtInstance.Jwe = encryptWithJweProcessor(
+        processor = CryptographyKotlinEncryptionProcessor(
+            EncryptionKey.EncryptionOnlyKey(EncryptionKey.Identifier(keyAlgorithm, keyId), key)
+        ),
+        contentAlgorithm = contentAlgorithm,
+        keyId = keyId,
+    )
 
     /**
      * Looks up the public key from [registry] and builds a JWE compact serialization.
@@ -481,8 +525,8 @@ public class JwtBuilder(
      *   key ID stored in [key]'s identifier.
      * @return the resulting [JwtInstance.Jwe] compact serialization
      */
-    public suspend fun <PublicKey : Key, PrivateKey : Key> encryptWith(
-        key: EncryptionKey.EncryptionOnlyKey<PublicKey, PrivateKey>,
+    public suspend fun encryptWith(
+        key: EncryptionKey.EncryptionOnlyKey,
         contentAlgorithm: EncryptionContentAlgorithm,
         keyId: String? = key.identifier.keyId,
     ): JwtInstance.Jwe = encryptWithJweProcessor(CryptographyKotlinEncryptionProcessor(key), contentAlgorithm, keyId)
@@ -496,8 +540,8 @@ public class JwtBuilder(
      *   key ID stored in [key]'s identifier.
      * @return the resulting [JwtInstance.Jwe] compact serialization
      */
-    public suspend fun <PublicKey : Key, PrivateKey : Key> encryptWith(
-        key: EncryptionKey.EncryptionKeyPair<PublicKey, PrivateKey>,
+    public suspend fun encryptWith(
+        key: EncryptionKey.EncryptionKeyPair,
         contentAlgorithm: EncryptionContentAlgorithm,
         keyId: String? = key.identifier.keyId,
     ): JwtInstance.Jwe = encryptWithJweProcessor(CryptographyKotlinEncryptionProcessor(key), contentAlgorithm, keyId)

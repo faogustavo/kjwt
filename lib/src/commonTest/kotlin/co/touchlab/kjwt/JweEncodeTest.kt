@@ -377,7 +377,7 @@ class JweEncodeTest :
 
             test("encryptWith EncryptionOnlyKey succeeds") {
                 val encKey = rsaOaepEncKey()
-                val encryptionOnlyKey = EncryptionKey.EncryptionOnlyKey<RSA.OAEP.PublicKey, RSA.OAEP.PrivateKey>(encKey.identifier, encKey.publicKey)
+                val encryptionOnlyKey = EncryptionKey.EncryptionOnlyKey(encKey.identifier, encKey.publicKey)
 
                 Jwt
                     .builder()

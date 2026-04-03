@@ -1,5 +1,6 @@
 package co.touchlab.kjwt.ext
 
+import co.touchlab.kjwt.annotations.DelicateKJWTApi
 import co.touchlab.kjwt.annotations.ExperimentalKJWTApi
 import co.touchlab.kjwt.cryptography.toCryptographyKotlin
 import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
@@ -96,6 +97,7 @@ public suspend fun JwtParserBuilder.verifyWith(
  *   `kid` header matches. Defaults to the JWK's own `kid` field.
  * @return This builder, configured with the ECDSA verification key.
  */
+@OptIn(DelicateKJWTApi::class)
 @ExperimentalKJWTApi
 public suspend fun JwtParserBuilder.verifyWith(
     algorithm: SigningAlgorithm.ECDSABased,

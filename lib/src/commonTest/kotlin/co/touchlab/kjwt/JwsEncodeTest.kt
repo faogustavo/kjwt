@@ -477,7 +477,7 @@ class JwsEncodeTest :
 
             test("signWith SigningOnlyKey succeeds") {
                 val keyPair = hs256SigningKey()
-                val signingOnlyKey = SigningKey.SigningOnlyKey<HMAC.Key, HMAC.Key>(keyPair.identifier, keyPair.privateKey)
+                val signingOnlyKey = SigningKey.SigningOnlyKey(keyPair.identifier, keyPair.privateKey)
 
                 Jwt
                     .builder()

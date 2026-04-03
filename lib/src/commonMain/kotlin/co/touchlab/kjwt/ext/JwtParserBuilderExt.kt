@@ -1,5 +1,6 @@
 package co.touchlab.kjwt.ext
 
+import co.touchlab.kjwt.annotations.DelicateKJWTApi
 import co.touchlab.kjwt.cryptography.SimpleKey
 import co.touchlab.kjwt.cryptography.toCryptographyKotlin
 import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
@@ -107,6 +108,7 @@ public suspend fun JwtParserBuilder.verifyWith(
  *   [CryptographyProvider.Default]
  * @return this builder for chaining.
  */
+@OptIn(DelicateKJWTApi::class)
 public suspend fun JwtParserBuilder.verifyWith(
     algorithm: SigningAlgorithm.ECDSABased,
     key: String,

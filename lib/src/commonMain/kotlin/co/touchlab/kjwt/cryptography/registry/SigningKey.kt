@@ -21,10 +21,10 @@ import dev.whyoleg.cryptography.materials.key.Key
  * @see CryptographyKotlinJwtKeyRegistry
  * @see co.touchlab.kjwt.parser.JwtParserBuilder.verifyWith
  */
-public sealed class SigningKey<PublicKey : Key, PrivateKey : Key> {
+public sealed class SigningKey {
     public abstract val identifier: Identifier
-    public abstract val publicKey: PublicKey
-    public abstract val privateKey: PrivateKey
+    public abstract val publicKey: Key
+    public abstract val privateKey: Key
 
     /**
      * Identifies a [SigningKey] within a [CryptographyKotlinJwtKeyRegistry] by
@@ -55,19 +55,19 @@ public sealed class SigningKey<PublicKey : Key, PrivateKey : Key> {
      * key holder (e.g. asymmetric algorithms where only the private key is available). Accessing
      * [publicKey] on this type throws.
      */
-    public class SigningOnlyKey<PublicKey : Key, PrivateKey : Key> internal constructor(
+    public class SigningOnlyKey internal constructor(
         override val identifier: Identifier,
-        override val privateKey: PrivateKey,
-    ) : SigningKey<PublicKey, PrivateKey>() {
+        override val privateKey: Key,
+    ) : SigningKey() {
         @Deprecated("SigningOnlyKey does not have a public key", level = DeprecationLevel.ERROR)
-        override val publicKey: PublicKey
+        override val publicKey: Key
             get() = error("SigningOnlyKey does not have a public key")
 
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (other == null || this::class != other::class) return false
 
-            other as SigningOnlyKey<*, *>
+            other as SigningOnlyKey
 
             if (identifier != other.identifier) return false
             if (privateKey != other.privateKey) return false
@@ -90,19 +90,19 @@ public sealed class SigningKey<PublicKey : Key, PrivateKey : Key> {
      * Used when tokens must be verified but signing is not required (e.g. a service that only
      * consumes tokens). Accessing [privateKey] on this type throws.
      */
-    public class VerifyOnlyKey<PublicKey : Key, PrivateKey : Key> internal constructor(
+    public class VerifyOnlyKey internal constructor(
         override val identifier: Identifier,
-        override val publicKey: PublicKey,
-    ) : SigningKey<PublicKey, PrivateKey>() {
+        override val publicKey: Key,
+    ) : SigningKey() {
         @Deprecated("VerifyOnlyKey does not have a private key", level = DeprecationLevel.ERROR)
-        override val privateKey: PrivateKey
+        override val privateKey: Key
             get() = error("VerifyOnlyKey does not have a private key")
 
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (other == null || this::class != other::class) return false
 
-            other as VerifyOnlyKey<*, *>
+            other as VerifyOnlyKey
 
             if (identifier != other.identifier) return false
             if (publicKey != other.publicKey) return false
@@ -127,16 +127,16 @@ public sealed class SigningKey<PublicKey : Key, PrivateKey : Key> {
      * [CryptographyKotlinJwtKeyRegistry]. Supports both signing and
      * verification.
      */
-    public class SigningKeyPair<PublicKey : Key, PrivateKey : Key> internal constructor(
+    public class SigningKeyPair internal constructor(
         override val identifier: Identifier,
-        override val publicKey: PublicKey,
-        override val privateKey: PrivateKey,
-    ) : SigningKey<PublicKey, PrivateKey>() {
+        override val publicKey: Key,
+        override val privateKey: Key,
+    ) : SigningKey() {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (other == null || this::class != other::class) return false
 
-            other as SigningKeyPair<*, *>
+            other as SigningKeyPair
 
             if (identifier != other.identifier) return false
             if (publicKey != other.publicKey) return false
@@ -156,7 +156,7 @@ public sealed class SigningKey<PublicKey : Key, PrivateKey : Key> {
             "SigningKeyPair(identifier=$identifier, publicKey=$publicKey, privateKey=$privateKey)"
     }
 
-    internal fun mergeWith(other: SigningKey<PublicKey, PrivateKey>?): SigningKey<PublicKey, PrivateKey> {
+    internal fun mergeWith(other: SigningKey?): SigningKey {
         if (other == null) return this
 
         require(identifier == other.identifier) { "Cannot merge keys with different identifiers" }
