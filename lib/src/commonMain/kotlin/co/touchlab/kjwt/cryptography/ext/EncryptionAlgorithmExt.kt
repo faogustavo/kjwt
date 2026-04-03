@@ -3,7 +3,7 @@
 package co.touchlab.kjwt.cryptography.ext
 
 import co.touchlab.kjwt.cryptography.SimpleKey
-import co.touchlab.kjwt.cryptography.registry.EncryptionKey
+import co.touchlab.kjwt.cryptography.processors.EncryptionKey
 import co.touchlab.kjwt.cryptography.toCryptographyKotlin
 import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm.Dir
 import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm.OAEPBased

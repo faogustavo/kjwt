@@ -19,6 +19,8 @@ import co.touchlab.kjwt.model.JwtPayload
 import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
 import co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
+import co.touchlab.kjwt.processor.JweDecryptor
+import co.touchlab.kjwt.processor.JwsVerifier
 import kotlin.time.Clock
 
 /**
@@ -50,7 +52,8 @@ public class JwtParser internal constructor(
      * @param token the JWS compact serialization to parse (must be exactly 3 dot-separated parts)
      * @return the parsed and verified [JwtInstance.Jws]
      * @throws MalformedJwtException if the token is not a valid 3-part JWT
-     * @throws UnsupportedJwtException if the algorithm is unrecognised, or if `alg=none` and unsecured tokens are not allowed
+     * @throws UnsupportedJwtException if the algorithm is unrecognised, or if `alg=none` and unsecured tokens are not
+     *  allowed
      * @throws SignatureException if the signature does not verify
      * @throws ExpiredJwtException if the token is past its expiration
      * @throws PrematureJwtException if the token is not yet valid
@@ -89,7 +92,9 @@ public class JwtParser internal constructor(
             val signingInput = "${parts[0]}.${parts[1]}".encodeToByteArray()
             val signature = signature.decodeBase64Url()
 
-            val valid = runCatching { integrityProcessor.verify(signingInput, signature) }
+            val verifier = integrityProcessor as? JwsVerifier
+                ?: error("Registered processor for ${algorithm.id} does not support verification.")
+            val valid = runCatching { verifier.verify(signingInput, signature) }
             if (!valid.getOrDefault(false)) throw SignatureException("JWT signature verification failed")
         }
 
@@ -149,7 +154,9 @@ public class JwtParser internal constructor(
 
         val plaintext =
             try {
-                decryptor.decrypt(
+                val jweDecryptor = decryptor as? JweDecryptor
+                    ?: error("Registered processor for ${keyAlgorithm.id} does not support decryption.")
+                jweDecryptor.decrypt(
                     aad = aad,
                     encryptedKey = encryptedKey.decodeBase64Url(),
                     iv = iv.decodeBase64Url(),
@@ -182,7 +189,8 @@ public class JwtParser internal constructor(
      * @param token the compact JWT serialization to parse
      * @return the parsed [JwtInstance], either a [JwtInstance.Jws] or [JwtInstance.Jwe]
      * @throws MalformedJwtException if the token does not have 3 or 5 dot-separated parts
-     * @throws UnsupportedJwtException if the algorithm is unrecognised, or if `alg=none` and unsecured tokens are not allowed
+     * @throws UnsupportedJwtException if the algorithm is unrecognised, or if `alg=none` and unsecured tokens are not
+     *  allowed
      * @throws SignatureException if the signature does not verify or decryption fails
      * @throws ExpiredJwtException if the token is past its expiration
      * @throws PrematureJwtException if the token is not yet valid

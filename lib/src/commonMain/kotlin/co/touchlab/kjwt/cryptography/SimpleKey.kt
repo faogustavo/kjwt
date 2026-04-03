@@ -9,7 +9,7 @@ import dev.whyoleg.cryptography.materials.key.Key
  * Used as the key type for direct-key (`dir`) JWE encryption, where the content encryption key is
  * supplied directly as bytes rather than being wrapped by an asymmetric algorithm.
  *
- * @see co.touchlab.kjwt.cryptography.registry.EncryptionKey
+ * @see co.touchlab.kjwt.cryptography.processors.EncryptionKey
  */
 @OptIn(CryptographyProviderApi::class)
 public class SimpleKey(

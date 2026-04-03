@@ -2,23 +2,38 @@ package co.touchlab.kjwt.processor
 
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
 
-/**
- * Core abstraction for JWS (signed JWT) signing and verification.
- *
- * Combines the [Signer] and [Verifier] functional interfaces and associates them with a
- * [SigningAlgorithm] and an optional key ID. Implementations are supplied to
- * [co.touchlab.kjwt.builder.JwtBuilder] for signing and to
- * [co.touchlab.kjwt.parser.JwtParserBuilder] for verification.
- *
- * @see Signer
- * @see Verifier
- */
-public interface JwsProcessor : Signer, Verifier {
-    /** The JWS signing algorithm this processor implements. */
+public interface BaseJwsProcessor {
+    /** The JWE key-encryption algorithm this processor implements. */
     public val algorithm: SigningAlgorithm
 
     /** The optional key ID (`kid`) associated with the key material used by this processor. */
     public val keyId: String?
+
+    public companion object;
+}
+
+/**
+ * Core abstraction for JWS (signed JWT) signing and verification.
+ *
+ * Combines the [JwsSigner] and [JwsVerifier] functional interfaces and associates them with a
+ * [SigningAlgorithm] and an optional key ID. Implementations are supplied to
+ * [co.touchlab.kjwt.builder.JwtBuilder] for signing and to
+ * [co.touchlab.kjwt.parser.JwtParserBuilder] for verification.
+ *
+ * @see BaseJwsProcessor
+ * @see JwsSigner
+ * @see JwsVerifier
+ */
+public interface JwsProcessor : BaseJwsProcessor, JwsSigner, JwsVerifier {
+    public companion object {
+        public fun combining(
+            signer: JwsSigner,
+            verifier: JwsVerifier,
+        ): JwsProcessor = object : JwsProcessor, JwsSigner by signer, JwsVerifier by verifier {
+            override val algorithm: SigningAlgorithm = signer.algorithm
+            override val keyId: String? = signer.keyId
+        }
+    }
 }
 
 /**
@@ -26,7 +41,7 @@ public interface JwsProcessor : Signer, Verifier {
  *
  * @see JwsProcessor
  */
-public fun interface Signer {
+public interface JwsSigner : BaseJwsProcessor {
     /**
      * Signs [data] and returns the raw signature bytes.
      *
@@ -34,6 +49,8 @@ public fun interface Signer {
      * @return the raw signature bytes produced by the signing operation
      */
     public suspend fun sign(data: ByteArray): ByteArray
+
+    public companion object;
 }
 
 /**
@@ -41,7 +58,7 @@ public fun interface Signer {
  *
  * @see JwsProcessor
  */
-public fun interface Verifier {
+public interface JwsVerifier : BaseJwsProcessor {
     /**
      * Verifies that [signature] is a valid signature over [data].
      *
@@ -50,4 +67,6 @@ public fun interface Verifier {
      * @return `true` if the signature is valid, `false` otherwise
      */
     public suspend fun verify(data: ByteArray, signature: ByteArray): Boolean
+
+    public companion object;
 }

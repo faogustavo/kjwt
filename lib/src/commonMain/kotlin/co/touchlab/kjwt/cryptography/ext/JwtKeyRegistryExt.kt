@@ -1,13 +1,12 @@
 package co.touchlab.kjwt.cryptography.ext
 
 import co.touchlab.kjwt.annotations.DelicateKJWTApi
-import co.touchlab.kjwt.cryptography.processors.CryptographyKotlinEncryptionProcessor
-import co.touchlab.kjwt.cryptography.processors.CryptographyKotlinIntegrityProcessor
-import co.touchlab.kjwt.cryptography.registry.EncryptionKey
-import co.touchlab.kjwt.cryptography.registry.SigningKey
+import co.touchlab.kjwt.cryptography.processors.EncryptionKey
+import co.touchlab.kjwt.cryptography.processors.SigningKey
+import co.touchlab.kjwt.ext.mergeWith
 import co.touchlab.kjwt.model.registry.JwtKeyRegistry
-import co.touchlab.kjwt.processor.JweProcessor
-import co.touchlab.kjwt.processor.JwsProcessor
+import co.touchlab.kjwt.processor.BaseJweProcessor
+import co.touchlab.kjwt.processor.BaseJwsProcessor
 
 /**
  * Registers a [SigningKey] in this registry, merging it with any existing processor for the same
@@ -19,25 +18,33 @@ import co.touchlab.kjwt.processor.JwsProcessor
  */
 @OptIn(DelicateKJWTApi::class)
 public fun JwtKeyRegistry.registerSigningKey(key: SigningKey) {
-    registerJwsProcessor(findBestJwsProcessorAndMerge(key))
+    registerJwsProcessor(key)
 }
 
 /**
- * Looks up the existing [JwsProcessor] for the algorithm and key ID in [key]'s identifier, then
- * creates a [CryptographyKotlinIntegrityProcessor] that merges [key] with that existing processor.
+ * Looks up the existing [BaseJwsProcessor] for the algorithm and key ID in [key]'s identifier,
+ * then merges [key] with that existing processor.
+ *
+ * When the existing processor is also a [SigningKey], the merge is performed at the key level,
+ * producing a [SigningKey.SigningKeyPair]. Otherwise the generic processor combining mechanism is
+ * used.
  *
  * @param key the signing key whose algorithm and key ID are used to locate an existing processor
- * @return a [JwsProcessor] incorporating the new key, merged with any previously registered key
+ * @return a [BaseJwsProcessor] incorporating the new key, merged with any previously registered key
  * @throws IllegalArgumentException if a signing key of the same type is already registered for
  *   the same algorithm and key ID
  */
 @DelicateKJWTApi
 public fun JwtKeyRegistry.findBestJwsProcessorAndMerge(
     key: SigningKey,
-): JwsProcessor {
+): BaseJwsProcessor {
     val previous = findBestJwsProcessor(key.identifier.algorithm, key.identifier.keyId)
     return try {
-        CryptographyKotlinIntegrityProcessor(key, previous)
+        when (previous) {
+            null -> key
+            is SigningKey -> key.mergeWith(previous)
+            else -> (key as BaseJwsProcessor).mergeWith(previous)
+        }
     } catch (error: IllegalArgumentException) {
         throw IllegalArgumentException(
             "Signing key for '${key.identifier.algorithm.id}' " +
@@ -57,25 +64,33 @@ public fun JwtKeyRegistry.findBestJwsProcessorAndMerge(
  */
 @OptIn(DelicateKJWTApi::class)
 public fun JwtKeyRegistry.registerEncryptionKey(key: EncryptionKey) {
-    registerJweProcessor(findBestJweProcessorAndMerge(key))
+    registerJweProcessor(key)
 }
 
 /**
- * Looks up the existing [JweProcessor] for the algorithm and key ID in [key]'s identifier, then
- * creates a [CryptographyKotlinEncryptionProcessor] that merges [key] with that existing processor.
+ * Looks up the existing [BaseJweProcessor] for the algorithm and key ID in [key]'s identifier,
+ * then merges [key] with that existing processor.
+ *
+ * When the existing processor is also an [EncryptionKey], the merge is performed at the key level,
+ * producing an [EncryptionKey.EncryptionKeyPair]. Otherwise the generic processor combining
+ * mechanism is used.
  *
  * @param key the encryption key whose algorithm and key ID are used to locate an existing processor
- * @return a [JweProcessor] incorporating the new key, merged with any previously registered key
+ * @return a [BaseJweProcessor] incorporating the new key, merged with any previously registered key
  * @throws IllegalArgumentException if an encryption key of the same type is already registered for
  *   the same algorithm and key ID
  */
 @DelicateKJWTApi
 public fun JwtKeyRegistry.findBestJweProcessorAndMerge(
     key: EncryptionKey,
-): JweProcessor {
+): BaseJweProcessor {
     val previous = findBestJweProcessor(key.identifier.algorithm, key.identifier.keyId)
     return try {
-        CryptographyKotlinEncryptionProcessor(key, previous)
+        when (previous) {
+            null -> key
+            is EncryptionKey -> key.mergeWith(previous)
+            else -> (key as BaseJweProcessor).mergeWith(previous)
+        }
     } catch (error: IllegalArgumentException) {
         throw IllegalArgumentException(
             "Encryption key for '${key.identifier.algorithm.id}' " +

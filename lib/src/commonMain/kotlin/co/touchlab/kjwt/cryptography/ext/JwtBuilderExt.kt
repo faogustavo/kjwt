@@ -4,11 +4,9 @@ import co.touchlab.kjwt.annotations.DelicateKJWTApi
 import co.touchlab.kjwt.annotations.ExperimentalKJWTApi
 import co.touchlab.kjwt.builder.JwtBuilder
 import co.touchlab.kjwt.cryptography.SimpleKey
-import co.touchlab.kjwt.cryptography.processors.CryptographyKotlinEncryptionProcessor
-import co.touchlab.kjwt.cryptography.processors.CryptographyKotlinIntegrityProcessor
-import co.touchlab.kjwt.cryptography.registry.EncryptionKey
-import co.touchlab.kjwt.cryptography.registry.SigningKey
-import co.touchlab.kjwt.cryptography.registry.SigningKey.Identifier
+import co.touchlab.kjwt.cryptography.processors.EncryptionKey
+import co.touchlab.kjwt.cryptography.processors.SigningKey
+import co.touchlab.kjwt.cryptography.processors.SigningKey.Identifier
 import co.touchlab.kjwt.cryptography.toCryptographyKotlin
 import co.touchlab.kjwt.model.JwtInstance
 import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
@@ -107,7 +105,7 @@ public suspend fun JwtBuilder.signWith(
 public suspend fun JwtBuilder.signWith(
     key: SigningKey.SigningOnlyKey,
     keyId: String? = key.identifier.keyId,
-): JwtInstance.Jws = signWith(CryptographyKotlinIntegrityProcessor(key), keyId)
+): JwtInstance.Jws = signWith(key, keyId)
 
 /**
  * Builds and returns a JWS compact serialization using a pre-built [SigningKey.SigningKeyPair].
@@ -120,7 +118,7 @@ public suspend fun JwtBuilder.signWith(
 public suspend fun JwtBuilder.signWith(
     key: SigningKey.SigningKeyPair,
     keyId: String? = key.identifier.keyId,
-): JwtInstance.Jws = signWith(CryptographyKotlinIntegrityProcessor(key), keyId)
+): JwtInstance.Jws = signWith(key, keyId)
 
 /**
  * Encrypts the JWT using a direct (`dir`) [SimpleKey] symmetric key.
@@ -137,9 +135,7 @@ public suspend fun JwtBuilder.encryptWith(
     contentAlgorithm: EncryptionContentAlgorithm,
     keyId: String? = null,
 ): JwtInstance.Jwe = encryptWithJweProcessor(
-    processor = CryptographyKotlinEncryptionProcessor(
-        EncryptionKey.EncryptionOnlyKey(EncryptionKey.Identifier(keyAlgorithm, keyId), key)
-    ),
+    processor = EncryptionKey.EncryptionOnlyKey(EncryptionKey.Identifier(keyAlgorithm, keyId), key),
     contentAlgorithm = contentAlgorithm,
     keyId = keyId,
 )
@@ -159,9 +155,7 @@ public suspend fun JwtBuilder.encryptWith(
     contentAlgorithm: EncryptionContentAlgorithm,
     keyId: String? = null,
 ): JwtInstance.Jwe = encryptWithJweProcessor(
-    processor = CryptographyKotlinEncryptionProcessor(
-        EncryptionKey.EncryptionOnlyKey(EncryptionKey.Identifier(keyAlgorithm, keyId), key)
-    ),
+    processor = EncryptionKey.EncryptionOnlyKey(EncryptionKey.Identifier(keyAlgorithm, keyId), key),
     contentAlgorithm = contentAlgorithm,
     keyId = keyId,
 )
@@ -185,9 +179,7 @@ public suspend fun JwtBuilder.encryptWith(
     contentAlgorithm: EncryptionContentAlgorithm,
     keyId: String? = null,
 ): JwtInstance.Jwe = encryptWithJweProcessor(
-    processor = CryptographyKotlinEncryptionProcessor(
-        EncryptionKey.EncryptionOnlyKey(EncryptionKey.Identifier(keyAlgorithm, keyId), key)
-    ),
+    processor = EncryptionKey.EncryptionOnlyKey(EncryptionKey.Identifier(keyAlgorithm, keyId), key),
     contentAlgorithm = contentAlgorithm,
     keyId = keyId,
 )
@@ -205,7 +197,7 @@ public suspend fun JwtBuilder.encryptWith(
     key: EncryptionKey.EncryptionOnlyKey,
     contentAlgorithm: EncryptionContentAlgorithm,
     keyId: String? = key.identifier.keyId,
-): JwtInstance.Jwe = encryptWithJweProcessor(CryptographyKotlinEncryptionProcessor(key), contentAlgorithm, keyId)
+): JwtInstance.Jwe = encryptWithJweProcessor(key, contentAlgorithm, keyId)
 
 /**
  * Builds and returns a JWE compact serialization using a pre-built [EncryptionKey.EncryptionKeyPair].
@@ -220,7 +212,7 @@ public suspend fun JwtBuilder.encryptWith(
     key: EncryptionKey.EncryptionKeyPair,
     contentAlgorithm: EncryptionContentAlgorithm,
     keyId: String? = key.identifier.keyId,
-): JwtInstance.Jwe = encryptWithJweProcessor(CryptographyKotlinEncryptionProcessor(key), contentAlgorithm, keyId)
+): JwtInstance.Jwe = encryptWithJweProcessor(key, contentAlgorithm, keyId)
 
 // ---------------------------------------------------------------------------
 // signWith — HMAC (oct)

@@ -2,8 +2,8 @@ package co.touchlab.kjwt.cryptography.ext
 
 import co.touchlab.kjwt.annotations.DelicateKJWTApi
 import co.touchlab.kjwt.cryptography.SimpleKey
-import co.touchlab.kjwt.cryptography.registry.EncryptionKey
-import co.touchlab.kjwt.cryptography.registry.SigningKey
+import co.touchlab.kjwt.cryptography.processors.EncryptionKey
+import co.touchlab.kjwt.cryptography.processors.SigningKey
 import co.touchlab.kjwt.cryptography.toCryptographyKotlin
 import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
@@ -255,7 +255,7 @@ public suspend fun JwtParserBuilder.verifyWith(
  */
 @DelicateKJWTApi
 public fun JwtParserBuilder.registerSigningKey(key: SigningKey): JwtParserBuilder =
-    verifyWith(keyRegistry.findBestJwsProcessorAndMerge(key))
+    apply { keyRegistry.registerJwsProcessor(key) }
 
 /**
  * Registers a direct (`dir`) [SimpleKey] symmetric key for JWE decryption.
@@ -352,7 +352,7 @@ public fun JwtParserBuilder.decryptWith(
  */
 @DelicateKJWTApi
 public fun JwtParserBuilder.registerEncryptionKey(key: EncryptionKey): JwtParserBuilder =
-    decryptWith(keyRegistry.findBestJweProcessorAndMerge(key))
+    apply { keyRegistry.registerJweProcessor(key) }
 
 /**
  * Registers a direct key (`dir`) for JWE decryption from a raw [ByteArray].

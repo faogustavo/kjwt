@@ -4,6 +4,8 @@ import co.touchlab.kjwt.annotations.ExperimentalKJWTApi
 import co.touchlab.kjwt.annotations.InternalKJWTApi
 import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
+import co.touchlab.kjwt.processor.BaseJweProcessor
+import co.touchlab.kjwt.processor.BaseJwsProcessor
 import co.touchlab.kjwt.processor.JweProcessor
 import co.touchlab.kjwt.processor.JwsProcessor
 
@@ -88,12 +90,12 @@ public interface JwtKeyRegistry {
      *
      * @param algorithm the signing algorithm the key must support
      * @param keyId optional key ID to narrow the look-up
-     * @return the matching [co.touchlab.kjwt.cryptography.registry.SigningKey], or `null` if none is found
+     * @return the matching [co.touchlab.kjwt.cryptography.processors.SigningKey], or `null` if none is found
      */
     public fun findBestJwsProcessor(
         algorithm: SigningAlgorithm,
         keyId: String?,
-    ): JwsProcessor?
+    ): BaseJwsProcessor?
 
     /**
      * Returns the best available encryption key for [algorithm] and the optional [keyId].
@@ -106,12 +108,12 @@ public interface JwtKeyRegistry {
      *
      * @param algorithm the encryption algorithm the key must support
      * @param keyId optional key ID to narrow the look-up
-     * @return the matching [co.touchlab.kjwt.cryptography.registry.EncryptionKey], or `null` if none is found
+     * @return the matching [co.touchlab.kjwt.cryptography.processors.EncryptionKey], or `null` if none is found
      */
     public fun findBestJweProcessor(
         algorithm: EncryptionAlgorithm,
         keyId: String?,
-    ): JweProcessor?
+    ): BaseJweProcessor?
 
     /**
      * Registers a [JwsProcessor] in this registry under its algorithm and optional [keyId].
@@ -119,7 +121,7 @@ public interface JwtKeyRegistry {
      * @param processor the processor to register
      * @param keyId optional key ID; `null` acts as a catch-all for the given algorithm
      */
-    public fun registerJwsProcessor(processor: JwsProcessor, keyId: String? = processor.keyId)
+    public fun registerJwsProcessor(processor: BaseJwsProcessor, keyId: String? = processor.keyId)
 
     /**
      * Registers a [JweProcessor] in this registry under its algorithm and optional [keyId].
@@ -127,5 +129,5 @@ public interface JwtKeyRegistry {
      * @param processor the processor to register
      * @param keyId optional key ID; `null` acts as a catch-all for the given algorithm
      */
-    public fun registerJweProcessor(processor: JweProcessor, keyId: String? = processor.keyId)
+    public fun registerJweProcessor(processor: BaseJweProcessor, keyId: String? = processor.keyId)
 }

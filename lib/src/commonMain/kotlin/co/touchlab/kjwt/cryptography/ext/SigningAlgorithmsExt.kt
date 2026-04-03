@@ -1,6 +1,6 @@
 package co.touchlab.kjwt.cryptography.ext
 
-import co.touchlab.kjwt.cryptography.registry.SigningKey
+import co.touchlab.kjwt.cryptography.processors.SigningKey
 import co.touchlab.kjwt.cryptography.toCryptographyKotlin
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm.ECDSABased
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm.MACBased

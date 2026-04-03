@@ -4,23 +4,38 @@ import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
 import co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm
 import co.touchlab.kjwt.model.algorithm.JweEncryptResult
 
-/**
- * Core abstraction for JWE (encrypted JWT) key encryption and decryption.
- *
- * Combines the [Encryptor] and [Decryptor] functional interfaces and associates them with an
- * [EncryptionAlgorithm] and an optional key ID. Implementations are supplied to
- * [co.touchlab.kjwt.builder.JwtBuilder] for token encryption and to
- * [co.touchlab.kjwt.parser.JwtParserBuilder] for token decryption.
- *
- * @see Encryptor
- * @see Decryptor
- */
-public interface JweProcessor : Encryptor, Decryptor {
+public interface BaseJweProcessor {
     /** The JWE key-encryption algorithm this processor implements. */
     public val algorithm: EncryptionAlgorithm
 
     /** The optional key ID (`kid`) associated with the key material used by this processor. */
     public val keyId: String?
+
+    public companion object;
+}
+
+/**
+ * Core abstraction for JWE (encrypted JWT) key encryption and decryption.
+ *
+ * Combines the [JweEncryptor] and [JweDecryptor] functional interfaces and associates them with an
+ * [EncryptionAlgorithm] and an optional key ID. Implementations are supplied to
+ * [co.touchlab.kjwt.builder.JwtBuilder] for token encryption and to
+ * [co.touchlab.kjwt.parser.JwtParserBuilder] for token decryption.
+ *
+ * @see BaseJweProcessor
+ * @see JweEncryptor
+ * @see JweDecryptor
+ */
+public interface JweProcessor : BaseJweProcessor, JweEncryptor, JweDecryptor {
+    public companion object {
+        public fun combining(
+            encryptor: JweEncryptor,
+            decryptor: JweDecryptor,
+        ): JweProcessor = object : JweProcessor, JweEncryptor by encryptor, JweDecryptor by decryptor {
+            override val algorithm: EncryptionAlgorithm = encryptor.algorithm
+            override val keyId: String? = encryptor.keyId
+        }
+    }
 }
 
 /**
@@ -28,7 +43,7 @@ public interface JweProcessor : Encryptor, Decryptor {
  *
  * @see JweProcessor
  */
-public fun interface Encryptor {
+public interface JweEncryptor : BaseJweProcessor {
     /**
      * Encrypts [data] using the given [contentAlgorithm] and returns the full JWE encryption result.
      *
@@ -42,6 +57,8 @@ public fun interface Encryptor {
         aad: ByteArray,
         contentAlgorithm: EncryptionContentAlgorithm,
     ): JweEncryptResult
+
+    public companion object;
 }
 
 /**
@@ -49,7 +66,7 @@ public fun interface Encryptor {
  *
  * @see JweProcessor
  */
-public fun interface Decryptor {
+public interface JweDecryptor : BaseJweProcessor {
     /**
      * Decrypts and authenticates the JWE token components, returning the plaintext payload bytes.
      *
@@ -70,4 +87,6 @@ public fun interface Decryptor {
         tag: ByteArray,
         contentAlgorithm: EncryptionContentAlgorithm,
     ): ByteArray
+
+    public companion object;
 }

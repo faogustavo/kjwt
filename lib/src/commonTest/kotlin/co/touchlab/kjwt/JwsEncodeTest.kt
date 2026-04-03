@@ -12,9 +12,8 @@ import co.touchlab.kjwt.ext.keyId
 import co.touchlab.kjwt.ext.notBeforeOrNull
 import co.touchlab.kjwt.ext.subjectOrNull
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
-import co.touchlab.kjwt.cryptography.registry.SigningKey
+import co.touchlab.kjwt.cryptography.processors.SigningKey
 import dev.whyoleg.cryptography.algorithms.EC
-import dev.whyoleg.cryptography.algorithms.HMAC
 import io.kotest.core.spec.style.FunSpec
 import kotlinx.serialization.json.JsonPrimitive
 import kotlin.test.assertEquals

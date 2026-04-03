@@ -2,10 +2,11 @@ package co.touchlab.kjwt.model.registry
 
 import co.touchlab.kjwt.annotations.ExperimentalKJWTApi
 import co.touchlab.kjwt.annotations.InternalKJWTApi
+import co.touchlab.kjwt.ext.mergeWith
 import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
-import co.touchlab.kjwt.processor.JweProcessor
-import co.touchlab.kjwt.processor.JwsProcessor
+import co.touchlab.kjwt.processor.BaseJweProcessor
+import co.touchlab.kjwt.processor.BaseJwsProcessor
 
 /**
  * Default in-memory implementation of [JwtKeyRegistry].
@@ -22,8 +23,8 @@ public class DefaultJwtKeyRegistry : JwtKeyRegistry {
     @InternalKJWTApi
     override var delegateKeyRegistry: JwtKeyRegistry? = null
 
-    private val signingProcessors = mutableMapOf<Pair<SigningAlgorithm, String?>, JwsProcessor>()
-    private val encryptionProcessors = mutableMapOf<Pair<EncryptionAlgorithm, String?>, JweProcessor>()
+    private val signingProcessors = mutableMapOf<Pair<SigningAlgorithm, String?>, BaseJwsProcessor>()
+    private val encryptionProcessors = mutableMapOf<Pair<EncryptionAlgorithm, String?>, BaseJweProcessor>()
 
     override fun delegateTo(other: JwtKeyRegistry) {
         var cursor: JwtKeyRegistry? = other
@@ -36,33 +37,57 @@ public class DefaultJwtKeyRegistry : JwtKeyRegistry {
         delegateKeyRegistry = other
     }
 
-    override fun registerJwsProcessor(processor: JwsProcessor, keyId: String?) {
-        signingProcessors[Pair(processor.algorithm, keyId)] = processor
+    override fun registerJwsProcessor(processor: BaseJwsProcessor, keyId: String?) {
+        signingProcessors[Pair(processor.algorithm, keyId)] =
+            processor.mergeWith(signingProcessors[Pair(processor.algorithm, keyId)])
     }
 
-    override fun registerJweProcessor(processor: JweProcessor, keyId: String?) {
-        encryptionProcessors[Pair(processor.algorithm, keyId)] = processor
+    override fun registerJweProcessor(processor: BaseJweProcessor, keyId: String?) {
+        encryptionProcessors[Pair(processor.algorithm, keyId)] =
+            processor.mergeWith(encryptionProcessors[Pair(processor.algorithm, keyId)])
     }
 
+    /**
+     * Returns the best available signing key for [algorithm] and the optional [keyId].
+     *
+     * Look-up order:
+     * 1. A key registered with both [algorithm] and [keyId] (exact match).
+     * 2. A key registered with [algorithm] and no key ID (algorithm-only fallback), when [keyId]
+     *    is non-null and has no exact match.
+     * 3. The [delegateKeyRegistry], if one is set.
+     *
+     * @param algorithm the signing algorithm the key must support
+     * @param keyId optional key ID to narrow the look-up
+     * @return the matching [co.touchlab.kjwt.cryptography.processors.SigningKey], or `null` if none is found
+     */
     override fun findBestJwsProcessor(
         algorithm: SigningAlgorithm,
         keyId: String?,
-    ): JwsProcessor? {
-        signingProcessors[Pair(algorithm, keyId)]?.let { return it }
-        if (keyId != null) {
-            signingProcessors[Pair(algorithm, null)]?.let { return it }
-        }
-        return delegateKeyRegistry?.findBestJwsProcessor(algorithm, keyId)
+    ): BaseJwsProcessor? {
+        return signingProcessors[Pair(algorithm, keyId)]
+            ?: signingProcessors[Pair(algorithm, null)]
+            ?: delegateKeyRegistry?.findBestJwsProcessor(algorithm, keyId)
     }
 
+    /**
+     * Returns the best available encryption key for [algorithm] and the optional [keyId].
+     *
+     * Look-up order:
+     * 1. A key registered with both [algorithm] and [keyId] (exact match).
+     * 2. A key registered with [algorithm] and no key ID (algorithm-only fallback), when [keyId]
+     *    is non-null and has no exact match.
+     * 3. The [delegateKeyRegistry], if one is set.
+     *
+     * @param algorithm the encryption algorithm the key must support
+     * @param keyId optional key ID to narrow the look-up
+     * @return the matching [co.touchlab.kjwt.cryptography.processors.EncryptionKey], or `null` if none is found
+     */
     override fun findBestJweProcessor(
         algorithm: EncryptionAlgorithm,
         keyId: String?,
-    ): JweProcessor? {
-        encryptionProcessors[Pair(algorithm, keyId)]?.let { return it }
-        if (keyId != null) {
-            encryptionProcessors[Pair(algorithm, null)]?.let { return it }
-        }
-        return delegateKeyRegistry?.findBestJweProcessor(algorithm, keyId)
+    ): BaseJweProcessor? {
+        return encryptionProcessors[Pair(algorithm, keyId)]
+            ?: encryptionProcessors[Pair(algorithm, null)]?.let { return it }
+            ?: delegateKeyRegistry?.findBestJweProcessor(algorithm, keyId)
     }
 }

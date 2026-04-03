@@ -11,8 +11,10 @@ import co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
 import co.touchlab.kjwt.model.registry.DefaultJwtKeyRegistry
 import co.touchlab.kjwt.model.registry.JwtKeyRegistry
+import co.touchlab.kjwt.processor.JweEncryptor
 import co.touchlab.kjwt.processor.JweProcessor
 import co.touchlab.kjwt.processor.JwsProcessor
+import co.touchlab.kjwt.processor.JwsSigner
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
@@ -331,7 +333,7 @@ public class JwtBuilder(
 
         return try {
             val processor =
-                requireNotNull(registry.findBestJwsProcessor(algorithm, keyId)) {
+                requireNotNull(registry.findBestJwsProcessor(algorithm, keyId) as? JwsSigner) {
                     "No signing key configured for ${algorithm.id}."
                 }
             signWith(processor, keyId)
@@ -352,7 +354,7 @@ public class JwtBuilder(
      * @see co.touchlab.kjwt.parser.JwtParserBuilder.verifyWith
      */
     public suspend fun signWith(
-        integrityProcessor: JwsProcessor,
+        integrityProcessor: JwsSigner,
         keyId: String? = integrityProcessor.keyId,
     ): JwtInstance.Jws {
         val header = headerBuilder.build(integrityProcessor.algorithm, keyId, jsonInstance)
@@ -405,8 +407,8 @@ public class JwtBuilder(
         keyId: String? = null,
     ): JwtInstance.Jwe = try {
         val processor =
-            requireNotNull(registry.findBestJweProcessor(keyAlgorithm, keyId)) {
-                "No signing key configured for ${keyAlgorithm.id}."
+            requireNotNull(registry.findBestJweProcessor(keyAlgorithm, keyId) as JweEncryptor) {
+                "No encryption key configured for ${keyAlgorithm.id}."
             }
 
         encryptWithJweProcessor(processor, contentAlgorithm, keyId)
@@ -427,7 +429,7 @@ public class JwtBuilder(
      * @see co.touchlab.kjwt.parser.JwtParserBuilder.decryptWith
      */
     public suspend fun encryptWithJweProcessor(
-        processor: JweProcessor,
+        processor: JweEncryptor,
         contentAlgorithm: EncryptionContentAlgorithm,
         keyId: String? = processor.keyId,
     ): JwtInstance.Jwe {

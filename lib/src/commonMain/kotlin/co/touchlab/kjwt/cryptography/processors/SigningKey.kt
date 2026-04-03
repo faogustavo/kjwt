@@ -1,6 +1,17 @@
-package co.touchlab.kjwt.cryptography.registry
+@file:OptIn(DelicateCryptographyApi::class)
 
+package co.touchlab.kjwt.cryptography.processors
+
+import co.touchlab.kjwt.cryptography.toCryptographyKotlin
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
+import co.touchlab.kjwt.processor.BaseJwsProcessor
+import co.touchlab.kjwt.processor.JwsProcessor
+import co.touchlab.kjwt.processor.JwsSigner
+import co.touchlab.kjwt.processor.JwsVerifier
+import dev.whyoleg.cryptography.DelicateCryptographyApi
+import dev.whyoleg.cryptography.algorithms.ECDSA
+import dev.whyoleg.cryptography.algorithms.HMAC
+import dev.whyoleg.cryptography.algorithms.RSA
 import dev.whyoleg.cryptography.materials.key.Key
 
 /**
@@ -18,10 +29,13 @@ import dev.whyoleg.cryptography.materials.key.Key
  * [mergeWith]. This happens automatically when both are registered with the same
  * [co.touchlab.kjwt.model.registry.DefaultJwtKeyRegistry].
  *
+ * Each subtype directly implements the appropriate processor interface ([JwsSigner], [JwsVerifier],
+ * or [JwsProcessor]) and carries the cryptographic logic for its role.
+ *
  * @see co.touchlab.kjwt.model.registry.DefaultJwtKeyRegistry
  * @see co.touchlab.kjwt.parser.JwtParserBuilder.verifyWith
  */
-public sealed class SigningKey {
+public sealed class SigningKey : BaseJwsProcessor {
     /** The algorithm and key ID that identify this key within a registry. */
     public abstract val identifier: Identifier
 
@@ -30,6 +44,9 @@ public sealed class SigningKey {
 
     /** The private key material used for signing; throws on subtypes that do not hold a private key. */
     public abstract val privateKey: Key
+
+    override val algorithm: SigningAlgorithm get() = identifier.algorithm
+    override val keyId: String? get() = identifier.keyId
 
     /**
      * Identifies a [SigningKey] within a [co.touchlab.kjwt.model.registry.DefaultJwtKeyRegistry] by
@@ -54,7 +71,7 @@ public sealed class SigningKey {
     }
 
     /**
-     * A signing-only key that holds only the private key material.
+     * A signing-only key that holds only the private key material, implementing [JwsSigner].
      *
      * Used when a token must be signed but signature verification is not performed by the same
      * key holder (e.g. asymmetric algorithms where only the private key is available). Accessing
@@ -63,10 +80,12 @@ public sealed class SigningKey {
     public class SigningOnlyKey internal constructor(
         override val identifier: Identifier,
         override val privateKey: Key,
-    ) : SigningKey() {
+    ) : SigningKey(), JwsSigner {
         @Deprecated("SigningOnlyKey does not have a public key", level = DeprecationLevel.ERROR)
         override val publicKey: Key
             get() = error("SigningOnlyKey does not have a public key")
+
+        override suspend fun sign(data: ByteArray): ByteArray = privateKey.sign(identifier.algorithm, data)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
@@ -90,7 +109,7 @@ public sealed class SigningKey {
     }
 
     /**
-     * A verify-only key that holds only the public key material.
+     * A verify-only key that holds only the public key material, implementing [JwsVerifier].
      *
      * Used when tokens must be verified but signing is not required (e.g. a service that only
      * consumes tokens). Accessing [privateKey] on this type throws.
@@ -98,10 +117,13 @@ public sealed class SigningKey {
     public class VerifyOnlyKey internal constructor(
         override val identifier: Identifier,
         override val publicKey: Key,
-    ) : SigningKey() {
+    ) : SigningKey(), JwsVerifier {
         @Deprecated("VerifyOnlyKey does not have a private key", level = DeprecationLevel.ERROR)
         override val privateKey: Key
             get() = error("VerifyOnlyKey does not have a private key")
+
+        override suspend fun verify(data: ByteArray, signature: ByteArray): Boolean =
+            publicKey.verify(identifier.algorithm, data, signature)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
@@ -125,7 +147,7 @@ public sealed class SigningKey {
     }
 
     /**
-     * A complete key pair that holds both private and public key material.
+     * A complete key pair that holds both private and public key material, implementing [JwsProcessor].
      *
      * Produced automatically by [mergeWith] when a [SigningOnlyKey] and a [VerifyOnlyKey] with
      * the same [Identifier] are both registered in a
@@ -136,7 +158,12 @@ public sealed class SigningKey {
         override val identifier: Identifier,
         override val publicKey: Key,
         override val privateKey: Key,
-    ) : SigningKey() {
+    ) : SigningKey(), JwsProcessor {
+        override suspend fun sign(data: ByteArray): ByteArray = privateKey.sign(identifier.algorithm, data)
+
+        override suspend fun verify(data: ByteArray, signature: ByteArray): Boolean =
+            publicKey.verify(identifier.algorithm, data, signature)
+
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (other == null || this::class != other::class) return false
@@ -183,3 +210,65 @@ public sealed class SigningKey {
         }
     }
 }
+
+private suspend fun Key.sign(algorithm: SigningAlgorithm, data: ByteArray): ByteArray =
+    when (this) {
+        is HMAC.Key if (algorithm is SigningAlgorithm.MACBased) -> {
+            signatureGenerator().generateSignature(data)
+        }
+
+        is RSA.PKCS1.PrivateKey if (algorithm is SigningAlgorithm.PKCS1Based) -> {
+            signatureGenerator().generateSignature(data)
+        }
+
+        is RSA.PSS.PrivateKey if (algorithm is SigningAlgorithm.PSSBased) -> {
+            signatureGenerator().generateSignature(data)
+        }
+
+        is ECDSA.PrivateKey if (algorithm is SigningAlgorithm.ECDSABased) -> {
+            signatureGenerator(algorithm.digest.toCryptographyKotlin(), ECDSA.SignatureFormat.RAW)
+                .generateSignature(data)
+        }
+
+        else -> {
+            when (algorithm) {
+                SigningAlgorithm.None -> ByteArray(0)
+                else -> error("The keys provided for signing are not valid for the ${algorithm.id}.")
+            }
+        }
+    }
+
+private suspend fun Key.verify(algorithm: SigningAlgorithm, data: ByteArray, signature: ByteArray): Boolean =
+    try {
+        when (this) {
+            is HMAC.Key if (algorithm is SigningAlgorithm.MACBased) -> {
+                signatureVerifier().verifySignature(data, signature)
+                true
+            }
+
+            is RSA.PKCS1.PublicKey if (algorithm is SigningAlgorithm.PKCS1Based) -> {
+                signatureVerifier().verifySignature(data, signature)
+                true
+            }
+
+            is RSA.PSS.PublicKey if (algorithm is SigningAlgorithm.PSSBased) -> {
+                signatureVerifier().verifySignature(data, signature)
+                true
+            }
+
+            is ECDSA.PublicKey if (algorithm is SigningAlgorithm.ECDSABased) -> {
+                signatureVerifier(algorithm.digest.toCryptographyKotlin(), ECDSA.SignatureFormat.RAW)
+                    .verifySignature(data, signature)
+                true
+            }
+
+            else -> {
+                when (algorithm) {
+                    SigningAlgorithm.None -> signature.isEmpty()
+                    else -> null
+                }
+            }
+        }
+    } catch (_: Throwable) {
+        false
+    } ?: error("The keys provided for verification are not valid for the ${algorithm.id}.")

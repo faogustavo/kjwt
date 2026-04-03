@@ -6,8 +6,8 @@ import co.touchlab.kjwt.cryptography.ext.newKey
 import co.touchlab.kjwt.cryptography.ext.parse
 import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
-import co.touchlab.kjwt.cryptography.registry.EncryptionKey
-import co.touchlab.kjwt.cryptography.registry.SigningKey
+import co.touchlab.kjwt.cryptography.processors.EncryptionKey
+import co.touchlab.kjwt.cryptography.processors.SigningKey
 import dev.whyoleg.cryptography.CryptographyAlgorithmId
 import dev.whyoleg.cryptography.CryptographyProvider
 import dev.whyoleg.cryptography.algorithms.Digest
