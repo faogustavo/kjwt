@@ -22,21 +22,41 @@ import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
 import kotlin.time.Clock
 
 /**
- * Thread-safe JWT parser. Obtain via [JwtParserBuilder.build].
+ * Thread-safe JWT parser that parses, verifies, and validates JWS and JWE compact tokens.
+ *
+ * Obtain an instance via [JwtParserBuilder.build] after configuring verification keys, decryption
+ * keys, and claim validators on the builder. Once built, a [JwtParser] instance is immutable and
+ * safe for concurrent use.
+ *
+ * The parser enforces the following lifecycle for each token:
+ * 1. Structural validation — correct number of parts (3 for JWS, 5 for JWE per RFC 7515/7516).
+ * 2. Algorithm resolution — the `alg` (and `enc`) header values are mapped to known algorithms.
+ * 3. Signature/decryption — the token is cryptographically verified or decrypted.
+ * 4. Time-claim validation — `exp` and `nbf` claims are checked against the current clock.
+ * 5. Custom claim validation — any validators registered on the builder are applied.
+ *
+ * @see JwtParserBuilder
+ * @see co.touchlab.kjwt.Jwt.parser
  */
 public class JwtParser internal constructor(
     private val config: JwtParserBuilder,
 ) {
     /**
-     * Parses and validates a JWS compact token, returning the signed JwtInstance.
+     * Parses and validates a JWS compact token, returning the signed [JwtInstance.Jws].
      *
+     * Tokens with `alg=none` (unsecured) are rejected unless [JwtParserBuilder.allowUnsecured]
+     * was set to `true` on the builder (RFC 7515).
+     *
+     * @param token the JWS compact serialization to parse (must be exactly 3 dot-separated parts)
+     * @return the parsed and verified [JwtInstance.Jws]
      * @throws MalformedJwtException if the token is not a valid 3-part JWT
-     * @throws UnsupportedJwtException if `alg=none` and unsecured tokens are not allowed
+     * @throws UnsupportedJwtException if the algorithm is unrecognised, or if `alg=none` and unsecured tokens are not allowed
      * @throws SignatureException if the signature does not verify
      * @throws ExpiredJwtException if the token is past its expiration
      * @throws PrematureJwtException if the token is not yet valid
      * @throws MissingClaimException if a required claim is absent
      * @throws IncorrectClaimException if a required claim has an unexpected value
+     * @see JwtParserBuilder.allowUnsecured
      */
     public suspend fun parseSigned(token: String): JwtInstance.Jws {
         val parts = token.split('.')
@@ -80,10 +100,21 @@ public class JwtParser internal constructor(
     }
 
     /**
-     * Parses and validates a JWE compact token, returning the decrypted claims.
+     * Parses and validates a JWE compact token, returning the decrypted [JwtInstance.Jwe].
      *
+     * The token is decrypted using the key registered via [JwtParserBuilder.decryptWith], and the
+     * decrypted payload is then subjected to time-claim and custom-claim validation (RFC 7516).
+     *
+     * @param token the JWE compact serialization to parse (must be exactly 5 dot-separated parts)
+     * @return the parsed and decrypted [JwtInstance.Jwe]
      * @throws MalformedJwtException if the token is not a valid 5-part JWE
+     * @throws UnsupportedJwtException if the key algorithm or content algorithm is unrecognised
      * @throws SignatureException if decryption or authentication tag verification fails
+     * @throws ExpiredJwtException if the token is past its expiration
+     * @throws PrematureJwtException if the token is not yet valid
+     * @throws MissingClaimException if a required claim is absent
+     * @throws IncorrectClaimException if a required claim has an unexpected value
+     * @see JwtParserBuilder.decryptWith
      */
     public suspend fun parseEncrypted(token: String): JwtInstance.Jwe {
         val parts = token.split('.')
@@ -146,7 +177,19 @@ public class JwtParser internal constructor(
     }
 
     /**
-     * Auto-detects JWS (3 parts) or JWE (5 parts) and delegates accordingly.
+     * Auto-detects the token type and delegates to [parseSigned] (3 parts) or [parseEncrypted] (5 parts).
+     *
+     * @param token the compact JWT serialization to parse
+     * @return the parsed [JwtInstance], either a [JwtInstance.Jws] or [JwtInstance.Jwe]
+     * @throws MalformedJwtException if the token does not have 3 or 5 dot-separated parts
+     * @throws UnsupportedJwtException if the algorithm is unrecognised, or if `alg=none` and unsecured tokens are not allowed
+     * @throws SignatureException if the signature does not verify or decryption fails
+     * @throws ExpiredJwtException if the token is past its expiration
+     * @throws PrematureJwtException if the token is not yet valid
+     * @throws MissingClaimException if a required claim is absent
+     * @throws IncorrectClaimException if a required claim has an unexpected value
+     * @see parseSigned
+     * @see parseEncrypted
      */
     public suspend fun parse(token: String): JwtInstance {
         val partCount = token.count { it == '.' } + 1

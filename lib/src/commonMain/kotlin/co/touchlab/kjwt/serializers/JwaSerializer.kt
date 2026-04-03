@@ -10,6 +10,12 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
+/**
+ * Serializer for [Jwa] values as their JWA algorithm identifier string (e.g. `"HS256"`, `"RSA-OAEP"`).
+ *
+ * Converts between the sealed [Jwa] hierarchy and its string `id` representation using [Jwa.fromId]
+ * for deserialization. Registered via `@Serializable(JwaSerializer::class)` on [Jwa].
+ */
 public object JwaSerializer : KSerializer<Jwa> {
     override val descriptor: SerialDescriptor =
         PrimitiveSerialDescriptor("Jwa", PrimitiveKind.STRING)
@@ -24,6 +30,12 @@ public object JwaSerializer : KSerializer<Jwa> {
     override fun deserialize(decoder: Decoder): Jwa = Jwa.fromId(decoder.decodeString())
 }
 
+/**
+ * Serializer for [EncryptionAlgorithm] values as their JWA identifier string (e.g. `"RSA-OAEP"`, `"dir"`).
+ *
+ * Converts between [EncryptionAlgorithm] and its string `id` using [EncryptionAlgorithm.fromId]
+ * for deserialization. Used for the `alg` header field in JWE tokens per RFC 7516.
+ */
 public object EncryptionAlgorithmSerializer : KSerializer<EncryptionAlgorithm> {
     override val descriptor: SerialDescriptor = JwaSerializer.descriptor
 
@@ -39,6 +51,12 @@ public object EncryptionAlgorithmSerializer : KSerializer<EncryptionAlgorithm> {
     )
 }
 
+/**
+ * Serializer for [SigningAlgorithm] values as their JWA identifier string (e.g. `"HS256"`, `"RS256"`).
+ *
+ * Converts between [SigningAlgorithm] and its string `id` using [SigningAlgorithm.fromId]
+ * for deserialization. Used for the `alg` header field in JWS tokens per RFC 7515.
+ */
 public object SigningAlgorithmSerializer : KSerializer<SigningAlgorithm> {
     override val descriptor: SerialDescriptor = JwaSerializer.descriptor
 

@@ -229,7 +229,7 @@ class JwtBuilderExtTest :
 
         context("encryptWith(ByteArray)") {
 
-            test("encrypt with byte array key round trip") {
+        test("encrypt with byte array key round trip") {
                 val keyBytes = Random.nextBytes(32) // 256-bit key for A256GCM
 
                 val token =

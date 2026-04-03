@@ -3,6 +3,14 @@ package co.touchlab.kjwt.cryptography
 import dev.whyoleg.cryptography.CryptographyProviderApi
 import dev.whyoleg.cryptography.materials.key.Key
 
+/**
+ * A minimal [Key] implementation that wraps a raw [ByteArray] of key material.
+ *
+ * Used as the key type for direct-key (`dir`) JWE encryption, where the content encryption key is
+ * supplied directly as bytes rather than being wrapped by an asymmetric algorithm.
+ *
+ * @see co.touchlab.kjwt.cryptography.registry.EncryptionKey
+ */
 @OptIn(CryptographyProviderApi::class)
 public class SimpleKey(
     /** The raw key bytes that back this key material. */

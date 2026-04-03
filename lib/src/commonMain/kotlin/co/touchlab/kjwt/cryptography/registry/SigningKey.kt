@@ -16,18 +16,23 @@ import dev.whyoleg.cryptography.materials.key.Key
  *
  * Complementary keys that share the same [Identifier] can be merged into a [SigningKeyPair] via
  * [mergeWith]. This happens automatically when both are registered with the same
- * [CryptographyKotlinJwtKeyRegistry].
+ * [co.touchlab.kjwt.model.registry.DefaultJwtKeyRegistry].
  *
- * @see CryptographyKotlinJwtKeyRegistry
+ * @see co.touchlab.kjwt.model.registry.DefaultJwtKeyRegistry
  * @see co.touchlab.kjwt.parser.JwtParserBuilder.verifyWith
  */
 public sealed class SigningKey {
+    /** The algorithm and key ID that identify this key within a registry. */
     public abstract val identifier: Identifier
+
+    /** The public key material used for signature verification; throws on subtypes that do not hold a public key. */
     public abstract val publicKey: Key
+
+    /** The private key material used for signing; throws on subtypes that do not hold a private key. */
     public abstract val privateKey: Key
 
     /**
-     * Identifies a [SigningKey] within a [CryptographyKotlinJwtKeyRegistry] by
+     * Identifies a [SigningKey] within a [co.touchlab.kjwt.model.registry.DefaultJwtKeyRegistry] by
      * algorithm and optional key ID.
      *
      * The combination of [algorithm] and [keyId] must be unique within a registry. When [keyId]
@@ -124,7 +129,7 @@ public sealed class SigningKey {
      *
      * Produced automatically by [mergeWith] when a [SigningOnlyKey] and a [VerifyOnlyKey] with
      * the same [Identifier] are both registered in a
-     * [CryptographyKotlinJwtKeyRegistry]. Supports both signing and
+     * [co.touchlab.kjwt.model.registry.DefaultJwtKeyRegistry]. Supports both signing and
      * verification.
      */
     public class SigningKeyPair internal constructor(

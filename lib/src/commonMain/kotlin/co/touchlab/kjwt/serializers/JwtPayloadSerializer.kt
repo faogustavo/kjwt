@@ -8,6 +8,13 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonObject
 
+/**
+ * Serializer for [JwtPayload] values to and from their JSON object representation.
+ *
+ * Serializes by encoding the underlying [JwtPayload.jsonData] JSON object directly. Deserializes
+ * by parsing the JSON object and constructing a [JwtPayload] with the canonical Base64URL-encoded
+ * representation of the serialized JSON as the raw payload bytes.
+ */
 public object JwtPayloadSerializer : KSerializer<JwtPayload> {
     private val delegate = JsonObject.serializer()
     override val descriptor: SerialDescriptor = delegate.descriptor

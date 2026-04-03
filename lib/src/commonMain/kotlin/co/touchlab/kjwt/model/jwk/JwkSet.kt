@@ -16,12 +16,26 @@ public data class JwkSet(
      */
     val keys: List<Jwk>,
 ) {
-    /** Returns the first key whose [Jwk.kid] matches [kid], or null if not found. */
+    /**
+     * Returns the first key whose [Jwk.kid] matches [kid], or `null` if not found.
+     *
+     * @param kid the key ID to search for
+     * @return the matching [Jwk], or `null` if no key with that ID is present.
+     */
     public fun findById(kid: String): Jwk? = keys.firstOrNull { it.kid == kid }
 
-    /** Returns all keys whose [Jwk.use] matches [use] (e.g. "sig" or "enc"). */
+    /**
+     * Returns all keys whose [Jwk.use] matches [use] (e.g. `"sig"` or `"enc"`).
+     *
+     * @param use the intended key use to filter by
+     * @return the list of [Jwk] entries with the specified use; empty if none match.
+     */
     public fun findByUse(use: String): List<Jwk> = keys.filter { it.use == use }
 
-    /** Returns a new [JwkSet] containing only public keys (no private key material). */
+    /**
+     * Returns a new [JwkSet] containing only public keys (no private key material).
+     *
+     * @return a [JwkSet] whose [keys] list contains only entries where [Jwk.isPrivate] is `false`.
+     */
     public fun publicKeys(): JwkSet = JwkSet(keys.filter { !it.isPrivate })
 }

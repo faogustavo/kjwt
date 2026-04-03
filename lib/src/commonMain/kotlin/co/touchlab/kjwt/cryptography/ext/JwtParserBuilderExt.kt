@@ -19,7 +19,15 @@ import dev.whyoleg.cryptography.algorithms.HMAC
 import dev.whyoleg.cryptography.algorithms.RSA
 import dev.whyoleg.cryptography.materials.key.Key
 
-/** Registers an HMAC (HS256/384/512) symmetric key for signature verification. */
+/**
+ * Registers an HMAC (HS256/384/512) symmetric key for JWS signature verification.
+ *
+ * @param algorithm the HMAC-based signing algorithm (HS256, HS384, or HS512)
+ * @param key the HMAC symmetric key to verify signatures with
+ * @param keyId optional key ID to associate with this verifier; when set, only tokens whose `kid`
+ *   header matches will use this key. Defaults to `null` (matches any token).
+ * @return this builder for chaining
+ */
 @OptIn(DelicateKJWTApi::class)
 public fun JwtParserBuilder.verifyWith(
     algorithm: MACBased,
@@ -27,7 +35,15 @@ public fun JwtParserBuilder.verifyWith(
     keyId: String? = null,
 ): JwtParserBuilder = verifyWith(algorithm as SigningAlgorithm, key, keyId)
 
-/** Registers an RSA PKCS#1 (RS256/384/512) public key for signature verification. */
+/**
+ * Registers an RSA PKCS#1 (RS256/384/512) public key for JWS signature verification.
+ *
+ * @param algorithm the RSA PKCS#1-based signing algorithm (RS256, RS384, or RS512)
+ * @param key the RSA PKCS#1 public key to verify signatures with
+ * @param keyId optional key ID to associate with this verifier; when set, only tokens whose `kid`
+ *   header matches will use this key. Defaults to `null` (matches any token).
+ * @return this builder for chaining
+ */
 @OptIn(DelicateKJWTApi::class)
 public fun JwtParserBuilder.verifyWith(
     algorithm: PKCS1Based,
@@ -35,7 +51,15 @@ public fun JwtParserBuilder.verifyWith(
     keyId: String? = null,
 ): JwtParserBuilder = verifyWith(algorithm as SigningAlgorithm, key, keyId)
 
-/** Registers an RSA PSS (PS256/384/512) public key for signature verification. */
+/**
+ * Registers an RSA PSS (PS256/384/512) public key for JWS signature verification.
+ *
+ * @param algorithm the RSA PSS-based signing algorithm (PS256, PS384, or PS512)
+ * @param key the RSA PSS public key to verify signatures with
+ * @param keyId optional key ID to associate with this verifier; when set, only tokens whose `kid`
+ *   header matches will use this key. Defaults to `null` (matches any token).
+ * @return this builder for chaining
+ */
 @OptIn(DelicateKJWTApi::class)
 public fun JwtParserBuilder.verifyWith(
     algorithm: PSSBased,
@@ -43,7 +67,15 @@ public fun JwtParserBuilder.verifyWith(
     keyId: String? = null,
 ): JwtParserBuilder = verifyWith(algorithm as SigningAlgorithm, key, keyId)
 
-/** Registers an ECDSA (ES256/384/512) public key for signature verification. */
+/**
+ * Registers an ECDSA (ES256/384/512) public key for JWS signature verification.
+ *
+ * @param algorithm the ECDSA-based signing algorithm (ES256, ES384, or ES512)
+ * @param key the ECDSA public key to verify signatures with
+ * @param keyId optional key ID to associate with this verifier; when set, only tokens whose `kid`
+ *   header matches will use this key. Defaults to `null` (matches any token).
+ * @return this builder for chaining
+ */
 @OptIn(DelicateKJWTApi::class)
 public fun JwtParserBuilder.verifyWith(
     algorithm: ECDSABased,
@@ -51,6 +83,18 @@ public fun JwtParserBuilder.verifyWith(
     keyId: String? = null,
 ): JwtParserBuilder = verifyWith(algorithm as SigningAlgorithm, key, keyId)
 
+/**
+ * Registers a raw [Key] for JWS signature verification using any [SigningAlgorithm].
+ *
+ * Prefer the strongly typed overloads (e.g. [verifyWith] accepting [HMAC.Key] or
+ * [RSA.PKCS1.PublicKey]) when possible, as they enforce the correct key type at compile time.
+ *
+ * @param algorithm the JWS signing algorithm this key is associated with
+ * @param key the raw cryptography-kotlin key to verify signatures with; must be compatible with [algorithm]
+ * @param keyId optional key ID to associate with this verifier; when set, only tokens whose `kid`
+ *   header matches will use this key. Defaults to `null` (matches any token).
+ * @return this builder for chaining
+ */
 @DelicateKJWTApi
 public fun JwtParserBuilder.verifyWith(algorithm: SigningAlgorithm, key: Key, keyId: String? = null): JwtParserBuilder =
     verifyWith(
@@ -200,11 +244,28 @@ public suspend fun JwtParserBuilder.verifyWith(
     return verifyWith(algorithm, parsedKey, keyId)
 }
 
+/**
+ * Registers any [SigningKey] variant for JWS signature verification, merging it with any
+ * previously registered processor for the same algorithm and key ID.
+ *
+ * @param key the signing key to register
+ * @return this builder for chaining
+ * @throws IllegalArgumentException if a key of the same type is already registered for the same
+ *   algorithm and key ID
+ */
 @DelicateKJWTApi
 public fun JwtParserBuilder.registerSigningKey(key: SigningKey): JwtParserBuilder =
     verifyWith(keyRegistry.findBestJwsProcessorAndMerge(key))
 
-/** Registers a direct (`dir`) symmetric key for JWE decryption. */
+/**
+ * Registers a direct (`dir`) [SimpleKey] symmetric key for JWE decryption.
+ *
+ * @param algorithm the direct key encryption algorithm ([EncryptionAlgorithm.Dir])
+ * @param privateKey the [SimpleKey] wrapping the raw symmetric content encryption key
+ * @param keyId optional key ID to associate with this decryptor; when set, only tokens whose `kid`
+ *   header matches will use this key. Defaults to `null` (matches any token).
+ * @return this builder for chaining
+ */
 @OptIn(DelicateKJWTApi::class)
 public fun JwtParserBuilder.decryptWith(
     algorithm: EncryptionAlgorithm.Dir,
@@ -212,7 +273,15 @@ public fun JwtParserBuilder.decryptWith(
     keyId: String? = null,
 ): JwtParserBuilder = decryptWith(algorithm as EncryptionAlgorithm, privateKey, keyId)
 
-/** Registers an RSA-OAEP (RSA-OAEP / RSA-OAEP-256) private key for JWE decryption. */
+/**
+ * Registers an RSA-OAEP (RSA-OAEP / RSA-OAEP-256) private key for JWE decryption.
+ *
+ * @param algorithm the OAEP-based key encryption algorithm (RSA-OAEP or RSA-OAEP-256)
+ * @param privateKey the RSA OAEP private key used to unwrap the content encryption key
+ * @param keyId optional key ID to associate with this decryptor; when set, only tokens whose `kid`
+ *   header matches will use this key. Defaults to `null` (matches any token).
+ * @return this builder for chaining
+ */
 @OptIn(DelicateKJWTApi::class)
 public fun JwtParserBuilder.decryptWith(
     algorithm: EncryptionAlgorithm.OAEPBased,
@@ -220,6 +289,18 @@ public fun JwtParserBuilder.decryptWith(
     keyId: String? = null,
 ): JwtParserBuilder = decryptWith(algorithm as EncryptionAlgorithm, privateKey, keyId)
 
+/**
+ * Registers a raw [Key] for JWE token decryption using any [EncryptionAlgorithm].
+ *
+ * Prefer the strongly typed overloads (e.g. [decryptWith] accepting [RSA.OAEP.PrivateKey] or
+ * [SimpleKey]) when possible, as they enforce the correct key type at compile time.
+ *
+ * @param algorithm the JWE key-encryption algorithm this key is associated with
+ * @param privateKey the raw cryptography-kotlin key to decrypt tokens with; must be compatible with [algorithm]
+ * @param keyId optional key ID to associate with this decryptor; when set, only tokens whose `kid`
+ *   header matches will use this key. Defaults to `null` (matches any token).
+ * @return this builder for chaining
+ */
 @DelicateKJWTApi
 public fun JwtParserBuilder.decryptWith(
     algorithm: EncryptionAlgorithm,
@@ -260,6 +341,15 @@ public fun JwtParserBuilder.decryptWith(
     key: EncryptionKey.EncryptionKeyPair,
 ): JwtParserBuilder = registerEncryptionKey(key)
 
+/**
+ * Registers any [EncryptionKey] variant for JWE token decryption, merging it with any
+ * previously registered processor for the same algorithm and key ID.
+ *
+ * @param key the encryption key to register
+ * @return this builder for chaining
+ * @throws IllegalArgumentException if a key of the same type is already registered for the same
+ *   algorithm and key ID
+ */
 @DelicateKJWTApi
 public fun JwtParserBuilder.registerEncryptionKey(key: EncryptionKey): JwtParserBuilder =
     decryptWith(keyRegistry.findBestJweProcessorAndMerge(key))

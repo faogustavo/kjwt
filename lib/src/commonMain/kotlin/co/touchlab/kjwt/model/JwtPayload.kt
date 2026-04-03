@@ -17,6 +17,17 @@ import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+/**
+ * Immutable representation of a JWT payload (claims set) as defined in RFC 7519.
+ *
+ * The payload is backed by a [JsonObject] and also stored in its base64url-encoded form so that
+ * the compact serialization can be reproduced exactly. Registered claim names (e.g. `iss`, `sub`,
+ * `aud`, `exp`) are accessible through named properties on [Builder]; arbitrary custom claims can
+ * be read with [getClaim] and [getClaimOrNull].
+ *
+ * @see JwtPayload.Builder
+ * @see JwtInstance
+ */
 @Serializable(with = JwtPayloadSerializer::class)
 public class JwtPayload internal constructor(
     internal val base64Encoded: String,
@@ -263,12 +274,25 @@ public class JwtPayload internal constructor(
     }
 
     public companion object {
+        /** The `iss` (issuer) claim name (RFC 7519 §4.1.1). */
         public const val ISS: String = "iss"
+
+        /** The `sub` (subject) claim name (RFC 7519 §4.1.2). */
         public const val SUB: String = "sub"
+
+        /** The `aud` (audience) claim name (RFC 7519 §4.1.3). */
         public const val AUD: String = "aud"
+
+        /** The `exp` (expiration time) claim name (RFC 7519 §4.1.4). */
         public const val EXP: String = "exp"
+
+        /** The `nbf` (not before) claim name (RFC 7519 §4.1.5). */
         public const val NBF: String = "nbf"
+
+        /** The `iat` (issued at) claim name (RFC 7519 §4.1.6). */
         public const val IAT: String = "iat"
+
+        /** The `jti` (JWT ID) claim name (RFC 7519 §4.1.7). */
         public const val JTI: String = "jti"
     }
 }

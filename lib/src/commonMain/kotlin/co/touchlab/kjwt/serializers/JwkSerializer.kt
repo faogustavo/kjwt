@@ -29,6 +29,14 @@ private fun JsonObject.optStringList(key: String): List<String>? = (this[key] as
 // RSA
 // ---------------------------------------------------------------------------
 
+/**
+ * Serializer for [Jwk.Rsa] values to and from their JSON Web Key representation per RFC 7517.
+ *
+ * Encodes all present RSA key parameters (`n`, `e`, `d`, `p`, `q`, `dp`, `dq`, `qi`) as
+ * Base64URL strings, along with optional metadata fields (`use`, `key_ops`, `alg`, `kid`).
+ * Throws [co.touchlab.kjwt.exception.MalformedJwkException] during deserialization if a required
+ * field is missing.
+ */
 public object JwkRsaSerializer : KSerializer<Jwk.Rsa> {
     private val delegate = JsonObject.serializer()
     override val descriptor: SerialDescriptor = delegate.descriptor
@@ -80,6 +88,14 @@ public object JwkRsaSerializer : KSerializer<Jwk.Rsa> {
 // EC
 // ---------------------------------------------------------------------------
 
+/**
+ * Serializer for [Jwk.Ec] values to and from their JSON Web Key representation per RFC 7517.
+ *
+ * Encodes the required EC parameters (`crv`, `x`, `y`) and optional private key parameter (`d`)
+ * as Base64URL strings, along with optional metadata fields (`use`, `key_ops`, `alg`, `kid`).
+ * Throws [co.touchlab.kjwt.exception.MalformedJwkException] during deserialization if a required
+ * field is missing.
+ */
 public object JwkEcSerializer : KSerializer<Jwk.Ec> {
     private val delegate = JsonObject.serializer()
     override val descriptor: SerialDescriptor = delegate.descriptor
@@ -123,6 +139,14 @@ public object JwkEcSerializer : KSerializer<Jwk.Ec> {
 // Oct
 // ---------------------------------------------------------------------------
 
+/**
+ * Serializer for [Jwk.Oct] values to and from their JSON Web Key representation per RFC 7517.
+ *
+ * Encodes the symmetric key material (`k`) as a Base64URL string, along with optional metadata
+ * fields (`use`, `key_ops`, `alg`, `kid`). Throws
+ * [co.touchlab.kjwt.exception.MalformedJwkException] during deserialization if the required `k`
+ * field is missing.
+ */
 public object JwkOctSerializer : KSerializer<Jwk.Oct> {
     private val delegate = JsonObject.serializer()
     override val descriptor: SerialDescriptor = delegate.descriptor
@@ -160,6 +184,14 @@ public object JwkOctSerializer : KSerializer<Jwk.Oct> {
 // Jwk (polymorphic dispatcher)
 // ---------------------------------------------------------------------------
 
+/**
+ * Polymorphic serializer for [Jwk] values, dispatching to the appropriate concrete serializer
+ * based on the `kty` field in the JSON object.
+ *
+ * Supports `"RSA"` ([JwkRsaSerializer]), `"EC"` ([JwkEcSerializer]), and `"oct"` ([JwkOctSerializer])
+ * key types. Throws [co.touchlab.kjwt.exception.MalformedJwkException] if `kty` is absent, and
+ * [co.touchlab.kjwt.exception.UnsupportedJwtException] if the key type is not recognised.
+ */
 public object JwkSerializer : KSerializer<Jwk> {
     private val delegate = JsonObject.serializer()
     override val descriptor: SerialDescriptor = delegate.descriptor
@@ -197,6 +229,12 @@ public object JwkSerializer : KSerializer<Jwk> {
 // RSAThumbprint
 // ---------------------------------------------------------------------------
 
+/**
+ * Serializer for [Jwk.Rsa.RSAThumbprint] values to and from their canonical JSON representation.
+ *
+ * Encodes only the required members (`e`, `kty`, `n`) in lexicographic key order as defined by
+ * RFC 7638 for computing JWK Thumbprints.
+ */
 public object JwkRsaThumbprintSerializer : KSerializer<Jwk.Rsa.RSAThumbprint> {
     private val delegate = JsonObject.serializer()
     override val descriptor: SerialDescriptor = delegate.descriptor
@@ -228,6 +266,12 @@ public object JwkRsaThumbprintSerializer : KSerializer<Jwk.Rsa.RSAThumbprint> {
 // ECThumbprint
 // ---------------------------------------------------------------------------
 
+/**
+ * Serializer for [Jwk.Ec.ECThumbprint] values to and from their canonical JSON representation.
+ *
+ * Encodes only the required members (`crv`, `kty`, `x`, `y`) in lexicographic key order as
+ * defined by RFC 7638 for computing JWK Thumbprints.
+ */
 public object JwkEcThumbprintSerializer : KSerializer<Jwk.Ec.ECThumbprint> {
     private val delegate = JsonObject.serializer()
     override val descriptor: SerialDescriptor = delegate.descriptor
@@ -261,6 +305,12 @@ public object JwkEcThumbprintSerializer : KSerializer<Jwk.Ec.ECThumbprint> {
 // OctThumbprint
 // ---------------------------------------------------------------------------
 
+/**
+ * Serializer for [Jwk.Oct.OctThumbprint] values to and from their canonical JSON representation.
+ *
+ * Encodes only the required members (`k`, `kty`) in lexicographic key order as defined by RFC 7638
+ * for computing JWK Thumbprints.
+ */
 public object JwkOctThumbprintSerializer : KSerializer<Jwk.Oct.OctThumbprint> {
     private val delegate = JsonObject.serializer()
     override val descriptor: SerialDescriptor = delegate.descriptor
@@ -290,6 +340,15 @@ public object JwkOctThumbprintSerializer : KSerializer<Jwk.Oct.OctThumbprint> {
 // Jwk.Thumbprint (polymorphic dispatcher)
 // ---------------------------------------------------------------------------
 
+/**
+ * Polymorphic serializer for [Jwk.Thumbprint] values, dispatching to the appropriate concrete
+ * thumbprint serializer based on the `kty` field in the JSON object.
+ *
+ * Supports `"RSA"` ([JwkRsaThumbprintSerializer]), `"EC"` ([JwkEcThumbprintSerializer]), and
+ * `"oct"` ([JwkOctThumbprintSerializer]) key types. Throws
+ * [co.touchlab.kjwt.exception.MalformedJwkException] if `kty` is absent, and
+ * [co.touchlab.kjwt.exception.UnsupportedJwtException] if the key type is not recognised.
+ */
 public object JwkThumbprintSerializer : KSerializer<Jwk.Thumbprint> {
     private val delegate = JsonObject.serializer()
     override val descriptor: SerialDescriptor = delegate.descriptor

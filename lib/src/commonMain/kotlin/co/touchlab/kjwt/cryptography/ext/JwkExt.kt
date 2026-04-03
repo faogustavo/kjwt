@@ -33,7 +33,11 @@ import kotlinx.serialization.json.Json
 /**
  * Computes the base64url-encoded SHA-256 hash of this JWK Thumbprint as defined by RFC 7638.
  *
- * @return The base64url-encoded SHA-256 digest of the canonical JSON representation of this thumbprint.
+ * @param jsonInstance the [Json] instance used to serialize the thumbprint to its canonical form;
+ *   defaults to the library's internal [JwtJson] configuration
+ * @param cryptoProvider the [CryptographyProvider] used to compute the SHA-256 hash; defaults to
+ *   [CryptographyProvider.Default]
+ * @return the base64url-encoded SHA-256 digest of the canonical JSON representation of this thumbprint
  */
 @ExperimentalKJWTApi
 public suspend fun Jwk.Thumbprint.hashed(
@@ -55,6 +59,11 @@ public suspend fun Jwk.Thumbprint.hashed(
 
 /**
  * Converts this [Jwk.Oct] to an [HMAC.Key] for the given [digest].
+ *
+ * @param digest the cryptography-kotlin digest algorithm to associate with the HMAC key
+ * @param cryptoProvider the [CryptographyProvider] used to decode the key; defaults to
+ *   [CryptographyProvider.Default]
+ * @return the decoded [HMAC.Key]
  */
 @ExperimentalKJWTApi
 public suspend fun Jwk.Oct.toHmacKey(
@@ -126,7 +135,14 @@ private fun Jwk.Rsa.toPkcs8Der(): ByteArray {
     return Der.encodeToByteArray(PrivateKeyInfo.serializer(), pkcs8)
 }
 
-/** Converts to [RSA.PKCS1.PublicKey] for RS256/RS384/RS512 verification. */
+/**
+ * Converts this [Jwk.Rsa] to an [RSA.PKCS1.PublicKey] for RS256/RS384/RS512 signature verification.
+ *
+ * @param digest the cryptography-kotlin digest algorithm to associate with the key
+ * @param cryptoProvider the [CryptographyProvider] used to decode the key; defaults to
+ *   [CryptographyProvider.Default]
+ * @return the decoded [RSA.PKCS1.PublicKey]
+ */
 @ExperimentalKJWTApi
 public suspend fun Jwk.Rsa.toRsaPkcs1PublicKey(
     digest: CryptographyAlgorithmId<Digest>,
@@ -137,7 +153,14 @@ public suspend fun Jwk.Rsa.toRsaPkcs1PublicKey(
         .publicKeyDecoder(digest)
         .decodeFromByteArray(RSA.PublicKey.Format.DER, toSpkiDer())
 
-/** Converts to [RSA.PKCS1.PrivateKey] for RS256/RS384/RS512 signing. */
+/**
+ * Converts this [Jwk.Rsa] to an [RSA.PKCS1.PrivateKey] for RS256/RS384/RS512 signing.
+ *
+ * @param digest the cryptography-kotlin digest algorithm to associate with the key
+ * @param cryptoProvider the [CryptographyProvider] used to decode the key; defaults to
+ *   [CryptographyProvider.Default]
+ * @return the decoded [RSA.PKCS1.PrivateKey]
+ */
 @ExperimentalKJWTApi
 public suspend fun Jwk.Rsa.toRsaPkcs1PrivateKey(
     digest: CryptographyAlgorithmId<Digest>,
@@ -148,7 +171,14 @@ public suspend fun Jwk.Rsa.toRsaPkcs1PrivateKey(
         .privateKeyDecoder(digest)
         .decodeFromByteArray(RSA.PrivateKey.Format.DER, toPkcs8Der())
 
-/** Converts to [RSA.PSS.PublicKey] for PS256/PS384/PS512 verification. */
+/**
+ * Converts this [Jwk.Rsa] to an [RSA.PSS.PublicKey] for PS256/PS384/PS512 signature verification.
+ *
+ * @param digest the cryptography-kotlin digest algorithm to associate with the key
+ * @param cryptoProvider the [CryptographyProvider] used to decode the key; defaults to
+ *   [CryptographyProvider.Default]
+ * @return the decoded [RSA.PSS.PublicKey]
+ */
 @ExperimentalKJWTApi
 public suspend fun Jwk.Rsa.toRsaPssPublicKey(
     digest: CryptographyAlgorithmId<Digest>,
@@ -159,7 +189,14 @@ public suspend fun Jwk.Rsa.toRsaPssPublicKey(
         .publicKeyDecoder(digest)
         .decodeFromByteArray(RSA.PublicKey.Format.DER, toSpkiDer())
 
-/** Converts to [RSA.PSS.PrivateKey] for PS256/PS384/PS512 signing. */
+/**
+ * Converts this [Jwk.Rsa] to an [RSA.PSS.PrivateKey] for PS256/PS384/PS512 signing.
+ *
+ * @param digest the cryptography-kotlin digest algorithm to associate with the key
+ * @param cryptoProvider the [CryptographyProvider] used to decode the key; defaults to
+ *   [CryptographyProvider.Default]
+ * @return the decoded [RSA.PSS.PrivateKey]
+ */
 @ExperimentalKJWTApi
 public suspend fun Jwk.Rsa.toRsaPssPrivateKey(
     digest: CryptographyAlgorithmId<Digest>,
@@ -170,7 +207,14 @@ public suspend fun Jwk.Rsa.toRsaPssPrivateKey(
         .privateKeyDecoder(digest)
         .decodeFromByteArray(RSA.PrivateKey.Format.DER, toPkcs8Der())
 
-/** Converts to [RSA.OAEP.PublicKey] for RSA-OAEP / RSA-OAEP-256 key encryption. */
+/**
+ * Converts this [Jwk.Rsa] to an [RSA.OAEP.PublicKey] for RSA-OAEP / RSA-OAEP-256 key encryption.
+ *
+ * @param digest the cryptography-kotlin digest algorithm to associate with the key
+ * @param cryptoProvider the [CryptographyProvider] used to decode the key; defaults to
+ *   [CryptographyProvider.Default]
+ * @return the decoded [RSA.OAEP.PublicKey]
+ */
 @ExperimentalKJWTApi
 public suspend fun Jwk.Rsa.toRsaOaepPublicKey(
     digest: CryptographyAlgorithmId<Digest>,
@@ -181,7 +225,14 @@ public suspend fun Jwk.Rsa.toRsaOaepPublicKey(
         .publicKeyDecoder(digest)
         .decodeFromByteArray(RSA.PublicKey.Format.DER, toSpkiDer())
 
-/** Converts to [RSA.OAEP.PrivateKey] for RSA-OAEP / RSA-OAEP-256 key decryption. */
+/**
+ * Converts this [Jwk.Rsa] to an [RSA.OAEP.PrivateKey] for RSA-OAEP / RSA-OAEP-256 key decryption.
+ *
+ * @param digest the cryptography-kotlin digest algorithm to associate with the key
+ * @param cryptoProvider the [CryptographyProvider] used to decode the key; defaults to
+ *   [CryptographyProvider.Default]
+ * @return the decoded [RSA.OAEP.PrivateKey]
+ */
 @ExperimentalKJWTApi
 public suspend fun Jwk.Rsa.toRsaOaepPrivateKey(
     digest: CryptographyAlgorithmId<Digest>,
@@ -263,7 +314,13 @@ private fun Jwk.Ec.toPkcs8Der(): ByteArray {
     return Der.encodeToByteArray(PrivateKeyInfo.serializer(), pkcs8)
 }
 
-/** Converts to [ECDSA.PublicKey] for ES256/ES384/ES512 verification. */
+/**
+ * Converts this [Jwk.Ec] to an [ECDSA.PublicKey] for ES256/ES384/ES512 signature verification.
+ *
+ * @param cryptoProvider the [CryptographyProvider] used to decode the key; defaults to
+ *   [CryptographyProvider.Default]
+ * @return the decoded [ECDSA.PublicKey]
+ */
 @ExperimentalKJWTApi
 public suspend fun Jwk.Ec.toEcdsaPublicKey(
     cryptoProvider: CryptographyProvider = CryptographyProvider.Default,
@@ -273,7 +330,13 @@ public suspend fun Jwk.Ec.toEcdsaPublicKey(
         .publicKeyDecoder(ecCurve(crv).toCryptographyKotlin())
         .decodeFromByteArray(EC.PublicKey.Format.DER, toSpkiDer())
 
-/** Converts to [ECDSA.PrivateKey] for ES256/ES384/ES512 signing. */
+/**
+ * Converts this [Jwk.Ec] to an [ECDSA.PrivateKey] for ES256/ES384/ES512 signing.
+ *
+ * @param cryptoProvider the [CryptographyProvider] used to decode the key; defaults to
+ *   [CryptographyProvider.Default]
+ * @return the decoded [ECDSA.PrivateKey]
+ */
 @ExperimentalKJWTApi
 public suspend fun Jwk.Ec.toEcdsaPrivateKey(
     cryptoProvider: CryptographyProvider = CryptographyProvider.Default,

@@ -4,6 +4,22 @@ import co.touchlab.kjwt.cryptography.registry.SigningKey
 import co.touchlab.kjwt.serializers.SigningAlgorithmSerializer
 import kotlinx.serialization.Serializable
 
+/**
+ * Sealed class representing the JWS signing algorithms defined in RFC 7518.
+ *
+ * The supported algorithms are grouped by their cryptographic family:
+ * - [MACBased] — HMAC-based algorithms ([HS256], [HS384], [HS512]).
+ * - [PKCS1Based] — RSA PKCS#1 v1.5 algorithms ([RS256], [RS384], [RS512]).
+ * - [PSSBased] — RSA PSS algorithms ([PS256], [PS384], [PS512]).
+ * - [ECDSABased] — Elliptic Curve DSA algorithms ([ES256], [ES384], [ES512]).
+ * - [None] — the unsecured algorithm (`alg=none`); rejected by the parser unless
+ *   `allowUnsecured(true)` is set.
+ *
+ * Use [fromId] to look up an instance by its JWA identifier string.
+ *
+ * @see co.touchlab.kjwt.builder.JwtBuilder.signWith
+ * @see co.touchlab.kjwt.parser.JwtParserBuilder.verifyWith
+ */
 @Serializable(SigningAlgorithmSerializer::class)
 public sealed class SigningAlgorithm(
     override val id: String,
@@ -117,6 +133,7 @@ public sealed class SigningAlgorithm(
                     ES512 -> JwtDigest.SHA512
                 }
 
+        /** The [JwtCurve] (P-256, P-384, or P-521) required by this ECDSA algorithm. */
         public val curve: JwtCurve
             get() =
                 when (this) {

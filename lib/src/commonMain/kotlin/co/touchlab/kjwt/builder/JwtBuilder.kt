@@ -340,6 +340,17 @@ public class JwtBuilder(
         }
     }
 
+    /**
+     * Suspends, signs the token using the given [JwsProcessor], and returns the JWS compact serialization.
+     *
+     * The processor is responsible for the signing operation; no key registry look-up is performed.
+     * The `kid` header parameter is set to [keyId] when provided.
+     *
+     * @param integrityProcessor the [JwsProcessor] that performs the signing operation
+     * @param keyId optional key ID to embed in the JWT header's `kid` field. Defaults to [JwsProcessor.keyId].
+     * @return the resulting [JwtInstance.Jws] compact serialization
+     * @see co.touchlab.kjwt.parser.JwtParserBuilder.verifyWith
+     */
     public suspend fun signWith(
         integrityProcessor: JwsProcessor,
         keyId: String? = integrityProcessor.keyId,
@@ -403,6 +414,18 @@ public class JwtBuilder(
         throw IllegalArgumentException("The signing key for $keyId does not support encryption.", e)
     }
 
+    /**
+     * Suspends, encrypts the token using the given [JweProcessor], and returns the JWE compact serialization.
+     *
+     * The processor handles key wrapping for the given [contentAlgorithm]; no key registry look-up
+     * is performed. The `kid` header parameter is set to [keyId] when provided.
+     *
+     * @param processor the [JweProcessor] that performs the key wrapping and encryption
+     * @param contentAlgorithm the content encryption algorithm used to encrypt the payload
+     * @param keyId optional key ID to embed in the JWE header's `kid` field. Defaults to [JweProcessor.keyId].
+     * @return the resulting [JwtInstance.Jwe] compact serialization
+     * @see co.touchlab.kjwt.parser.JwtParserBuilder.decryptWith
+     */
     public suspend fun encryptWithJweProcessor(
         processor: JweProcessor,
         contentAlgorithm: EncryptionContentAlgorithm,

@@ -11,6 +11,20 @@ import co.touchlab.kjwt.serializers.JwkSerializer
 import co.touchlab.kjwt.serializers.JwkThumbprintSerializer
 import kotlinx.serialization.Serializable
 
+/**
+ * Sealed class representing a JSON Web Key (JWK) as defined in RFC 7517.
+ *
+ * A JWK is a JSON object that represents a cryptographic key. The three supported key types are:
+ * - [Rsa] — RSA public or private key (`kty = "RSA"`).
+ * - [Ec] — Elliptic Curve public or private key (`kty = "EC"`).
+ * - [Oct] — Symmetric (octet sequence) key (`kty = "oct"`).
+ *
+ * Each subtype exposes its own required parameters as well as the common parameters defined in
+ * RFC 7517 §4 (`use`, `key_ops`, `alg`, `kid`). JWK Thumbprints (RFC 7638) are available
+ * through the [thumbprint] property.
+ *
+ * @see JwkSet
+ */
 @Serializable(with = JwkSerializer::class)
 @ExperimentalKJWTApi
 public sealed class Jwk {
@@ -90,6 +104,7 @@ public sealed class Jwk {
         ) : Thumbprint()
 
         public companion object {
+            /** The `kty` value identifying this key type as RSA (RFC 7517 §4.1). */
             public const val KTY: String = "RSA"
         }
     }
@@ -126,6 +141,7 @@ public sealed class Jwk {
         ) : Thumbprint()
 
         public companion object {
+            /** The `kty` value identifying this key type as Elliptic Curve (RFC 7517 §4.1). */
             public const val KTY: String = "EC"
         }
     }
@@ -157,6 +173,7 @@ public sealed class Jwk {
         ) : Thumbprint()
 
         public companion object {
+            /** The `kty` value identifying this key type as an octet sequence (RFC 7517 §4.1). */
             public const val KTY: String = "oct"
         }
     }

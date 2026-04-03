@@ -16,11 +16,12 @@ import dev.whyoleg.cryptography.CryptographyProvider
 /**
  * Configures the parser to verify JWS signatures using an HMAC key derived from the given [Jwk.Oct] JWK.
  *
- * @param algorithm The HMAC-based signing algorithm (HS256, HS384, or HS512).
- * @param jwk The Oct JWK containing the raw symmetric key material.
- * @param keyId Optional key ID override; when set, the parser will only use this key if the token's
+ * @param algorithm the HMAC-based signing algorithm (HS256, HS384, or HS512)
+ * @param jwk the Oct JWK containing the raw symmetric key material
+ * @param keyId optional key ID override; when set, the parser will only use this key if the token's
  *   `kid` header matches. Defaults to the JWK's own `kid` field.
- * @return This builder, configured with the HMAC verification key.
+ * @param cryptoProvider the [CryptographyProvider] used to decode the key; defaults to [CryptographyProvider.Default]
+ * @return this builder for chaining
  */
 @ExperimentalKJWTApi
 public suspend fun JwtParserBuilder.verifyWith(
@@ -41,11 +42,12 @@ public suspend fun JwtParserBuilder.verifyWith(
 /**
  * Configures the parser to verify JWS signatures using an RSA PKCS#1 public key derived from the given [Jwk.Rsa] JWK.
  *
- * @param algorithm The RSA PKCS#1-based signing algorithm (RS256, RS384, or RS512).
- * @param jwk The RSA JWK containing the public key parameters `n` and `e`.
- * @param keyId Optional key ID override; when set, the parser will only use this key if the token's
+ * @param algorithm the RSA PKCS#1-based signing algorithm (RS256, RS384, or RS512)
+ * @param jwk the RSA JWK containing the public key parameters `n` and `e`
+ * @param keyId optional key ID override; when set, the parser will only use this key if the token's
  *   `kid` header matches. Defaults to the JWK's own `kid` field.
- * @return This builder, configured with the RSA PKCS#1 verification key.
+ * @param cryptoProvider the [CryptographyProvider] used to decode the key; defaults to [CryptographyProvider.Default]
+ * @return this builder for chaining
  */
 @ExperimentalKJWTApi
 public suspend fun JwtParserBuilder.verifyWith(
@@ -66,11 +68,12 @@ public suspend fun JwtParserBuilder.verifyWith(
 /**
  * Configures the parser to verify JWS signatures using an RSA PSS public key derived from the given [Jwk.Rsa] JWK.
  *
- * @param algorithm The RSA PSS-based signing algorithm (PS256, PS384, or PS512).
- * @param jwk The RSA JWK containing the public key parameters `n` and `e`.
- * @param keyId Optional key ID override; when set, the parser will only use this key if the token's
+ * @param algorithm the RSA PSS-based signing algorithm (PS256, PS384, or PS512)
+ * @param jwk the RSA JWK containing the public key parameters `n` and `e`
+ * @param keyId optional key ID override; when set, the parser will only use this key if the token's
  *   `kid` header matches. Defaults to the JWK's own `kid` field.
- * @return This builder, configured with the RSA PSS verification key.
+ * @param cryptoProvider the [CryptographyProvider] used to decode the key; defaults to [CryptographyProvider.Default]
+ * @return this builder for chaining
  */
 @ExperimentalKJWTApi
 public suspend fun JwtParserBuilder.verifyWith(
@@ -91,11 +94,12 @@ public suspend fun JwtParserBuilder.verifyWith(
 /**
  * Configures the parser to verify JWS signatures using an ECDSA public key derived from the given [Jwk.Ec] JWK.
  *
- * @param algorithm The ECDSA-based signing algorithm (ES256, ES384, or ES512).
- * @param jwk The EC JWK containing the public key parameters `crv`, `x`, and `y`.
- * @param keyId Optional key ID override; when set, the parser will only use this key if the token's
+ * @param algorithm the ECDSA-based signing algorithm (ES256, ES384, or ES512)
+ * @param jwk the EC JWK containing the public key parameters `crv`, `x`, and `y`
+ * @param keyId optional key ID override; when set, the parser will only use this key if the token's
  *   `kid` header matches. Defaults to the JWK's own `kid` field.
- * @return This builder, configured with the ECDSA verification key.
+ * @param cryptoProvider the [CryptographyProvider] used to decode the key; defaults to [CryptographyProvider.Default]
+ * @return this builder for chaining
  */
 @OptIn(DelicateKJWTApi::class)
 @ExperimentalKJWTApi
@@ -113,11 +117,12 @@ public suspend fun JwtParserBuilder.verifyWith(
 /**
  * Configures the parser to decrypt JWE tokens using an RSA OAEP private key derived from the given [Jwk.Rsa] JWK.
  *
- * @param algorithm The OAEP-based key encryption algorithm (RSA-OAEP or RSA-OAEP-256).
- * @param jwk The RSA JWK containing the private key parameters, including `d` and the CRT parameters.
- * @param keyId Optional key ID override; when set, the parser will only use this key if the token's
+ * @param algorithm the OAEP-based key encryption algorithm (RSA-OAEP or RSA-OAEP-256)
+ * @param jwk the RSA JWK containing the private key parameters, including `d` and the CRT parameters
+ * @param keyId optional key ID override; when set, the parser will only use this key if the token's
  *   `kid` header matches. Defaults to the JWK's own `kid` field.
- * @return This builder, configured with the RSA OAEP decryption key.
+ * @param cryptoProvider the [CryptographyProvider] used to decode the key; defaults to [CryptographyProvider.Default]
+ * @return this builder for chaining
  */
 @ExperimentalKJWTApi
 public suspend fun JwtParserBuilder.decryptWith(

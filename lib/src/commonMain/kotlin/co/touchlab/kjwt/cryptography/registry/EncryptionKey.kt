@@ -16,18 +16,23 @@ import dev.whyoleg.cryptography.materials.key.Key
  *
  * Complementary keys that share the same [Identifier] can be merged into an [EncryptionKeyPair]
  * via [mergeWith]. This happens automatically when both are registered with the same
- * [CryptographyKotlinJwtKeyRegistry].
+ * [co.touchlab.kjwt.model.registry.DefaultJwtKeyRegistry].
  *
- * @see CryptographyKotlinJwtKeyRegistry
+ * @see co.touchlab.kjwt.model.registry.DefaultJwtKeyRegistry
  * @see co.touchlab.kjwt.parser.JwtParserBuilder.decryptWith
  */
 public sealed class EncryptionKey {
+    /** The algorithm and key ID that identify this key within a registry. */
     public abstract val identifier: Identifier
+
+    /** The public key material used for encryption; throws on subtypes that do not hold a public key. */
     public abstract val publicKey: Key
+
+    /** The private key material used for decryption; throws on subtypes that do not hold a private key. */
     public abstract val privateKey: Key
 
     /**
-     * Identifies an [EncryptionKey] within a [CryptographyKotlinJwtKeyRegistry]
+     * Identifies an [EncryptionKey] within a [co.touchlab.kjwt.model.registry.DefaultJwtKeyRegistry]
      * by algorithm and optional key ID.
      *
      * The combination of [algorithm] and [keyId] must be unique within a registry. When [keyId]
@@ -121,7 +126,7 @@ public sealed class EncryptionKey {
      *
      * Produced automatically by [mergeWith] when an [EncryptionOnlyKey] and a [DecryptionOnlyKey]
      * with the same [Identifier] are both registered in a
-     * [CryptographyKotlinJwtKeyRegistry]. Supports both encryption and
+     * [co.touchlab.kjwt.model.registry.DefaultJwtKeyRegistry]. Supports both encryption and
      * decryption.
      */
     public class EncryptionKeyPair internal constructor(

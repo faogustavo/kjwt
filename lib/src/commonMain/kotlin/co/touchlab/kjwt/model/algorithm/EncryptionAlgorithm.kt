@@ -3,6 +3,20 @@ package co.touchlab.kjwt.model.algorithm
 import co.touchlab.kjwt.serializers.EncryptionAlgorithmSerializer
 import kotlinx.serialization.Serializable
 
+/**
+ * Sealed class representing the JWE key management algorithms defined in RFC 7518.
+ *
+ * The key management algorithm determines how the Content Encryption Key (CEK) is protected in
+ * the JWE compact serialization. The supported algorithms are:
+ * - [RsaOaep] — RSA-OAEP with SHA-1 key wrapping.
+ * - [RsaOaep256] — RSA-OAEP with SHA-256 key wrapping.
+ * - [Dir] — direct use of a shared symmetric key as the CEK; no key wrapping is performed.
+ *
+ * Use [fromId] to look up an instance by its JWA identifier string.
+ *
+ * @see EncryptionContentAlgorithm
+ * @see co.touchlab.kjwt.builder.JwtBuilder.encryptWith
+ */
 @Serializable(EncryptionAlgorithmSerializer::class)
 public sealed class EncryptionAlgorithm(
     override val id: String,

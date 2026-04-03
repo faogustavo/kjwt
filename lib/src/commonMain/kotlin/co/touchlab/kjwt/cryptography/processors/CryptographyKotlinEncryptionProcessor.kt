@@ -18,6 +18,20 @@ import dev.whyoleg.cryptography.algorithms.SHA384
 import dev.whyoleg.cryptography.algorithms.SHA512
 import kotlin.random.Random
 
+/**
+ * A [JweProcessor] implementation backed by the cryptography-kotlin library.
+ *
+ * Wraps an [EncryptionKey] and delegates all key-wrapping and content-encryption operations to
+ * the cryptography-kotlin primitives appropriate for the key's algorithm: [RSA.OAEP] for
+ * RSA-OAEP-based algorithms, and [SimpleKey] for direct-key (`dir`) encryption.
+ *
+ * Content encryption is performed with AES-GCM for [co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm.AesGCMBased]
+ * algorithms and AES-CBC combined with an HMAC authentication tag for
+ * [co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm.AesCBCBased] algorithms, per RFC 7516.
+ *
+ * @see co.touchlab.kjwt.processor.JweProcessor
+ * @see EncryptionKey
+ */
 public class CryptographyKotlinEncryptionProcessor(
     internal val key: EncryptionKey,
 ) : JweProcessor {
@@ -28,12 +42,28 @@ public class CryptographyKotlinEncryptionProcessor(
         key.mergeWith((previous as? CryptographyKotlinEncryptionProcessor)?.key)
     )
 
+    /** The JWE key-encryption algorithm derived from the wrapped [EncryptionKey]'s identifier. */
     override val algorithm: EncryptionAlgorithm
         get() = key.identifier.algorithm
 
+    /** The optional key ID (`kid`) derived from the wrapped [EncryptionKey]'s identifier. */
     override val keyId: String?
         get() = key.identifier.keyId
 
+    /**
+     * Encrypts [data] using the public key material from the wrapped [EncryptionKey].
+     *
+     * Generates a fresh content encryption key (CEK), wraps it with the key-encryption algorithm,
+     * and encrypts the plaintext with [contentAlgorithm]. For direct-key (`dir`) encryption no
+     * key wrapping occurs and the CEK is the raw key bytes from the [SimpleKey].
+     *
+     * @param data the plaintext bytes to encrypt
+     * @param aad the additional authenticated data to protect
+     * @param contentAlgorithm the content encryption algorithm to apply
+     * @return a [co.touchlab.kjwt.model.algorithm.JweEncryptResult] containing the encrypted key,
+     *   IV, ciphertext, and authentication tag
+     * @throws IllegalStateException if the wrapped key type is incompatible with the algorithm
+     */
     override suspend fun encrypt(
         data: ByteArray,
         aad: ByteArray,
@@ -60,6 +90,23 @@ public class CryptographyKotlinEncryptionProcessor(
         }
     }
 
+    /**
+     * Decrypts [data] using the private key material from the wrapped [EncryptionKey].
+     *
+     * Unwraps the content encryption key (CEK) from [encryptedKey] using the key-encryption
+     * algorithm, then decrypts the ciphertext with [contentAlgorithm]. For direct-key (`dir`)
+     * encryption the CEK is the raw key bytes from the [SimpleKey] and [encryptedKey] is ignored.
+     *
+     * @param aad the additional authenticated data that was protected during encryption
+     * @param encryptedKey the wrapped content encryption key bytes
+     * @param iv the initialisation vector used during encryption
+     * @param data the ciphertext bytes to decrypt
+     * @param tag the authentication tag to verify
+     * @param contentAlgorithm the content encryption algorithm that was used during encryption
+     * @return the decrypted plaintext bytes
+     * @throws IllegalStateException if the wrapped key type is incompatible with the algorithm
+     * @throws IllegalArgumentException if the authentication tag verification fails (AES-CBC mode)
+     */
     override suspend fun decrypt(
         aad: ByteArray,
         encryptedKey: ByteArray,

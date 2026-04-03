@@ -32,6 +32,7 @@ import kotlinx.serialization.json.Json
 public class JwtParserBuilder(
     internal val jsonInstance: Json,
 ) {
+    /** The key registry used by the built [JwtParser] to look up signing and encryption keys. */
     @InternalKJWTApi
     public val keyRegistry: JwtKeyRegistry = DefaultJwtKeyRegistry()
 
@@ -73,19 +74,39 @@ public class JwtParserBuilder(
      *     .build()
      * ```
      *
-     * @param registry the [CryptographyKotlinJwtKeyRegistry] to fall back to when no local key matches
+     * @param registry the [JwtKeyRegistry] to fall back to when no local key matches
      * @return this builder for chaining
-     * @see CryptographyKotlinJwtKeyRegistry
+     * @see DefaultJwtKeyRegistry
      */
     public fun useKeysFrom(registry: JwtKeyRegistry): JwtParserBuilder =
         apply {
             keyRegistry.delegateTo(registry)
         }
 
+    /**
+     * Registers a [JwsProcessor] to use for signature verification.
+     *
+     * The processor is keyed by its [JwsProcessor.algorithm] and [JwsProcessor.keyId]; at parse
+     * time the parser selects the best matching processor from the registry.
+     *
+     * @param processor the [JwsProcessor] that performs signature verification
+     * @return this builder for chaining
+     * @see co.touchlab.kjwt.builder.JwtBuilder.signWith
+     */
     public fun verifyWith(
         processor: JwsProcessor,
     ): JwtParserBuilder = apply { keyRegistry.registerJwsProcessor(processor) }
 
+    /**
+     * Registers a [JweProcessor] to use for token decryption.
+     *
+     * The processor is keyed by its [JweProcessor.algorithm] and [JweProcessor.keyId]; at parse
+     * time the parser selects the best matching processor from the registry.
+     *
+     * @param processor the [JweProcessor] that performs key unwrapping and payload decryption
+     * @return this builder for chaining
+     * @see co.touchlab.kjwt.builder.JwtBuilder.encryptWithJweProcessor
+     */
     public fun decryptWith(
         processor: JweProcessor,
     ): JwtParserBuilder = apply { keyRegistry.registerJweProcessor(processor) }
@@ -183,7 +204,16 @@ public class JwtParserBuilder(
         }
 
     /**
-     * Allow unsigned ("none" algorithm) JWTs. Disabled by default for security.
+     * Configures whether tokens with `alg=none` (unsecured JWTs) are accepted.
+     *
+     * Unsecured tokens carry no signature and are rejected by default. Pass `true` only when the
+     * token source is fully trusted and signature validation is intentionally not required
+     * (RFC 7515 §6). Passing `false` re-enables signature verification if [noVerify] had previously
+     * disabled it.
+     *
+     * @param allow `true` to permit `alg=none` tokens; `false` to reject them (the default)
+     * @return this builder for chaining
+     * @see noVerify
      */
     public fun allowUnsecured(allow: Boolean): JwtParserBuilder =
         apply {

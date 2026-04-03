@@ -4,10 +4,34 @@ import co.touchlab.kjwt.internal.JwtJson
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 
+/**
+ * Sealed base class for a parsed or constructed JWT token instance.
+ *
+ * The two concrete variants correspond to the two main JWT token types defined in the JOSE
+ * specifications:
+ * - [Jws] — a signed token (JWS, RFC 7515) with three compact-serialization parts:
+ *   `header.payload.signature`.
+ * - [Jwe] — an encrypted token (JWE, RFC 7516) with five compact-serialization parts:
+ *   `header.encryptedKey.iv.ciphertext.tag`.
+ *
+ * Use [compact] to obtain the compact-serialized string, or [getPayload] / [getHeader] to
+ * deserialize the payload or header into a typed object.
+ *
+ * @see co.touchlab.kjwt.builder.JwtBuilder
+ * @see co.touchlab.kjwt.parser.JwtParser
+ */
 public sealed class JwtInstance {
+    /** The JOSE header of the token. */
     public abstract val header: JwtHeader
+
+    /** The payload (claims set) of the token. */
     public abstract val payload: JwtPayload
 
+    /**
+     * Returns the compact serialization of this token.
+     *
+     * @return the compact token string
+     */
     public abstract fun compact(): String
 
     override fun toString(): String = compact()
@@ -62,9 +86,13 @@ public sealed class JwtInstance {
     public class Jwe internal constructor(
         override val header: JwtHeader,
         override val payload: JwtPayload,
+        /** The base64url-encoded encrypted Content Encryption Key (CEK). */
         public val encryptedKey: String,
+        /** The base64url-encoded initialization vector used during content encryption. */
         public val iv: String,
+        /** The base64url-encoded ciphertext produced by content encryption. */
         public val cipherText: String,
+        /** The base64url-encoded authentication tag produced by content encryption. */
         public val tag: String,
     ) : JwtInstance() {
         /**
@@ -123,6 +151,7 @@ public sealed class JwtInstance {
     /** Represents a JWS (signed) token with one or more signatures. */
     public class Jws internal constructor(
         override val payload: JwtPayload,
+        /** The list of [Signature] entries; each holds a header and its corresponding base64url-encoded signature. */
         public val signatures: List<Signature>,
     ) : JwtInstance() {
         internal constructor(

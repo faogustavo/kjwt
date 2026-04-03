@@ -1,9 +1,20 @@
 package co.touchlab.kjwt.model.algorithm
 
+/**
+ * Holds the raw byte outputs produced by a JWE content encryption operation.
+ *
+ * Instances are created by [co.touchlab.kjwt.processor.JweProcessor] implementations and
+ * consumed by [co.touchlab.kjwt.builder.JwtBuilder] to assemble the five-part JWE compact
+ * serialization per RFC 7516.
+ */
 public class JweEncryptResult(
+    /** The encrypted Content Encryption Key (CEK) bytes; may be empty for `dir` key management. */
     public val encryptedKey: ByteArray,
+    /** The initialization vector bytes used during content encryption. */
     public val iv: ByteArray,
+    /** The ciphertext bytes produced by content encryption. */
     public val ciphertext: ByteArray,
+    /** The authentication tag bytes produced by content encryption. */
     public val tag: ByteArray,
 ) {
     override fun equals(other: Any?): Boolean {

@@ -1,6 +1,19 @@
 package co.touchlab.kjwt.model.algorithm
 
+/**
+ * Sealed class representing the JWE content encryption algorithms defined in RFC 7518 §5.
+ *
+ * The content encryption algorithm determines how the plaintext payload is encrypted and
+ * integrity-protected inside the JWE compact serialization. The supported algorithms are:
+ * - [AesGCMBased] — AES in GCM mode ([A128GCM], [A192GCM], [A256GCM]).
+ * - [AesCBCBased] — AES in CBC mode combined with HMAC ([A128CbcHs256], [A192CbcHs384], [A256CbcHs512]).
+ *
+ * Use [fromId] to look up an instance by its JWA identifier string.
+ *
+ * @see EncryptionAlgorithm
+ */
 public sealed class EncryptionContentAlgorithm(
+    /** The JWA content encryption algorithm identifier string (e.g. `"A256GCM"`). */
     public val id: String,
 ) {
     /** AES-128 in GCM mode (`A128GCM`) content encryption algorithm. */

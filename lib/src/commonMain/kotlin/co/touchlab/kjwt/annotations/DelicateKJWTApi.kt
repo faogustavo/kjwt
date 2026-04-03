@@ -1,9 +1,10 @@
 package co.touchlab.kjwt.annotations
 
 /**
- * APIs annotated as internal KJWT API are not meant for usage in client code; there are no
- * guarantees about binary nor source compatibility, and the behavior can change at any time.
- * **Avoid the usage** of these APIs in client code!
+ * APIs annotated as delicate KJWT API are not meant for typical client usage; no guarantees about
+ * binary nor source compatibility are provided, and incorrect usage may lead to security
+ * vulnerabilities or undefined behaviour. **Avoid the usage** of these APIs in client code unless
+ * you fully understand the implications.
  */
 @Target(
     allowedTargets = [

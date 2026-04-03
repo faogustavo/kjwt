@@ -7,6 +7,15 @@ import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
 import co.touchlab.kjwt.processor.JweProcessor
 import co.touchlab.kjwt.processor.JwsProcessor
 
+/**
+ * Default in-memory implementation of [JwtKeyRegistry].
+ *
+ * Signing processors are keyed by ([SigningAlgorithm], optional key ID) and encryption processors
+ * by ([EncryptionAlgorithm], optional key ID). Look-up follows the order defined by
+ * [JwtKeyRegistry]: exact match, algorithm-only fallback, then delegate.
+ *
+ * @see JwtKeyRegistry
+ */
 @ExperimentalKJWTApi
 @OptIn(InternalKJWTApi::class)
 public class DefaultJwtKeyRegistry : JwtKeyRegistry {

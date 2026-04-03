@@ -20,6 +20,17 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
+/**
+ * Immutable representation of a JOSE header for a JWT, JWS, or JWE token.
+ *
+ * The header is backed by a [JsonObject] and is also stored in its base64url-encoded form so that
+ * the compact serialization can be reproduced exactly. Standard parameters such as `alg`, `enc`,
+ * `typ`, `cty`, and `kid` are accessible via dedicated properties or helper functions; arbitrary
+ * custom parameters can be read with [getHeader] and [getHeaderOrNull].
+ *
+ * @see JwtHeader.Builder
+ * @see JwtInstance
+ */
 @Serializable(with = JwtHeaderSerializer::class)
 public class JwtHeader internal constructor(
     internal val base64Encoded: String,
@@ -238,10 +249,19 @@ public class JwtHeader internal constructor(
     }
 
     public companion object {
+        /** The `alg` (algorithm) header parameter name (RFC 7515 §4.1.1 / RFC 7516 §4.1.1). */
         public const val ALG: String = "alg"
+
+        /** The `enc` (encryption algorithm) header parameter name (RFC 7516 §4.1.2). */
         public const val ENC: String = "enc"
+
+        /** The `typ` (type) header parameter name (RFC 7519 §5.1). */
         public const val TYP: String = "typ"
+
+        /** The `cty` (content type) header parameter name (RFC 7519 §5.2). */
         public const val CTY: String = "cty"
+
+        /** The `kid` (key ID) header parameter name (RFC 7515 §4.1.4). */
         public const val KID: String = "kid"
     }
 }

@@ -3,6 +3,16 @@ package co.touchlab.kjwt.model.algorithm
 import co.touchlab.kjwt.serializers.JwaSerializer
 import kotlinx.serialization.Serializable
 
+/**
+ * Sealed interface representing a JSON Web Algorithm (JWA) identifier as defined in RFC 7518.
+ *
+ * All concrete signing and encryption algorithms in the library implement this interface. The
+ * [id] property holds the algorithm identifier string used in JWT headers (e.g. `"HS256"`,
+ * `"RSA-OAEP"`). Use [Jwa.fromId] to resolve an identifier string to the corresponding instance.
+ *
+ * @see SigningAlgorithm
+ * @see EncryptionAlgorithm
+ */
 @Serializable(JwaSerializer::class)
 public sealed interface Jwa {
     /** The JWA algorithm identifier string (e.g. `"HS256"`, `"RS256"`). */
