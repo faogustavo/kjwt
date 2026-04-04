@@ -1,9 +1,7 @@
 package co.touchlab.kjwt.hardware
 
-import co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm
-import co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm
+import co.touchlab.kjwt.hardware.model.AndroidStrongBoxKeyPreference
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
-import co.touchlab.kjwt.processor.JweProcessor
 import co.touchlab.kjwt.processor.JwsProcessor
 import kotlinx.coroutines.test.runTest
 import java.security.KeyStore
@@ -15,10 +13,7 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-class AndroidKeystoreJwtProcessorRegistryTest {
-
-    private val registry = AndroidKeystoreJwtProcessorRegistry()
-
+class AndroidKeyStoreSigningKeyTest {
     // Removes every key written by these tests from the Android Keystore.
     // Each test uses a keyId that starts with "__kjwt_test_" so cleanup is safe.
     @AfterTest
@@ -86,46 +81,6 @@ class AndroidKeystoreJwtProcessorRegistryTest {
     }
 
     // -------------------------------------------------------------------------
-    // JWE — RSA-OAEP with several content algorithms
-    // -------------------------------------------------------------------------
-
-    @Test
-    fun jweRsaOaepA256GcmRoundTrip() = runTest {
-        assertJweRoundTrip(
-            algorithm = EncryptionAlgorithm.RsaOaep,
-            contentAlgorithm = EncryptionContentAlgorithm.A256GCM,
-            keyId = "__kjwt_test_oaep",
-        )
-    }
-
-    @Test
-    fun jweRsaOaepA128CbcHs256RoundTrip() = runTest {
-        assertJweRoundTrip(
-            algorithm = EncryptionAlgorithm.RsaOaep,
-            contentAlgorithm = EncryptionContentAlgorithm.A128CbcHs256,
-            keyId = "__kjwt_test_oaep_cbc",
-        )
-    }
-
-    @Test
-    fun jweRsaOaep256A256GcmRoundTrip() = runTest {
-        assertJweRoundTrip(
-            algorithm = EncryptionAlgorithm.RsaOaep256,
-            contentAlgorithm = EncryptionContentAlgorithm.A256GCM,
-            keyId = "__kjwt_test_oaep256",
-        )
-    }
-
-    @Test
-    fun jweRsaOaep256A256CbcHs512RoundTrip() = runTest {
-        assertJweRoundTrip(
-            algorithm = EncryptionAlgorithm.RsaOaep256,
-            contentAlgorithm = EncryptionContentAlgorithm.A256CbcHs512,
-            keyId = "__kjwt_test_oaep256_cbc",
-        )
-    }
-
-    // -------------------------------------------------------------------------
     // StrongBox
     // -------------------------------------------------------------------------
 
@@ -133,16 +88,11 @@ class AndroidKeystoreJwtProcessorRegistryTest {
     // silently falls back to the default TEE-backed keystore.
     @Test
     fun strongBoxPreferredFallsBackGracefully() = runTest {
-        val preferredRegistry = AndroidKeystoreJwtProcessorRegistry(
-            keyGenerationArguments = AndroidKeystoreJwtProcessorRegistry.KeyGenerationArguments(
-                strongBoxMode = AndroidKeystoreJwtProcessorRegistry.StrongBoxMode.Preferred,
-            ),
-        )
-        val processor = preferredRegistry.findBestJwsProcessor(
+        val processor = AndroidKeyStoreSigningKey.getOrCreateInstance(
             algorithm = SigningAlgorithm.ES256,
             keyId = "__kjwt_test_sb_preferred",
+            strongBoxPreference = AndroidStrongBoxKeyPreference.Preferred,
         )
-        assertNotNull(processor)
         assertIs<JwsProcessor>(processor)
 
         val data = "strongbox-fallback-test".encodeToByteArray()
@@ -153,46 +103,39 @@ class AndroidKeystoreJwtProcessorRegistryTest {
     // StrongBox.None must behave identically to the default.
     @Test
     fun strongBoxNoneWorksNormally() = runTest {
-        val noneRegistry = AndroidKeystoreJwtProcessorRegistry(
-            keyGenerationArguments = AndroidKeystoreJwtProcessorRegistry.KeyGenerationArguments(
-                strongBoxMode = AndroidKeystoreJwtProcessorRegistry.StrongBoxMode.None,
-            ),
+        assertJwsRoundTrip(
+            algorithm = SigningAlgorithm.ES256,
+            keyId = "__kjwt_test_sb_none",
+            strongBoxPreference = AndroidStrongBoxKeyPreference.None,
         )
-        assertJwsRoundTripWith(noneRegistry, SigningAlgorithm.ES256, keyId = "__kjwt_test_sb_none")
     }
 
     // -------------------------------------------------------------------------
     // Edge cases
     // -------------------------------------------------------------------------
 
-    // alg=none must never return a processor from a hardware-backed registry.
+    // alg=none must return null — getInstance never auto-creates keys and
+    // no none-algorithm key has ever been stored in the keystore.
     @Test
     fun noneAlgorithmReturnsNull() = runTest {
-        assertNull(registry.findBestJwsProcessor(SigningAlgorithm.None, keyId = null))
+        assertNull(AndroidKeyStoreSigningKey.getInstance(SigningAlgorithm.None, null))
     }
 
-    // When auto-generation is disabled and no key exists the result is null.
+    // When no key exists for a given keyId, getInstance must return null.
     @Test
     fun noAutoGenerationReturnsNull() = runTest {
-        val noGenRegistry = AndroidKeystoreJwtProcessorRegistry(keyGenerationArguments = null)
         assertNull(
-            noGenRegistry.findBestJwsProcessor(SigningAlgorithm.ES256, keyId = "__kjwt_test_missing"),
+            AndroidKeyStoreSigningKey.getInstance(SigningAlgorithm.ES256, "__kjwt_test_missing"),
         )
-    }
-
-    // Dir uses a pre-shared symmetric key, which doesn't fit the hardware-backed
-    // model — the registry must return null (or forward to a delegate).
-    @Test
-    fun dirAlgorithmReturnsNull() = runTest {
-        assertNull(registry.findBestJweProcessor(EncryptionAlgorithm.Dir, keyId = null))
     }
 
     // A tampered payload must not verify successfully.
     @Test
     fun tamperedDataFailsVerification() = runTest {
-        val processor = registry.findBestJwsProcessor(SigningAlgorithm.ES256, "__kjwt_test_tamper")
-        assertNotNull(processor)
-        assertIs<JwsProcessor>(processor)
+        val processor = AndroidKeyStoreSigningKey.getOrCreateInstance(
+            algorithm = SigningAlgorithm.ES256,
+            keyId = "__kjwt_test_tamper",
+        )
 
         val original = "header.payload".encodeToByteArray()
         val signature = processor.sign(original)
@@ -206,9 +149,10 @@ class AndroidKeystoreJwtProcessorRegistryTest {
     // A truncated or corrupted signature must not verify successfully.
     @Test
     fun corruptedSignatureFailsVerification() = runTest {
-        val processor = registry.findBestJwsProcessor(SigningAlgorithm.HS256, "__kjwt_test_corrupt")
-        assertNotNull(processor)
-        assertIs<JwsProcessor>(processor)
+        val processor = AndroidKeyStoreSigningKey.getOrCreateInstance(
+            algorithm = SigningAlgorithm.HS256,
+            keyId = "__kjwt_test_corrupt",
+        )
 
         val data = "header.payload".encodeToByteArray()
         val signature = processor.sign(data)
@@ -224,16 +168,16 @@ class AndroidKeystoreJwtProcessorRegistryTest {
     // Helpers
     // -------------------------------------------------------------------------
 
-    private suspend fun assertJwsRoundTrip(algorithm: SigningAlgorithm, keyId: String) {
-        assertJwsRoundTripWith(registry, algorithm, keyId)
-    }
-
-    private suspend fun assertJwsRoundTripWith(
-        reg: AndroidKeystoreJwtProcessorRegistry,
+    private suspend fun assertJwsRoundTrip(
         algorithm: SigningAlgorithm,
         keyId: String,
+        strongBoxPreference: AndroidStrongBoxKeyPreference = AndroidStrongBoxKeyPreference.None,
     ) {
-        val processor = reg.findBestJwsProcessor(algorithm, keyId)
+        val processor = AndroidKeyStoreSigningKey.getOrCreateInstance(
+            algorithm = algorithm,
+            keyId = keyId,
+            strongBoxPreference = strongBoxPreference,
+        )
         assertNotNull(processor)
         assertIs<JwsProcessor>(processor)
 
@@ -247,34 +191,6 @@ class AndroidKeystoreJwtProcessorRegistryTest {
         assertFalse(
             processor.verify("header.other".encodeToByteArray(), signature),
             "Signature for ${algorithm.id} should not verify against different data",
-        )
-    }
-
-    private suspend fun assertJweRoundTrip(
-        algorithm: EncryptionAlgorithm,
-        contentAlgorithm: EncryptionContentAlgorithm,
-        keyId: String,
-    ) {
-        val processor = registry.findBestJweProcessor(algorithm, keyId)
-        assertNotNull(processor)
-        assertIs<JweProcessor>(processor)
-
-        val plaintext = "secret payload content".encodeToByteArray()
-        val aad = "protected.header".encodeToByteArray()
-
-        val result = processor.encrypt(plaintext, aad, contentAlgorithm)
-        val decrypted = processor.decrypt(
-            aad,
-            result.encryptedKey,
-            result.iv,
-            result.ciphertext,
-            result.tag,
-            contentAlgorithm,
-        )
-
-        assertTrue(
-            plaintext.contentEquals(decrypted),
-            "Decrypted content must match original plaintext for ${algorithm.id}/${contentAlgorithm.id}",
         )
     }
 }
