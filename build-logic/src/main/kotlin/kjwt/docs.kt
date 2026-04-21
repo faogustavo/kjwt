@@ -1,11 +1,11 @@
 package kjwt
 
-import gradle.kotlin.dsl.accessors._ae0e2e0f59d526dd61b4865f6e032691.versioning
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.named
 import org.jetbrains.dokka.gradle.DokkaExtension
 import org.jetbrains.dokka.gradle.engine.parameters.DokkaSourceSetSpec
 import org.jetbrains.dokka.gradle.engine.plugins.DokkaHtmlPluginParameters
+import org.jetbrains.dokka.gradle.engine.plugins.DokkaVersioningPluginParameters
 
 fun DokkaExtension.setupHtmlPlugin() {
     pluginsConfiguration.named<DokkaHtmlPluginParameters>("html") {
@@ -32,7 +32,7 @@ fun DokkaSourceSetSpec.registerExternalDocumentation() {
 }
 
 fun DokkaExtension.registerVersioningPlugin(project: Project) {
-    pluginsConfiguration.versioning {
+    pluginsConfiguration.named<DokkaVersioningPluginParameters>("versioning") {
         version.set(Projects.VERSION)
         olderVersionsDir.set(project.rootProject.projectDir.resolve("build/previous-versions"))
     }
