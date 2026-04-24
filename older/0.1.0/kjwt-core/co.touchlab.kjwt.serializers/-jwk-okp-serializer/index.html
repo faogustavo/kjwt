@@ -2,7 +2,7 @@
 <html class="no-js" lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-    <title>SimpleKey</title>
+    <title>JwkOkpSerializer</title>
 <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>
     <script>document.documentElement.classList.replace("no-js", "js");</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
@@ -40,10 +40,10 @@
         </button>
         <div class="navigation-controls--break ui-kit_mobile-only"></div>
         <div class="library-version" id="library-version">
-<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;co.touchlab.kjwt.cryptography/-simple-key/index.html&quot;}">0.1.0</dokka-template-command>        </div>
+<dokka-template-command data="{&quot;@class&quot;:&quot;org.jetbrains.dokka.base.templating.ReplaceVersionsCommand&quot;,&quot;location&quot;:&quot;co.touchlab.kjwt.serializers/-jwk-okp-serializer/index.html&quot;}">0.1.0</dokka-template-command>        </div>
         <div class="navigation-controls">
         <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
-                <button class="platform-tag platform-selector common-like" data-active="" aria-pressed="true" data-filter=":kjwt-cryptography-kotlin-processor/commonMain">common</button>
+                <button class="platform-tag platform-selector common-like" data-active="" aria-pressed="true" data-filter=":kjwt-core/commonMain">common</button>
             <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
                 <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
                 <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
@@ -54,7 +54,7 @@
                     </div>
                         <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
                             <label class="checkbox">
-                                <input type="checkbox" class="checkbox--input" id=":kjwt-cryptography-kotlin-processor/commonMain" data-filter=":kjwt-cryptography-kotlin-processor/commonMain">
+                                <input type="checkbox" class="checkbox--input" id=":kjwt-core/commonMain" data-filter=":kjwt-core/commonMain">
                                 <span class="checkbox--icon"></span>
                                 common
                             </label>
@@ -91,66 +91,62 @@
         </nav>
         <div id="resizer" class="resizer" data-item-type="BAR"></div>
         <div id="main" data-item-type="SECTION" role="main">
-<div class="main-content" data-page-type="classlike" id="content" pageids="kjwt-cryptography-kotlin-processor::co.touchlab.kjwt.cryptography/SimpleKey///PointingToDeclaration//-811057663">
-  <div class="breadcrumbs"><a href="../../index.html">kjwt-cryptography-kotlin-processor</a><span class="delimiter">/</span><a href="../index.html">co.touchlab.kjwt.cryptography</a><span class="delimiter">/</span><span class="current">SimpleKey</span></div>
+<div class="main-content" data-page-type="classlike" id="content" pageids="kjwt-core::co.touchlab.kjwt.serializers/JwkOkpSerializer///PointingToDeclaration//433806985">
+  <div class="breadcrumbs"><a href="../../index.html">kjwt-core</a><span class="delimiter">/</span><a href="../index.html">co.touchlab.kjwt.serializers</a><span class="delimiter">/</span><span class="current">JwkOkpSerializer</span></div>
   <div class="cover ">
-    <h1 class="cover"><span>Simple</span><wbr><span><span>Key</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kjwt-cryptography-kotlin-processor/commonMain"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">SimpleKey</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>value<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-byte-array/index.html">ByteArray</a></span></span><span class="token punctuation">)</span> : <span data-unresolved-link="dev.whyoleg.cryptography.materials.key/Key///PointingToDeclaration/">Key</span><span class="source-link-wrapper"><span class="source-link" data-element-type="source-link">(<a href="https://github.com/touchlab/kjwt/tree/0.1.0//cryptography-kotlin/processor/src/commonMain/kotlin/co/touchlab/kjwt/cryptography/SimpleKey.kt#L15">source</a>)</span></span></div><p class="paragraph">A minimal <span data-unresolved-link="dev.whyoleg.cryptography.materials.key/Key///PointingToDeclaration/">Key</span> implementation that wraps a raw <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-byte-array/index.html">ByteArray</a> of key material.</p><p class="paragraph">Used as the key type for direct-key (<code class="lang-kotlin">dir</code>) JWE encryption, where the content encryption key is supplied directly as bytes rather than being wrapped by an asymmetric algorithm.</p><h4 class="tableheader">See also</h4><div class="table"><div class="table-row table-row_content" data-filterable-current=":kjwt-cryptography-kotlin-processor/commonMain" data-filterable-set=":kjwt-cryptography-kotlin-processor/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-encryption-key/index.html"><span>Encryption</span><wbr><span><span>Key</span></span></a></div></span></div><div></div></div></div></div></div></div>
+    <h1 class="cover"><span>Jwk</span><wbr><span>Okp</span><wbr><span><span>Serializer</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kjwt-core/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="index.html">JwkOkpSerializer</a> : <a href="https://kotlinlang.org/api/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization/-k-serializer/index.html">KSerializer</a><span class="token operator">&lt;</span><a href="../../co.touchlab.kjwt.model.jwk/-jwk/-okp/index.html">Jwk.Okp</a><span class="token operator">&gt; </span><span class="source-link-wrapper"><span class="source-link" data-element-type="source-link">(<a href="https://github.com/touchlab/kjwt/tree/0.1.0//core/src/commonMain/kotlin/co/touchlab/kjwt/serializers/JwkSerializer.kt#L195">source</a>)</span></span></div><p class="paragraph">Serializer for <a href="../../co.touchlab.kjwt.model.jwk/-jwk/-okp/index.html">Jwk.Okp</a> values to and from their JSON Web Key representation per RFC 8037.</p><p class="paragraph">Encodes the required OKP parameters (<code class="lang-kotlin">crv</code>, <code class="lang-kotlin">x</code>) and optional private key parameter (<code class="lang-kotlin">d</code>) as Base64URL strings, along with optional metadata fields (<code class="lang-kotlin">use</code>, <code class="lang-kotlin">key_ops</code>, <code class="lang-kotlin">alg</code>, <code class="lang-kotlin">kid</code>). Throws <a href="../../co.touchlab.kjwt.exception/-malformed-jwk-exception/index.html">co.touchlab.kjwt.exception.MalformedJwkException</a> during deserialization if a required field is missing.</p></div></div>
   </div>
   <div class="tabbedcontent">
     <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
     <div class="tabs-section-body">
-      <div data-togglable="CONSTRUCTOR">
-        <h2 class="tableheader">Constructors</h2>
-        <div class="table"><a data-name="1019524925%2FConstructors%2F-811057663" anchor-label="SimpleKey" id="1019524925%2FConstructors%2F-811057663" data-filterable-set=":kjwt-cryptography-kotlin-processor/commonMain"></a>
-          <div class="table-row table-row_content" data-togglable="CONSTRUCTOR" data-filterable-current=":kjwt-cryptography-kotlin-processor/commonMain" data-filterable-set=":kjwt-cryptography-kotlin-processor/commonMain">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="-simple-key.html"><span>Simple</span><wbr><span><span>Key</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1019524925%2FConstructors%2F-811057663"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kjwt-cryptography-kotlin-processor/commonMain"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-byte-array/index.html">ByteArray</a></span></span><span class="token punctuation">)</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div data-togglable="TYPE">
-        <h2 class="tableheader">Types</h2>
-        <div class="table"><a data-name="1723523317%2FClasslikes%2F-811057663" anchor-label="Companion" id="1723523317%2FClasslikes%2F-811057663" data-filterable-set=":kjwt-cryptography-kotlin-processor/commonMain"></a>
-          <div class="table-row table-row_content" data-filterable-current=":kjwt-cryptography-kotlin-processor/commonMain" data-filterable-set=":kjwt-cryptography-kotlin-processor/commonMain">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="-companion/index.html"><span><span>Companion</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1723523317%2FClasslikes%2F-811057663"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kjwt-cryptography-kotlin-processor/commonMain"><div class="symbol monospace"><span class="token keyword">object </span><a href="-companion/index.html">Companion</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
       <div data-togglable="PROPERTY">
         <h2 class="tableheader">Properties</h2>
-        <div class="table"><a data-name="1421995997%2FProperties%2F-811057663" anchor-label="value" id="1421995997%2FProperties%2F-811057663" data-filterable-set=":kjwt-cryptography-kotlin-processor/commonMain"></a>
-          <div class="table-row table-row_content" data-filterable-current=":kjwt-cryptography-kotlin-processor/commonMain" data-filterable-set=":kjwt-cryptography-kotlin-processor/commonMain">
+        <div class="table"><a data-name="-933974903%2FProperties%2F433806985" anchor-label="descriptor" id="-933974903%2FProperties%2F433806985" data-filterable-set=":kjwt-core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":kjwt-core/commonMain" data-filterable-set=":kjwt-core/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="value.html"><span><span>value</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1421995997%2FProperties%2F-811057663"></span>
+                  <div><a href="descriptor.html"><span><span>descriptor</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-933974903%2FProperties%2F433806985"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kjwt-cryptography-kotlin-processor/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="value.html">value</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-byte-array/index.html">ByteArray</a></div><div class="brief "><p class="paragraph">The raw key bytes that back this key material.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kjwt-core/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="descriptor.html">descriptor</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization.descriptors/-serial-descriptor/index.html">SerialDescriptor</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="-612184603%2FFunctions%2F433806985" anchor-label="deserialize" id="-612184603%2FFunctions%2F433806985" data-filterable-set=":kjwt-core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":kjwt-core/commonMain" data-filterable-set=":kjwt-core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="deserialize.html"><span><span>deserialize</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-612184603%2FFunctions%2F433806985"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kjwt-core/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="deserialize.html"><span class="token function">deserialize</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">decoder<span class="token operator">: </span><a href="https://kotlinlang.org/api/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization.encoding/-decoder/index.html">Decoder</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../co.touchlab.kjwt.model.jwk/-jwk/-okp/index.html">Jwk.Okp</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-661721192%2FFunctions%2F433806985" anchor-label="serialize" id="-661721192%2FFunctions%2F433806985" data-filterable-set=":kjwt-core/commonMain"></a>
+          <div class="table-row table-row_content" data-filterable-current=":kjwt-core/commonMain" data-filterable-set=":kjwt-core/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="serialize.html"><span><span>serialize</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-661721192%2FFunctions%2F433806985"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":kjwt-core/commonMain"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="serialize.html"><span class="token function">serialize</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">encoder<span class="token operator">: </span><a href="https://kotlinlang.org/api/kotlinx.serialization/kotlinx-serialization-core/kotlinx.serialization.encoding/-encoder/index.html">Encoder</a><span class="token punctuation">, </span></span><span class="parameter ">value<span class="token operator">: </span><a href="../../co.touchlab.kjwt.model.jwk/-jwk/-okp/index.html">Jwk.Okp</a></span></span><span class="token punctuation">)</span></div></div></div>
                 </div>
               </div>
             </div>
