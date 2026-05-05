@@ -16,7 +16,7 @@ version = Projects.VERSION.let {
 
 mavenPublishing {
     configureBasedOnAppliedPlugins()
-    publishToMavenCentral()
+    publishToMavenCentral(true, DeploymentValidation.NONE)
 
     if (project.findProperty("RELEASE_SIGNING_ENABLED") != "false") {
         signAllPublications()
