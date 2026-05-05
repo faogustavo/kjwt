@@ -8,7 +8,10 @@ plugins {
 
 group = Projects.GROUP
 version = Projects.VERSION.let {
-    if (project.hasProperty("SNAPSHOT")) {
+    if (
+        project.hasProperty("SNAPSHOT") &&
+        project.property("SNAPSHOT")?.toString() == "true"
+    ) {
         "$it-SNAPSHOT"
     } else {
         it
