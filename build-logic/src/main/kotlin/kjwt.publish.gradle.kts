@@ -1,4 +1,5 @@
 import kjwt.Projects
+import com.vanniktech.maven.publish.DeploymentValidation
 
 plugins {
     kotlin("multiplatform")
