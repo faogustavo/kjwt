@@ -1,0 +1,175 @@
+// Klib ABI Dump
+// Targets: [androidNativeArm32, androidNativeArm64, androidNativeX64, androidNativeX86, iosArm64, iosSimulatorArm64, iosX64, js, linuxArm64, linuxX64, macosArm64, macosX64, mingwX64, tvosArm64, tvosSimulatorArm64, tvosX64, wasmJs, wasmWasi, watchosArm64, watchosDeviceArm64, watchosSimulatorArm64, watchosX64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <co.touchlab:kjwt-cryptography-kotlin-processor>
+sealed class co.touchlab.kjwt.cryptography/EncryptionKey : co.touchlab.kjwt.processor/BaseJweProcessor { // co.touchlab.kjwt.cryptography/EncryptionKey|null[0]
+    abstract val identifier // co.touchlab.kjwt.cryptography/EncryptionKey.identifier|{}identifier[0]
+        abstract fun <get-identifier>(): co.touchlab.kjwt.cryptography/EncryptionKey.Identifier // co.touchlab.kjwt.cryptography/EncryptionKey.identifier.<get-identifier>|<get-identifier>(){}[0]
+    abstract val privateKey // co.touchlab.kjwt.cryptography/EncryptionKey.privateKey|{}privateKey[0]
+        abstract fun <get-privateKey>(): kotlin/Any // co.touchlab.kjwt.cryptography/EncryptionKey.privateKey.<get-privateKey>|<get-privateKey>(){}[0]
+    abstract val publicKey // co.touchlab.kjwt.cryptography/EncryptionKey.publicKey|{}publicKey[0]
+        abstract fun <get-publicKey>(): kotlin/Any // co.touchlab.kjwt.cryptography/EncryptionKey.publicKey.<get-publicKey>|<get-publicKey>(){}[0]
+    open val algorithm // co.touchlab.kjwt.cryptography/EncryptionKey.algorithm|{}algorithm[0]
+        open fun <get-algorithm>(): co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm // co.touchlab.kjwt.cryptography/EncryptionKey.algorithm.<get-algorithm>|<get-algorithm>(){}[0]
+    open val keyId // co.touchlab.kjwt.cryptography/EncryptionKey.keyId|{}keyId[0]
+        open fun <get-keyId>(): kotlin/String? // co.touchlab.kjwt.cryptography/EncryptionKey.keyId.<get-keyId>|<get-keyId>(){}[0]
+
+    final fun mergeWith(co.touchlab.kjwt.cryptography/EncryptionKey?): co.touchlab.kjwt.cryptography/EncryptionKey // co.touchlab.kjwt.cryptography/EncryptionKey.mergeWith|mergeWith(co.touchlab.kjwt.cryptography.EncryptionKey?){}[0]
+
+    final class DecryptionOnlyKey : co.touchlab.kjwt.cryptography/EncryptionKey, co.touchlab.kjwt.processor/JweDecryptor { // co.touchlab.kjwt.cryptography/EncryptionKey.DecryptionOnlyKey|null[0]
+        constructor <init>(co.touchlab.kjwt.cryptography/EncryptionKey.Identifier, kotlin/Any) // co.touchlab.kjwt.cryptography/EncryptionKey.DecryptionOnlyKey.<init>|<init>(co.touchlab.kjwt.cryptography.EncryptionKey.Identifier;kotlin.Any){}[0]
+
+        final val identifier // co.touchlab.kjwt.cryptography/EncryptionKey.DecryptionOnlyKey.identifier|{}identifier[0]
+            final fun <get-identifier>(): co.touchlab.kjwt.cryptography/EncryptionKey.Identifier // co.touchlab.kjwt.cryptography/EncryptionKey.DecryptionOnlyKey.identifier.<get-identifier>|<get-identifier>(){}[0]
+        final val privateKey // co.touchlab.kjwt.cryptography/EncryptionKey.DecryptionOnlyKey.privateKey|{}privateKey[0]
+            final fun <get-privateKey>(): kotlin/Any // co.touchlab.kjwt.cryptography/EncryptionKey.DecryptionOnlyKey.privateKey.<get-privateKey>|<get-privateKey>(){}[0]
+        final val publicKey // co.touchlab.kjwt.cryptography/EncryptionKey.DecryptionOnlyKey.publicKey|{}publicKey[0]
+            final fun <get-publicKey>(): kotlin/Any // co.touchlab.kjwt.cryptography/EncryptionKey.DecryptionOnlyKey.publicKey.<get-publicKey>|<get-publicKey>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.cryptography/EncryptionKey.DecryptionOnlyKey.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.cryptography/EncryptionKey.DecryptionOnlyKey.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.cryptography/EncryptionKey.DecryptionOnlyKey.toString|toString(){}[0]
+        final suspend fun decrypt(kotlin/ByteArray, kotlin/ByteArray, kotlin/ByteArray, kotlin/ByteArray, kotlin/ByteArray, co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm): kotlin/ByteArray // co.touchlab.kjwt.cryptography/EncryptionKey.DecryptionOnlyKey.decrypt|decrypt(kotlin.ByteArray;kotlin.ByteArray;kotlin.ByteArray;kotlin.ByteArray;kotlin.ByteArray;co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm){}[0]
+    }
+
+    final class EncryptionKeyPair : co.touchlab.kjwt.cryptography/EncryptionKey, co.touchlab.kjwt.processor/JweProcessor { // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionKeyPair|null[0]
+        constructor <init>(co.touchlab.kjwt.cryptography/EncryptionKey.Identifier, kotlin/Any, kotlin/Any) // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionKeyPair.<init>|<init>(co.touchlab.kjwt.cryptography.EncryptionKey.Identifier;kotlin.Any;kotlin.Any){}[0]
+
+        final val identifier // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionKeyPair.identifier|{}identifier[0]
+            final fun <get-identifier>(): co.touchlab.kjwt.cryptography/EncryptionKey.Identifier // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionKeyPair.identifier.<get-identifier>|<get-identifier>(){}[0]
+        final val privateKey // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionKeyPair.privateKey|{}privateKey[0]
+            final fun <get-privateKey>(): kotlin/Any // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionKeyPair.privateKey.<get-privateKey>|<get-privateKey>(){}[0]
+        final val publicKey // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionKeyPair.publicKey|{}publicKey[0]
+            final fun <get-publicKey>(): kotlin/Any // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionKeyPair.publicKey.<get-publicKey>|<get-publicKey>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionKeyPair.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionKeyPair.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionKeyPair.toString|toString(){}[0]
+        final suspend fun decrypt(kotlin/ByteArray, kotlin/ByteArray, kotlin/ByteArray, kotlin/ByteArray, kotlin/ByteArray, co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm): kotlin/ByteArray // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionKeyPair.decrypt|decrypt(kotlin.ByteArray;kotlin.ByteArray;kotlin.ByteArray;kotlin.ByteArray;kotlin.ByteArray;co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm){}[0]
+        final suspend fun encrypt(kotlin/ByteArray, kotlin/ByteArray, co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm): co.touchlab.kjwt.model.algorithm/JweEncryptResult // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionKeyPair.encrypt|encrypt(kotlin.ByteArray;kotlin.ByteArray;co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm){}[0]
+    }
+
+    final class EncryptionOnlyKey : co.touchlab.kjwt.cryptography/EncryptionKey, co.touchlab.kjwt.processor/JweEncryptor { // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionOnlyKey|null[0]
+        constructor <init>(co.touchlab.kjwt.cryptography/EncryptionKey.Identifier, kotlin/Any) // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionOnlyKey.<init>|<init>(co.touchlab.kjwt.cryptography.EncryptionKey.Identifier;kotlin.Any){}[0]
+
+        final val identifier // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionOnlyKey.identifier|{}identifier[0]
+            final fun <get-identifier>(): co.touchlab.kjwt.cryptography/EncryptionKey.Identifier // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionOnlyKey.identifier.<get-identifier>|<get-identifier>(){}[0]
+        final val privateKey // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionOnlyKey.privateKey|{}privateKey[0]
+            final fun <get-privateKey>(): kotlin/Any // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionOnlyKey.privateKey.<get-privateKey>|<get-privateKey>(){}[0]
+        final val publicKey // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionOnlyKey.publicKey|{}publicKey[0]
+            final fun <get-publicKey>(): kotlin/Any // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionOnlyKey.publicKey.<get-publicKey>|<get-publicKey>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionOnlyKey.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionOnlyKey.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionOnlyKey.toString|toString(){}[0]
+        final suspend fun encrypt(kotlin/ByteArray, kotlin/ByteArray, co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm): co.touchlab.kjwt.model.algorithm/JweEncryptResult // co.touchlab.kjwt.cryptography/EncryptionKey.EncryptionOnlyKey.encrypt|encrypt(kotlin.ByteArray;kotlin.ByteArray;co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm){}[0]
+    }
+
+    final class Identifier { // co.touchlab.kjwt.cryptography/EncryptionKey.Identifier|null[0]
+        constructor <init>(co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm, kotlin/String?) // co.touchlab.kjwt.cryptography/EncryptionKey.Identifier.<init>|<init>(co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm;kotlin.String?){}[0]
+
+        final val algorithm // co.touchlab.kjwt.cryptography/EncryptionKey.Identifier.algorithm|{}algorithm[0]
+            final fun <get-algorithm>(): co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm // co.touchlab.kjwt.cryptography/EncryptionKey.Identifier.algorithm.<get-algorithm>|<get-algorithm>(){}[0]
+        final val keyId // co.touchlab.kjwt.cryptography/EncryptionKey.Identifier.keyId|{}keyId[0]
+            final fun <get-keyId>(): kotlin/String? // co.touchlab.kjwt.cryptography/EncryptionKey.Identifier.keyId.<get-keyId>|<get-keyId>(){}[0]
+
+        final fun component1(): co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm // co.touchlab.kjwt.cryptography/EncryptionKey.Identifier.component1|component1(){}[0]
+        final fun component2(): kotlin/String? // co.touchlab.kjwt.cryptography/EncryptionKey.Identifier.component2|component2(){}[0]
+        final fun copy(co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm = ..., kotlin/String? = ...): co.touchlab.kjwt.cryptography/EncryptionKey.Identifier // co.touchlab.kjwt.cryptography/EncryptionKey.Identifier.copy|copy(co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm;kotlin.String?){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.cryptography/EncryptionKey.Identifier.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.cryptography/EncryptionKey.Identifier.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.cryptography/EncryptionKey.Identifier.toString|toString(){}[0]
+
+        final object Companion // co.touchlab.kjwt.cryptography/EncryptionKey.Identifier.Companion|null[0]
+    }
+}
+
+sealed class co.touchlab.kjwt.cryptography/SigningKey : co.touchlab.kjwt.processor/BaseJwsProcessor { // co.touchlab.kjwt.cryptography/SigningKey|null[0]
+    abstract val identifier // co.touchlab.kjwt.cryptography/SigningKey.identifier|{}identifier[0]
+        abstract fun <get-identifier>(): co.touchlab.kjwt.cryptography/SigningKey.Identifier // co.touchlab.kjwt.cryptography/SigningKey.identifier.<get-identifier>|<get-identifier>(){}[0]
+    abstract val privateKey // co.touchlab.kjwt.cryptography/SigningKey.privateKey|{}privateKey[0]
+        abstract fun <get-privateKey>(): kotlin/Any // co.touchlab.kjwt.cryptography/SigningKey.privateKey.<get-privateKey>|<get-privateKey>(){}[0]
+    abstract val publicKey // co.touchlab.kjwt.cryptography/SigningKey.publicKey|{}publicKey[0]
+        abstract fun <get-publicKey>(): kotlin/Any // co.touchlab.kjwt.cryptography/SigningKey.publicKey.<get-publicKey>|<get-publicKey>(){}[0]
+    open val algorithm // co.touchlab.kjwt.cryptography/SigningKey.algorithm|{}algorithm[0]
+        open fun <get-algorithm>(): co.touchlab.kjwt.model.algorithm/SigningAlgorithm // co.touchlab.kjwt.cryptography/SigningKey.algorithm.<get-algorithm>|<get-algorithm>(){}[0]
+    open val keyId // co.touchlab.kjwt.cryptography/SigningKey.keyId|{}keyId[0]
+        open fun <get-keyId>(): kotlin/String? // co.touchlab.kjwt.cryptography/SigningKey.keyId.<get-keyId>|<get-keyId>(){}[0]
+
+    final class Identifier { // co.touchlab.kjwt.cryptography/SigningKey.Identifier|null[0]
+        constructor <init>(co.touchlab.kjwt.model.algorithm/SigningAlgorithm, kotlin/String?) // co.touchlab.kjwt.cryptography/SigningKey.Identifier.<init>|<init>(co.touchlab.kjwt.model.algorithm.SigningAlgorithm;kotlin.String?){}[0]
+
+        final val algorithm // co.touchlab.kjwt.cryptography/SigningKey.Identifier.algorithm|{}algorithm[0]
+            final fun <get-algorithm>(): co.touchlab.kjwt.model.algorithm/SigningAlgorithm // co.touchlab.kjwt.cryptography/SigningKey.Identifier.algorithm.<get-algorithm>|<get-algorithm>(){}[0]
+        final val keyId // co.touchlab.kjwt.cryptography/SigningKey.Identifier.keyId|{}keyId[0]
+            final fun <get-keyId>(): kotlin/String? // co.touchlab.kjwt.cryptography/SigningKey.Identifier.keyId.<get-keyId>|<get-keyId>(){}[0]
+
+        final fun component1(): co.touchlab.kjwt.model.algorithm/SigningAlgorithm // co.touchlab.kjwt.cryptography/SigningKey.Identifier.component1|component1(){}[0]
+        final fun component2(): kotlin/String? // co.touchlab.kjwt.cryptography/SigningKey.Identifier.component2|component2(){}[0]
+        final fun copy(co.touchlab.kjwt.model.algorithm/SigningAlgorithm = ..., kotlin/String? = ...): co.touchlab.kjwt.cryptography/SigningKey.Identifier // co.touchlab.kjwt.cryptography/SigningKey.Identifier.copy|copy(co.touchlab.kjwt.model.algorithm.SigningAlgorithm;kotlin.String?){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.cryptography/SigningKey.Identifier.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.cryptography/SigningKey.Identifier.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.cryptography/SigningKey.Identifier.toString|toString(){}[0]
+
+        final object Companion { // co.touchlab.kjwt.cryptography/SigningKey.Identifier.Companion|null[0]
+            final val None // co.touchlab.kjwt.cryptography/SigningKey.Identifier.Companion.None|{}None[0]
+                final fun <get-None>(): co.touchlab.kjwt.cryptography/SigningKey.Identifier // co.touchlab.kjwt.cryptography/SigningKey.Identifier.Companion.None.<get-None>|<get-None>(){}[0]
+        }
+    }
+
+    final class SigningKeyPair : co.touchlab.kjwt.cryptography/SigningKey, co.touchlab.kjwt.processor/JwsProcessor { // co.touchlab.kjwt.cryptography/SigningKey.SigningKeyPair|null[0]
+        constructor <init>(co.touchlab.kjwt.cryptography/SigningKey.Identifier, kotlin/Any, kotlin/Any) // co.touchlab.kjwt.cryptography/SigningKey.SigningKeyPair.<init>|<init>(co.touchlab.kjwt.cryptography.SigningKey.Identifier;kotlin.Any;kotlin.Any){}[0]
+
+        final val identifier // co.touchlab.kjwt.cryptography/SigningKey.SigningKeyPair.identifier|{}identifier[0]
+            final fun <get-identifier>(): co.touchlab.kjwt.cryptography/SigningKey.Identifier // co.touchlab.kjwt.cryptography/SigningKey.SigningKeyPair.identifier.<get-identifier>|<get-identifier>(){}[0]
+        final val privateKey // co.touchlab.kjwt.cryptography/SigningKey.SigningKeyPair.privateKey|{}privateKey[0]
+            final fun <get-privateKey>(): kotlin/Any // co.touchlab.kjwt.cryptography/SigningKey.SigningKeyPair.privateKey.<get-privateKey>|<get-privateKey>(){}[0]
+        final val publicKey // co.touchlab.kjwt.cryptography/SigningKey.SigningKeyPair.publicKey|{}publicKey[0]
+            final fun <get-publicKey>(): kotlin/Any // co.touchlab.kjwt.cryptography/SigningKey.SigningKeyPair.publicKey.<get-publicKey>|<get-publicKey>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.cryptography/SigningKey.SigningKeyPair.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.cryptography/SigningKey.SigningKeyPair.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.cryptography/SigningKey.SigningKeyPair.toString|toString(){}[0]
+        final suspend fun sign(kotlin/ByteArray): kotlin/ByteArray // co.touchlab.kjwt.cryptography/SigningKey.SigningKeyPair.sign|sign(kotlin.ByteArray){}[0]
+        final suspend fun verify(kotlin/ByteArray, kotlin/ByteArray): kotlin/Boolean // co.touchlab.kjwt.cryptography/SigningKey.SigningKeyPair.verify|verify(kotlin.ByteArray;kotlin.ByteArray){}[0]
+    }
+
+    final class SigningOnlyKey : co.touchlab.kjwt.cryptography/SigningKey, co.touchlab.kjwt.processor/JwsSigner { // co.touchlab.kjwt.cryptography/SigningKey.SigningOnlyKey|null[0]
+        constructor <init>(co.touchlab.kjwt.cryptography/SigningKey.Identifier, kotlin/Any) // co.touchlab.kjwt.cryptography/SigningKey.SigningOnlyKey.<init>|<init>(co.touchlab.kjwt.cryptography.SigningKey.Identifier;kotlin.Any){}[0]
+
+        final val identifier // co.touchlab.kjwt.cryptography/SigningKey.SigningOnlyKey.identifier|{}identifier[0]
+            final fun <get-identifier>(): co.touchlab.kjwt.cryptography/SigningKey.Identifier // co.touchlab.kjwt.cryptography/SigningKey.SigningOnlyKey.identifier.<get-identifier>|<get-identifier>(){}[0]
+        final val privateKey // co.touchlab.kjwt.cryptography/SigningKey.SigningOnlyKey.privateKey|{}privateKey[0]
+            final fun <get-privateKey>(): kotlin/Any // co.touchlab.kjwt.cryptography/SigningKey.SigningOnlyKey.privateKey.<get-privateKey>|<get-privateKey>(){}[0]
+        final val publicKey // co.touchlab.kjwt.cryptography/SigningKey.SigningOnlyKey.publicKey|{}publicKey[0]
+            final fun <get-publicKey>(): kotlin/Any // co.touchlab.kjwt.cryptography/SigningKey.SigningOnlyKey.publicKey.<get-publicKey>|<get-publicKey>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.cryptography/SigningKey.SigningOnlyKey.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.cryptography/SigningKey.SigningOnlyKey.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.cryptography/SigningKey.SigningOnlyKey.toString|toString(){}[0]
+        final suspend fun sign(kotlin/ByteArray): kotlin/ByteArray // co.touchlab.kjwt.cryptography/SigningKey.SigningOnlyKey.sign|sign(kotlin.ByteArray){}[0]
+    }
+
+    final class VerifyOnlyKey : co.touchlab.kjwt.cryptography/SigningKey, co.touchlab.kjwt.processor/JwsVerifier { // co.touchlab.kjwt.cryptography/SigningKey.VerifyOnlyKey|null[0]
+        constructor <init>(co.touchlab.kjwt.cryptography/SigningKey.Identifier, kotlin/Any) // co.touchlab.kjwt.cryptography/SigningKey.VerifyOnlyKey.<init>|<init>(co.touchlab.kjwt.cryptography.SigningKey.Identifier;kotlin.Any){}[0]
+
+        final val identifier // co.touchlab.kjwt.cryptography/SigningKey.VerifyOnlyKey.identifier|{}identifier[0]
+            final fun <get-identifier>(): co.touchlab.kjwt.cryptography/SigningKey.Identifier // co.touchlab.kjwt.cryptography/SigningKey.VerifyOnlyKey.identifier.<get-identifier>|<get-identifier>(){}[0]
+        final val privateKey // co.touchlab.kjwt.cryptography/SigningKey.VerifyOnlyKey.privateKey|{}privateKey[0]
+            final fun <get-privateKey>(): kotlin/Any // co.touchlab.kjwt.cryptography/SigningKey.VerifyOnlyKey.privateKey.<get-privateKey>|<get-privateKey>(){}[0]
+        final val publicKey // co.touchlab.kjwt.cryptography/SigningKey.VerifyOnlyKey.publicKey|{}publicKey[0]
+            final fun <get-publicKey>(): kotlin/Any // co.touchlab.kjwt.cryptography/SigningKey.VerifyOnlyKey.publicKey.<get-publicKey>|<get-publicKey>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.cryptography/SigningKey.VerifyOnlyKey.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.cryptography/SigningKey.VerifyOnlyKey.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.cryptography/SigningKey.VerifyOnlyKey.toString|toString(){}[0]
+        final suspend fun verify(kotlin/ByteArray, kotlin/ByteArray): kotlin/Boolean // co.touchlab.kjwt.cryptography/SigningKey.VerifyOnlyKey.verify|verify(kotlin.ByteArray;kotlin.ByteArray){}[0]
+    }
+}
+
+final fun (co.touchlab.kjwt.model.algorithm/JwtCurve).co.touchlab.kjwt.cryptography/toCryptographyKotlin(): dev.whyoleg.cryptography.algorithms/EC.Curve // co.touchlab.kjwt.cryptography/toCryptographyKotlin|toCryptographyKotlin@co.touchlab.kjwt.model.algorithm.JwtCurve(){}[0]
+final fun (co.touchlab.kjwt.model.algorithm/JwtEdCurve).co.touchlab.kjwt.cryptography/toCryptographyKotlin(): dev.whyoleg.cryptography.algorithms/EdDSA.Curve // co.touchlab.kjwt.cryptography/toCryptographyKotlin|toCryptographyKotlin@co.touchlab.kjwt.model.algorithm.JwtEdCurve(){}[0]

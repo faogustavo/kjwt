@@ -63,11 +63,12 @@ class SecureHardwareSigningKeyTest {
     @Test fun es512SignAndVerify() = runBlocking { assertJwsRoundTrip(SigningAlgorithm.ES512, "__kjwt_test_es512") }
 
     // -------------------------------------------------------------------------
-    // JWS — EdDSA  (Android Keystore EdDSA support requires API 33+)
+    // JWS — EdDSA  (Android Keystore signs Ed25519 from API 33, but verifying with the public key
+    // needs Conscrypt's EdDSA provider, which is only available from API 36)
     // -------------------------------------------------------------------------
 
     @Test
-    @SdkSuppress(minSdkVersion = 33)
+    @SdkSuppress(minSdkVersion = 36)
     fun ed25519SignAndVerify() = runBlocking { assertJwsRoundTrip(SigningAlgorithm.Ed25519, "__kjwt_test_ed25519") }
 
     // -------------------------------------------------------------------------

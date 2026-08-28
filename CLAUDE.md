@@ -24,6 +24,12 @@ RFC 7515), and JWE (RFC 7516) tokens across JVM, JavaScript, WebAssembly, and Na
 
 # Run all checks
 ./gradlew check
+
+# Check ABI Compatibility
+./gradlew checkKotlinAbi
+
+# Update ABI dumps
+./gradlew updateKotlinAbi
 ```
 
 Tests live in `lib/src/commonTest/kotlin/` and run on all platforms.

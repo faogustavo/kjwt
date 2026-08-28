@@ -1,0 +1,1203 @@
+// Klib ABI Dump
+// Targets: [androidNativeArm32, androidNativeArm64, androidNativeX64, androidNativeX86, iosArm64, iosSimulatorArm64, iosX64, js, linuxArm64, linuxX64, macosArm64, macosX64, mingwX64, tvosArm64, tvosSimulatorArm64, tvosX64, wasmJs, wasmWasi, watchosArm64, watchosDeviceArm64, watchosSimulatorArm64, watchosX64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <co.touchlab:kjwt-core>
+open annotation class co.touchlab.kjwt.annotations/DelicateKJWTApi : kotlin/Annotation { // co.touchlab.kjwt.annotations/DelicateKJWTApi|null[0]
+    constructor <init>() // co.touchlab.kjwt.annotations/DelicateKJWTApi.<init>|<init>(){}[0]
+}
+
+open annotation class co.touchlab.kjwt.annotations/ExperimentalKJWTApi : kotlin/Annotation { // co.touchlab.kjwt.annotations/ExperimentalKJWTApi|null[0]
+    constructor <init>() // co.touchlab.kjwt.annotations/ExperimentalKJWTApi.<init>|<init>(){}[0]
+}
+
+open annotation class co.touchlab.kjwt.annotations/InternalKJWTApi : kotlin/Annotation { // co.touchlab.kjwt.annotations/InternalKJWTApi|null[0]
+    constructor <init>() // co.touchlab.kjwt.annotations/InternalKJWTApi.<init>|<init>(){}[0]
+}
+
+final enum class co.touchlab.kjwt.model.algorithm/JwtCurve : kotlin/Enum<co.touchlab.kjwt.model.algorithm/JwtCurve> { // co.touchlab.kjwt.model.algorithm/JwtCurve|null[0]
+    enum entry P256 // co.touchlab.kjwt.model.algorithm/JwtCurve.P256|null[0]
+    enum entry P384 // co.touchlab.kjwt.model.algorithm/JwtCurve.P384|null[0]
+    enum entry P521 // co.touchlab.kjwt.model.algorithm/JwtCurve.P521|null[0]
+
+    final val entries // co.touchlab.kjwt.model.algorithm/JwtCurve.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<co.touchlab.kjwt.model.algorithm/JwtCurve> // co.touchlab.kjwt.model.algorithm/JwtCurve.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): co.touchlab.kjwt.model.algorithm/JwtCurve // co.touchlab.kjwt.model.algorithm/JwtCurve.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<co.touchlab.kjwt.model.algorithm/JwtCurve> // co.touchlab.kjwt.model.algorithm/JwtCurve.values|values#static(){}[0]
+}
+
+final enum class co.touchlab.kjwt.model.algorithm/JwtDigest : kotlin/Enum<co.touchlab.kjwt.model.algorithm/JwtDigest> { // co.touchlab.kjwt.model.algorithm/JwtDigest|null[0]
+    enum entry SHA1 // co.touchlab.kjwt.model.algorithm/JwtDigest.SHA1|null[0]
+    enum entry SHA256 // co.touchlab.kjwt.model.algorithm/JwtDigest.SHA256|null[0]
+    enum entry SHA384 // co.touchlab.kjwt.model.algorithm/JwtDigest.SHA384|null[0]
+    enum entry SHA512 // co.touchlab.kjwt.model.algorithm/JwtDigest.SHA512|null[0]
+
+    final val entries // co.touchlab.kjwt.model.algorithm/JwtDigest.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<co.touchlab.kjwt.model.algorithm/JwtDigest> // co.touchlab.kjwt.model.algorithm/JwtDigest.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): co.touchlab.kjwt.model.algorithm/JwtDigest // co.touchlab.kjwt.model.algorithm/JwtDigest.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<co.touchlab.kjwt.model.algorithm/JwtDigest> // co.touchlab.kjwt.model.algorithm/JwtDigest.values|values#static(){}[0]
+}
+
+final enum class co.touchlab.kjwt.model.algorithm/JwtEdCurve : kotlin/Enum<co.touchlab.kjwt.model.algorithm/JwtEdCurve> { // co.touchlab.kjwt.model.algorithm/JwtEdCurve|null[0]
+    enum entry Ed25519 // co.touchlab.kjwt.model.algorithm/JwtEdCurve.Ed25519|null[0]
+    enum entry Ed448 // co.touchlab.kjwt.model.algorithm/JwtEdCurve.Ed448|null[0]
+
+    final val entries // co.touchlab.kjwt.model.algorithm/JwtEdCurve.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<co.touchlab.kjwt.model.algorithm/JwtEdCurve> // co.touchlab.kjwt.model.algorithm/JwtEdCurve.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): co.touchlab.kjwt.model.algorithm/JwtEdCurve // co.touchlab.kjwt.model.algorithm/JwtEdCurve.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<co.touchlab.kjwt.model.algorithm/JwtEdCurve> // co.touchlab.kjwt.model.algorithm/JwtEdCurve.values|values#static(){}[0]
+}
+
+abstract interface co.touchlab.kjwt.model.registry/JwtProcessorRegistry { // co.touchlab.kjwt.model.registry/JwtProcessorRegistry|null[0]
+    abstract fun delegateTo(co.touchlab.kjwt.model.registry/JwtProcessorRegistry) // co.touchlab.kjwt.model.registry/JwtProcessorRegistry.delegateTo|delegateTo(co.touchlab.kjwt.model.registry.JwtProcessorRegistry){}[0]
+    abstract fun findBestJweProcessor(co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm, kotlin/String?): co.touchlab.kjwt.processor/BaseJweProcessor? // co.touchlab.kjwt.model.registry/JwtProcessorRegistry.findBestJweProcessor|findBestJweProcessor(co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm;kotlin.String?){}[0]
+    abstract fun findBestJwsProcessor(co.touchlab.kjwt.model.algorithm/SigningAlgorithm, kotlin/String?): co.touchlab.kjwt.processor/BaseJwsProcessor? // co.touchlab.kjwt.model.registry/JwtProcessorRegistry.findBestJwsProcessor|findBestJwsProcessor(co.touchlab.kjwt.model.algorithm.SigningAlgorithm;kotlin.String?){}[0]
+}
+
+abstract interface co.touchlab.kjwt.model.registry/MutableJwtProcessorRegistry : co.touchlab.kjwt.model.registry/JwtProcessorRegistry { // co.touchlab.kjwt.model.registry/MutableJwtProcessorRegistry|null[0]
+    abstract fun registerJweProcessor(co.touchlab.kjwt.processor/BaseJweProcessor, kotlin/String? = ...) // co.touchlab.kjwt.model.registry/MutableJwtProcessorRegistry.registerJweProcessor|registerJweProcessor(co.touchlab.kjwt.processor.BaseJweProcessor;kotlin.String?){}[0]
+    abstract fun registerJwsProcessor(co.touchlab.kjwt.processor/BaseJwsProcessor, kotlin/String? = ...) // co.touchlab.kjwt.model.registry/MutableJwtProcessorRegistry.registerJwsProcessor|registerJwsProcessor(co.touchlab.kjwt.processor.BaseJwsProcessor;kotlin.String?){}[0]
+}
+
+abstract interface co.touchlab.kjwt.processor/BaseJweProcessor { // co.touchlab.kjwt.processor/BaseJweProcessor|null[0]
+    abstract val algorithm // co.touchlab.kjwt.processor/BaseJweProcessor.algorithm|{}algorithm[0]
+        abstract fun <get-algorithm>(): co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm // co.touchlab.kjwt.processor/BaseJweProcessor.algorithm.<get-algorithm>|<get-algorithm>(){}[0]
+    abstract val keyId // co.touchlab.kjwt.processor/BaseJweProcessor.keyId|{}keyId[0]
+        abstract fun <get-keyId>(): kotlin/String? // co.touchlab.kjwt.processor/BaseJweProcessor.keyId.<get-keyId>|<get-keyId>(){}[0]
+
+    final object Companion // co.touchlab.kjwt.processor/BaseJweProcessor.Companion|null[0]
+}
+
+abstract interface co.touchlab.kjwt.processor/BaseJwsProcessor { // co.touchlab.kjwt.processor/BaseJwsProcessor|null[0]
+    abstract val algorithm // co.touchlab.kjwt.processor/BaseJwsProcessor.algorithm|{}algorithm[0]
+        abstract fun <get-algorithm>(): co.touchlab.kjwt.model.algorithm/SigningAlgorithm // co.touchlab.kjwt.processor/BaseJwsProcessor.algorithm.<get-algorithm>|<get-algorithm>(){}[0]
+    abstract val keyId // co.touchlab.kjwt.processor/BaseJwsProcessor.keyId|{}keyId[0]
+        abstract fun <get-keyId>(): kotlin/String? // co.touchlab.kjwt.processor/BaseJwsProcessor.keyId.<get-keyId>|<get-keyId>(){}[0]
+
+    final object Companion // co.touchlab.kjwt.processor/BaseJwsProcessor.Companion|null[0]
+}
+
+abstract interface co.touchlab.kjwt.processor/JweDecryptor : co.touchlab.kjwt.processor/BaseJweProcessor { // co.touchlab.kjwt.processor/JweDecryptor|null[0]
+    abstract suspend fun decrypt(kotlin/ByteArray, kotlin/ByteArray, kotlin/ByteArray, kotlin/ByteArray, kotlin/ByteArray, co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm): kotlin/ByteArray // co.touchlab.kjwt.processor/JweDecryptor.decrypt|decrypt(kotlin.ByteArray;kotlin.ByteArray;kotlin.ByteArray;kotlin.ByteArray;kotlin.ByteArray;co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm){}[0]
+
+    final object Companion // co.touchlab.kjwt.processor/JweDecryptor.Companion|null[0]
+}
+
+abstract interface co.touchlab.kjwt.processor/JweEncryptor : co.touchlab.kjwt.processor/BaseJweProcessor { // co.touchlab.kjwt.processor/JweEncryptor|null[0]
+    abstract suspend fun encrypt(kotlin/ByteArray, kotlin/ByteArray, co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm): co.touchlab.kjwt.model.algorithm/JweEncryptResult // co.touchlab.kjwt.processor/JweEncryptor.encrypt|encrypt(kotlin.ByteArray;kotlin.ByteArray;co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm){}[0]
+
+    final object Companion // co.touchlab.kjwt.processor/JweEncryptor.Companion|null[0]
+}
+
+abstract interface co.touchlab.kjwt.processor/JweProcessor : co.touchlab.kjwt.processor/BaseJweProcessor, co.touchlab.kjwt.processor/JweDecryptor, co.touchlab.kjwt.processor/JweEncryptor { // co.touchlab.kjwt.processor/JweProcessor|null[0]
+    final object Companion { // co.touchlab.kjwt.processor/JweProcessor.Companion|null[0]
+        final fun combining(co.touchlab.kjwt.processor/JweEncryptor, co.touchlab.kjwt.processor/JweDecryptor): co.touchlab.kjwt.processor/JweProcessor // co.touchlab.kjwt.processor/JweProcessor.Companion.combining|combining(co.touchlab.kjwt.processor.JweEncryptor;co.touchlab.kjwt.processor.JweDecryptor){}[0]
+    }
+}
+
+abstract interface co.touchlab.kjwt.processor/JwsProcessor : co.touchlab.kjwt.processor/BaseJwsProcessor, co.touchlab.kjwt.processor/JwsSigner, co.touchlab.kjwt.processor/JwsVerifier { // co.touchlab.kjwt.processor/JwsProcessor|null[0]
+    final object Companion { // co.touchlab.kjwt.processor/JwsProcessor.Companion|null[0]
+        final fun combining(co.touchlab.kjwt.processor/JwsSigner, co.touchlab.kjwt.processor/JwsVerifier): co.touchlab.kjwt.processor/JwsProcessor // co.touchlab.kjwt.processor/JwsProcessor.Companion.combining|combining(co.touchlab.kjwt.processor.JwsSigner;co.touchlab.kjwt.processor.JwsVerifier){}[0]
+    }
+}
+
+abstract interface co.touchlab.kjwt.processor/JwsSigner : co.touchlab.kjwt.processor/BaseJwsProcessor { // co.touchlab.kjwt.processor/JwsSigner|null[0]
+    abstract suspend fun sign(kotlin/ByteArray): kotlin/ByteArray // co.touchlab.kjwt.processor/JwsSigner.sign|sign(kotlin.ByteArray){}[0]
+
+    final object Companion // co.touchlab.kjwt.processor/JwsSigner.Companion|null[0]
+}
+
+abstract interface co.touchlab.kjwt.processor/JwsVerifier : co.touchlab.kjwt.processor/BaseJwsProcessor { // co.touchlab.kjwt.processor/JwsVerifier|null[0]
+    abstract suspend fun verify(kotlin/ByteArray, kotlin/ByteArray): kotlin/Boolean // co.touchlab.kjwt.processor/JwsVerifier.verify|verify(kotlin.ByteArray;kotlin.ByteArray){}[0]
+
+    final object Companion // co.touchlab.kjwt.processor/JwsVerifier.Companion|null[0]
+}
+
+sealed interface co.touchlab.kjwt.model.algorithm/Jwa { // co.touchlab.kjwt.model.algorithm/Jwa|null[0]
+    abstract val id // co.touchlab.kjwt.model.algorithm/Jwa.id|{}id[0]
+        abstract fun <get-id>(): kotlin/String // co.touchlab.kjwt.model.algorithm/Jwa.id.<get-id>|<get-id>(){}[0]
+
+    abstract interface UsesHashingAlgorithm { // co.touchlab.kjwt.model.algorithm/Jwa.UsesHashingAlgorithm|null[0]
+        abstract val digest // co.touchlab.kjwt.model.algorithm/Jwa.UsesHashingAlgorithm.digest|{}digest[0]
+            abstract fun <get-digest>(): co.touchlab.kjwt.model.algorithm/JwtDigest // co.touchlab.kjwt.model.algorithm/Jwa.UsesHashingAlgorithm.digest.<get-digest>|<get-digest>(){}[0]
+    }
+
+    final object Companion : kotlinx.serialization.internal/SerializerFactory { // co.touchlab.kjwt.model.algorithm/Jwa.Companion|null[0]
+        final fun fromId(kotlin/String): co.touchlab.kjwt.model.algorithm/Jwa // co.touchlab.kjwt.model.algorithm/Jwa.Companion.fromId|fromId(kotlin.String){}[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.algorithm/Jwa> // co.touchlab.kjwt.model.algorithm/Jwa.Companion.serializer|serializer(){}[0]
+        final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // co.touchlab.kjwt.model.algorithm/Jwa.Companion.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+    }
+}
+
+final class co.touchlab.kjwt.builder/JwtBuilder { // co.touchlab.kjwt.builder/JwtBuilder|null[0]
+    constructor <init>(kotlinx.serialization.json/Json) // co.touchlab.kjwt.builder/JwtBuilder.<init>|<init>(kotlinx.serialization.json.Json){}[0]
+
+    final val headerBuilder // co.touchlab.kjwt.builder/JwtBuilder.headerBuilder|{}headerBuilder[0]
+        final fun <get-headerBuilder>(): co.touchlab.kjwt.model/JwtHeader.Builder // co.touchlab.kjwt.builder/JwtBuilder.headerBuilder.<get-headerBuilder>|<get-headerBuilder>(){}[0]
+    final val payloadBuilder // co.touchlab.kjwt.builder/JwtBuilder.payloadBuilder|{}payloadBuilder[0]
+        final fun <get-payloadBuilder>(): co.touchlab.kjwt.model/JwtPayload.Builder // co.touchlab.kjwt.builder/JwtBuilder.payloadBuilder.<get-payloadBuilder>|<get-payloadBuilder>(){}[0]
+
+    final fun <#A1: kotlin/Any?> claim(kotlin/String, kotlinx.serialization/SerializationStrategy<#A1>, #A1?): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.claim|claim(kotlin.String;kotlinx.serialization.SerializationStrategy<0:0>;0:0?){0§<kotlin.Any?>}[0]
+    final fun <#A1: kotlin/Any?> header(kotlin/String, kotlinx.serialization/SerializationStrategy<#A1>, #A1?): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.header|header(kotlin.String;kotlinx.serialization.SerializationStrategy<0:0>;0:0?){0§<kotlin.Any?>}[0]
+    final fun <#A1: kotlin/Any?> header(kotlinx.serialization/SerializationStrategy<#A1>, #A1): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.header|header(kotlinx.serialization.SerializationStrategy<0:0>;0:0){0§<kotlin.Any?>}[0]
+    final fun <#A1: kotlin/Any?> payload(kotlinx.serialization/SerializationStrategy<#A1>, #A1): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.payload|payload(kotlinx.serialization.SerializationStrategy<0:0>;0:0){0§<kotlin.Any?>}[0]
+    final fun audience(kotlin/Array<out kotlin/String>...): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.audience|audience(kotlin.Array<out|kotlin.String>...){}[0]
+    final fun build(): co.touchlab.kjwt.model/JwtInstance.Jws // co.touchlab.kjwt.builder/JwtBuilder.build|build(){}[0]
+    final fun claim(kotlin/String, kotlinx.serialization.json/JsonElement): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.claim|claim(kotlin.String;kotlinx.serialization.json.JsonElement){}[0]
+    final fun claims(kotlin/Function1<co.touchlab.kjwt.model/JwtPayload.Builder, kotlin/Unit>): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.claims|claims(kotlin.Function1<co.touchlab.kjwt.model.JwtPayload.Builder,kotlin.Unit>){}[0]
+    final fun contentType(kotlin/String): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.contentType|contentType(kotlin.String){}[0]
+    final fun expiration(kotlin.time/Instant): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.expiration|expiration(kotlin.time.Instant){}[0]
+    final fun expiresIn(kotlin.time/Duration): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.expiresIn|expiresIn(kotlin.time.Duration){}[0]
+    final fun header(kotlin/Function1<co.touchlab.kjwt.model/JwtHeader.Builder, kotlin/Unit>): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.header|header(kotlin.Function1<co.touchlab.kjwt.model.JwtHeader.Builder,kotlin.Unit>){}[0]
+    final fun header(kotlin/String, kotlinx.serialization.json/JsonElement): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.header|header(kotlin.String;kotlinx.serialization.json.JsonElement){}[0]
+    final fun id(kotlin/String): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.id|id(kotlin.String){}[0]
+    final fun issuedAt(kotlin.time/Instant): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.issuedAt|issuedAt(kotlin.time.Instant){}[0]
+    final fun issuedNow(): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.issuedNow|issuedNow(){}[0]
+    final fun issuer(kotlin/String): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.issuer|issuer(kotlin.String){}[0]
+    final fun notBefore(kotlin.time/Instant): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.notBefore|notBefore(kotlin.time.Instant){}[0]
+    final fun notBeforeNow(): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.notBeforeNow|notBeforeNow(){}[0]
+    final fun randomId(): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.randomId|randomId(){}[0]
+    final fun subject(kotlin/String): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.subject|subject(kotlin.String){}[0]
+    final fun type(kotlin/String): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.type|type(kotlin.String){}[0]
+    final inline fun <#A1: reified kotlin/Any?> claim(kotlin/String, #A1): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.claim|claim(kotlin.String;0:0){0§<kotlin.Any?>}[0]
+    final inline fun <#A1: reified kotlin/Any?> header(#A1): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.header|header(0:0){0§<kotlin.Any?>}[0]
+    final inline fun <#A1: reified kotlin/Any?> header(kotlin/String, #A1): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.header|header(kotlin.String;0:0){0§<kotlin.Any?>}[0]
+    final inline fun <#A1: reified kotlin/Any?> payload(#A1): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt.builder/JwtBuilder.payload|payload(0:0){0§<kotlin.Any?>}[0]
+    final suspend fun encryptWith(co.touchlab.kjwt.model.registry/JwtProcessorRegistry, co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm, co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm, kotlin/String? = ...): co.touchlab.kjwt.model/JwtInstance.Jwe // co.touchlab.kjwt.builder/JwtBuilder.encryptWith|encryptWith(co.touchlab.kjwt.model.registry.JwtProcessorRegistry;co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm;co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm;kotlin.String?){}[0]
+    final suspend fun encryptWithJweProcessor(co.touchlab.kjwt.processor/JweEncryptor, co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm, kotlin/String? = ...): co.touchlab.kjwt.model/JwtInstance.Jwe // co.touchlab.kjwt.builder/JwtBuilder.encryptWithJweProcessor|encryptWithJweProcessor(co.touchlab.kjwt.processor.JweEncryptor;co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm;kotlin.String?){}[0]
+    final suspend fun signWith(co.touchlab.kjwt.model.algorithm/SigningAlgorithm, co.touchlab.kjwt.model.registry/JwtProcessorRegistry, kotlin/String? = ...): co.touchlab.kjwt.model/JwtInstance.Jws // co.touchlab.kjwt.builder/JwtBuilder.signWith|signWith(co.touchlab.kjwt.model.algorithm.SigningAlgorithm;co.touchlab.kjwt.model.registry.JwtProcessorRegistry;kotlin.String?){}[0]
+    final suspend fun signWith(co.touchlab.kjwt.processor/JwsSigner, kotlin/String? = ...): co.touchlab.kjwt.model/JwtInstance.Jws // co.touchlab.kjwt.builder/JwtBuilder.signWith|signWith(co.touchlab.kjwt.processor.JwsSigner;kotlin.String?){}[0]
+}
+
+final class co.touchlab.kjwt.exception/ExpiredJwtException : co.touchlab.kjwt.exception/JwtException { // co.touchlab.kjwt.exception/ExpiredJwtException|null[0]
+    constructor <init>(co.touchlab.kjwt.model/JwtHeader, co.touchlab.kjwt.model/JwtPayload, kotlin/String) // co.touchlab.kjwt.exception/ExpiredJwtException.<init>|<init>(co.touchlab.kjwt.model.JwtHeader;co.touchlab.kjwt.model.JwtPayload;kotlin.String){}[0]
+
+    final val claims // co.touchlab.kjwt.exception/ExpiredJwtException.claims|{}claims[0]
+        final fun <get-claims>(): co.touchlab.kjwt.model/JwtPayload // co.touchlab.kjwt.exception/ExpiredJwtException.claims.<get-claims>|<get-claims>(){}[0]
+    final val header // co.touchlab.kjwt.exception/ExpiredJwtException.header|{}header[0]
+        final fun <get-header>(): co.touchlab.kjwt.model/JwtHeader // co.touchlab.kjwt.exception/ExpiredJwtException.header.<get-header>|<get-header>(){}[0]
+}
+
+final class co.touchlab.kjwt.exception/IncorrectClaimException : co.touchlab.kjwt.exception/JwtException { // co.touchlab.kjwt.exception/IncorrectClaimException|null[0]
+    constructor <init>(kotlin/String, kotlin/Any?, kotlin/Any?) // co.touchlab.kjwt.exception/IncorrectClaimException.<init>|<init>(kotlin.String;kotlin.Any?;kotlin.Any?){}[0]
+
+    final val actual // co.touchlab.kjwt.exception/IncorrectClaimException.actual|{}actual[0]
+        final fun <get-actual>(): kotlin/Any? // co.touchlab.kjwt.exception/IncorrectClaimException.actual.<get-actual>|<get-actual>(){}[0]
+    final val claimName // co.touchlab.kjwt.exception/IncorrectClaimException.claimName|{}claimName[0]
+        final fun <get-claimName>(): kotlin/String // co.touchlab.kjwt.exception/IncorrectClaimException.claimName.<get-claimName>|<get-claimName>(){}[0]
+    final val expected // co.touchlab.kjwt.exception/IncorrectClaimException.expected|{}expected[0]
+        final fun <get-expected>(): kotlin/Any? // co.touchlab.kjwt.exception/IncorrectClaimException.expected.<get-expected>|<get-expected>(){}[0]
+}
+
+final class co.touchlab.kjwt.exception/MalformedJwkException : co.touchlab.kjwt.exception/JwtException { // co.touchlab.kjwt.exception/MalformedJwkException|null[0]
+    constructor <init>(kotlin/String, kotlin/Throwable? = ...) // co.touchlab.kjwt.exception/MalformedJwkException.<init>|<init>(kotlin.String;kotlin.Throwable?){}[0]
+}
+
+final class co.touchlab.kjwt.exception/MalformedJwtException : co.touchlab.kjwt.exception/JwtException { // co.touchlab.kjwt.exception/MalformedJwtException|null[0]
+    constructor <init>(kotlin/String, kotlin/Throwable? = ...) // co.touchlab.kjwt.exception/MalformedJwtException.<init>|<init>(kotlin.String;kotlin.Throwable?){}[0]
+}
+
+final class co.touchlab.kjwt.exception/MissingClaimException : co.touchlab.kjwt.exception/JwtException { // co.touchlab.kjwt.exception/MissingClaimException|null[0]
+    constructor <init>(kotlin/String) // co.touchlab.kjwt.exception/MissingClaimException.<init>|<init>(kotlin.String){}[0]
+
+    final val claimName // co.touchlab.kjwt.exception/MissingClaimException.claimName|{}claimName[0]
+        final fun <get-claimName>(): kotlin/String // co.touchlab.kjwt.exception/MissingClaimException.claimName.<get-claimName>|<get-claimName>(){}[0]
+}
+
+final class co.touchlab.kjwt.exception/MissingHeaderException : co.touchlab.kjwt.exception/JwtException { // co.touchlab.kjwt.exception/MissingHeaderException|null[0]
+    constructor <init>(kotlin/String) // co.touchlab.kjwt.exception/MissingHeaderException.<init>|<init>(kotlin.String){}[0]
+
+    final val headerName // co.touchlab.kjwt.exception/MissingHeaderException.headerName|{}headerName[0]
+        final fun <get-headerName>(): kotlin/String // co.touchlab.kjwt.exception/MissingHeaderException.headerName.<get-headerName>|<get-headerName>(){}[0]
+}
+
+final class co.touchlab.kjwt.exception/PrematureJwtException : co.touchlab.kjwt.exception/JwtException { // co.touchlab.kjwt.exception/PrematureJwtException|null[0]
+    constructor <init>(co.touchlab.kjwt.model/JwtHeader, co.touchlab.kjwt.model/JwtPayload, kotlin/String) // co.touchlab.kjwt.exception/PrematureJwtException.<init>|<init>(co.touchlab.kjwt.model.JwtHeader;co.touchlab.kjwt.model.JwtPayload;kotlin.String){}[0]
+
+    final val claims // co.touchlab.kjwt.exception/PrematureJwtException.claims|{}claims[0]
+        final fun <get-claims>(): co.touchlab.kjwt.model/JwtPayload // co.touchlab.kjwt.exception/PrematureJwtException.claims.<get-claims>|<get-claims>(){}[0]
+    final val header // co.touchlab.kjwt.exception/PrematureJwtException.header|{}header[0]
+        final fun <get-header>(): co.touchlab.kjwt.model/JwtHeader // co.touchlab.kjwt.exception/PrematureJwtException.header.<get-header>|<get-header>(){}[0]
+}
+
+final class co.touchlab.kjwt.exception/SignatureException : co.touchlab.kjwt.exception/JwtException { // co.touchlab.kjwt.exception/SignatureException|null[0]
+    constructor <init>(kotlin/String, kotlin/Throwable? = ...) // co.touchlab.kjwt.exception/SignatureException.<init>|<init>(kotlin.String;kotlin.Throwable?){}[0]
+}
+
+final class co.touchlab.kjwt.exception/UnsupportedJwtException : co.touchlab.kjwt.exception/JwtException { // co.touchlab.kjwt.exception/UnsupportedJwtException|null[0]
+    constructor <init>(kotlin/String, kotlin/Throwable? = ...) // co.touchlab.kjwt.exception/UnsupportedJwtException.<init>|<init>(kotlin.String;kotlin.Throwable?){}[0]
+}
+
+final class co.touchlab.kjwt.model.algorithm/JweEncryptResult { // co.touchlab.kjwt.model.algorithm/JweEncryptResult|null[0]
+    constructor <init>(kotlin/ByteArray, kotlin/ByteArray, kotlin/ByteArray, kotlin/ByteArray) // co.touchlab.kjwt.model.algorithm/JweEncryptResult.<init>|<init>(kotlin.ByteArray;kotlin.ByteArray;kotlin.ByteArray;kotlin.ByteArray){}[0]
+
+    final val ciphertext // co.touchlab.kjwt.model.algorithm/JweEncryptResult.ciphertext|{}ciphertext[0]
+        final fun <get-ciphertext>(): kotlin/ByteArray // co.touchlab.kjwt.model.algorithm/JweEncryptResult.ciphertext.<get-ciphertext>|<get-ciphertext>(){}[0]
+    final val encryptedKey // co.touchlab.kjwt.model.algorithm/JweEncryptResult.encryptedKey|{}encryptedKey[0]
+        final fun <get-encryptedKey>(): kotlin/ByteArray // co.touchlab.kjwt.model.algorithm/JweEncryptResult.encryptedKey.<get-encryptedKey>|<get-encryptedKey>(){}[0]
+    final val iv // co.touchlab.kjwt.model.algorithm/JweEncryptResult.iv|{}iv[0]
+        final fun <get-iv>(): kotlin/ByteArray // co.touchlab.kjwt.model.algorithm/JweEncryptResult.iv.<get-iv>|<get-iv>(){}[0]
+    final val tag // co.touchlab.kjwt.model.algorithm/JweEncryptResult.tag|{}tag[0]
+        final fun <get-tag>(): kotlin/ByteArray // co.touchlab.kjwt.model.algorithm/JweEncryptResult.tag.<get-tag>|<get-tag>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/JweEncryptResult.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/JweEncryptResult.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/JweEncryptResult.toString|toString(){}[0]
+}
+
+final class co.touchlab.kjwt.model.jwk/JwkSet { // co.touchlab.kjwt.model.jwk/JwkSet|null[0]
+    constructor <init>(kotlin.collections/List<co.touchlab.kjwt.model.jwk/Jwk>) // co.touchlab.kjwt.model.jwk/JwkSet.<init>|<init>(kotlin.collections.List<co.touchlab.kjwt.model.jwk.Jwk>){}[0]
+
+    final val keys // co.touchlab.kjwt.model.jwk/JwkSet.keys|{}keys[0]
+        final fun <get-keys>(): kotlin.collections/List<co.touchlab.kjwt.model.jwk/Jwk> // co.touchlab.kjwt.model.jwk/JwkSet.keys.<get-keys>|<get-keys>(){}[0]
+
+    final fun component1(): kotlin.collections/List<co.touchlab.kjwt.model.jwk/Jwk> // co.touchlab.kjwt.model.jwk/JwkSet.component1|component1(){}[0]
+    final fun copy(kotlin.collections/List<co.touchlab.kjwt.model.jwk/Jwk> = ...): co.touchlab.kjwt.model.jwk/JwkSet // co.touchlab.kjwt.model.jwk/JwkSet.copy|copy(kotlin.collections.List<co.touchlab.kjwt.model.jwk.Jwk>){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.jwk/JwkSet.equals|equals(kotlin.Any?){}[0]
+    final fun findById(kotlin/String): co.touchlab.kjwt.model.jwk/Jwk? // co.touchlab.kjwt.model.jwk/JwkSet.findById|findById(kotlin.String){}[0]
+    final fun findByUse(kotlin/String): kotlin.collections/List<co.touchlab.kjwt.model.jwk/Jwk> // co.touchlab.kjwt.model.jwk/JwkSet.findByUse|findByUse(kotlin.String){}[0]
+    final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.jwk/JwkSet.hashCode|hashCode(){}[0]
+    final fun publicKeys(): co.touchlab.kjwt.model.jwk/JwkSet // co.touchlab.kjwt.model.jwk/JwkSet.publicKeys|publicKeys(){}[0]
+    final fun toString(): kotlin/String // co.touchlab.kjwt.model.jwk/JwkSet.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<co.touchlab.kjwt.model.jwk/JwkSet> { // co.touchlab.kjwt.model.jwk/JwkSet.$serializer|null[0]
+        final val descriptor // co.touchlab.kjwt.model.jwk/JwkSet.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // co.touchlab.kjwt.model.jwk/JwkSet.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // co.touchlab.kjwt.model.jwk/JwkSet.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): co.touchlab.kjwt.model.jwk/JwkSet // co.touchlab.kjwt.model.jwk/JwkSet.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, co.touchlab.kjwt.model.jwk/JwkSet) // co.touchlab.kjwt.model.jwk/JwkSet.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;co.touchlab.kjwt.model.jwk.JwkSet){}[0]
+    }
+
+    final object Companion { // co.touchlab.kjwt.model.jwk/JwkSet.Companion|null[0]
+        final val $childSerializers // co.touchlab.kjwt.model.jwk/JwkSet.Companion.$childSerializers|{}$childSerializers[0]
+
+        final fun serializer(): kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.jwk/JwkSet> // co.touchlab.kjwt.model.jwk/JwkSet.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class co.touchlab.kjwt.model.registry/DefaultJwtProcessorRegistry : co.touchlab.kjwt.model.registry/MutableJwtProcessorRegistry { // co.touchlab.kjwt.model.registry/DefaultJwtProcessorRegistry|null[0]
+    constructor <init>() // co.touchlab.kjwt.model.registry/DefaultJwtProcessorRegistry.<init>|<init>(){}[0]
+
+    final fun delegateTo(co.touchlab.kjwt.model.registry/JwtProcessorRegistry) // co.touchlab.kjwt.model.registry/DefaultJwtProcessorRegistry.delegateTo|delegateTo(co.touchlab.kjwt.model.registry.JwtProcessorRegistry){}[0]
+    final fun findBestJweProcessor(co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm, kotlin/String?): co.touchlab.kjwt.processor/BaseJweProcessor? // co.touchlab.kjwt.model.registry/DefaultJwtProcessorRegistry.findBestJweProcessor|findBestJweProcessor(co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm;kotlin.String?){}[0]
+    final fun findBestJwsProcessor(co.touchlab.kjwt.model.algorithm/SigningAlgorithm, kotlin/String?): co.touchlab.kjwt.processor/BaseJwsProcessor? // co.touchlab.kjwt.model.registry/DefaultJwtProcessorRegistry.findBestJwsProcessor|findBestJwsProcessor(co.touchlab.kjwt.model.algorithm.SigningAlgorithm;kotlin.String?){}[0]
+    final fun registerJweProcessor(co.touchlab.kjwt.processor/BaseJweProcessor, kotlin/String?) // co.touchlab.kjwt.model.registry/DefaultJwtProcessorRegistry.registerJweProcessor|registerJweProcessor(co.touchlab.kjwt.processor.BaseJweProcessor;kotlin.String?){}[0]
+    final fun registerJwsProcessor(co.touchlab.kjwt.processor/BaseJwsProcessor, kotlin/String?) // co.touchlab.kjwt.model.registry/DefaultJwtProcessorRegistry.registerJwsProcessor|registerJwsProcessor(co.touchlab.kjwt.processor.BaseJwsProcessor;kotlin.String?){}[0]
+}
+
+final class co.touchlab.kjwt.model/JwtHeader { // co.touchlab.kjwt.model/JwtHeader|null[0]
+    final val algorithm // co.touchlab.kjwt.model/JwtHeader.algorithm|{}algorithm[0]
+        final fun <get-algorithm>(): kotlin/String // co.touchlab.kjwt.model/JwtHeader.algorithm.<get-algorithm>|<get-algorithm>(){}[0]
+    final val jsonData // co.touchlab.kjwt.model/JwtHeader.jsonData|{}jsonData[0]
+        final fun <get-jsonData>(): kotlinx.serialization.json/JsonObject // co.touchlab.kjwt.model/JwtHeader.jsonData.<get-jsonData>|<get-jsonData>(){}[0]
+
+    final fun <#A1: kotlin/Any?> getHeader(kotlinx.serialization/DeserializationStrategy<#A1>, kotlin/String, kotlinx.serialization.json/Json = ...): #A1 // co.touchlab.kjwt.model/JwtHeader.getHeader|getHeader(kotlinx.serialization.DeserializationStrategy<0:0>;kotlin.String;kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+    final fun <#A1: kotlin/Any?> getHeaderOrNull(kotlinx.serialization/DeserializationStrategy<#A1>, kotlin/String, kotlinx.serialization.json/Json = ...): #A1? // co.touchlab.kjwt.model/JwtHeader.getHeaderOrNull|getHeaderOrNull(kotlinx.serialization.DeserializationStrategy<0:0>;kotlin.String;kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model/JwtHeader.equals|equals(kotlin.Any?){}[0]
+    final fun hasHeader(kotlin/String): kotlin/Boolean // co.touchlab.kjwt.model/JwtHeader.hasHeader|hasHeader(kotlin.String){}[0]
+    final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model/JwtHeader.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // co.touchlab.kjwt.model/JwtHeader.toString|toString(){}[0]
+
+    final class Builder { // co.touchlab.kjwt.model/JwtHeader.Builder|null[0]
+        constructor <init>() // co.touchlab.kjwt.model/JwtHeader.Builder.<init>|<init>(){}[0]
+
+        final var contentType // co.touchlab.kjwt.model/JwtHeader.Builder.contentType|{}contentType[0]
+            final fun <get-contentType>(): kotlin/String? // co.touchlab.kjwt.model/JwtHeader.Builder.contentType.<get-contentType>|<get-contentType>(){}[0]
+            final fun <set-contentType>(kotlin/String?) // co.touchlab.kjwt.model/JwtHeader.Builder.contentType.<set-contentType>|<set-contentType>(kotlin.String?){}[0]
+        final var type // co.touchlab.kjwt.model/JwtHeader.Builder.type|{}type[0]
+            final fun <get-type>(): kotlin/String? // co.touchlab.kjwt.model/JwtHeader.Builder.type.<get-type>|<get-type>(){}[0]
+            final fun <set-type>(kotlin/String?) // co.touchlab.kjwt.model/JwtHeader.Builder.type.<set-type>|<set-type>(kotlin.String?){}[0]
+
+        final fun <#A2: kotlin/Any?> extra(kotlin/String, kotlinx.serialization/SerializationStrategy<#A2>, #A2?, kotlinx.serialization.json/Json = ...) // co.touchlab.kjwt.model/JwtHeader.Builder.extra|extra(kotlin.String;kotlinx.serialization.SerializationStrategy<0:0>;0:0?;kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+        final fun <#A2: kotlin/Any?> takeFrom(kotlinx.serialization/SerializationStrategy<#A2>, #A2, kotlinx.serialization.json/Json = ...) // co.touchlab.kjwt.model/JwtHeader.Builder.takeFrom|takeFrom(kotlinx.serialization.SerializationStrategy<0:0>;0:0;kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+        final fun extra(kotlin/String, kotlinx.serialization.json/JsonElement?) // co.touchlab.kjwt.model/JwtHeader.Builder.extra|extra(kotlin.String;kotlinx.serialization.json.JsonElement?){}[0]
+        final inline fun <#A2: reified kotlin/Any?> extra(kotlin/String, #A2) // co.touchlab.kjwt.model/JwtHeader.Builder.extra|extra(kotlin.String;0:0){0§<kotlin.Any?>}[0]
+        final inline fun <#A2: reified kotlin/Any?> takeFrom(#A2) // co.touchlab.kjwt.model/JwtHeader.Builder.takeFrom|takeFrom(0:0){0§<kotlin.Any?>}[0]
+    }
+
+    final object Companion { // co.touchlab.kjwt.model/JwtHeader.Companion|null[0]
+        final const val ALG // co.touchlab.kjwt.model/JwtHeader.Companion.ALG|{}ALG[0]
+            final fun <get-ALG>(): kotlin/String // co.touchlab.kjwt.model/JwtHeader.Companion.ALG.<get-ALG>|<get-ALG>(){}[0]
+        final const val CTY // co.touchlab.kjwt.model/JwtHeader.Companion.CTY|{}CTY[0]
+            final fun <get-CTY>(): kotlin/String // co.touchlab.kjwt.model/JwtHeader.Companion.CTY.<get-CTY>|<get-CTY>(){}[0]
+        final const val ENC // co.touchlab.kjwt.model/JwtHeader.Companion.ENC|{}ENC[0]
+            final fun <get-ENC>(): kotlin/String // co.touchlab.kjwt.model/JwtHeader.Companion.ENC.<get-ENC>|<get-ENC>(){}[0]
+        final const val KID // co.touchlab.kjwt.model/JwtHeader.Companion.KID|{}KID[0]
+            final fun <get-KID>(): kotlin/String // co.touchlab.kjwt.model/JwtHeader.Companion.KID.<get-KID>|<get-KID>(){}[0]
+        final const val TYP // co.touchlab.kjwt.model/JwtHeader.Companion.TYP|{}TYP[0]
+            final fun <get-TYP>(): kotlin/String // co.touchlab.kjwt.model/JwtHeader.Companion.TYP.<get-TYP>|<get-TYP>(){}[0]
+
+        final fun serializer(): kotlinx.serialization/KSerializer<co.touchlab.kjwt.model/JwtHeader> // co.touchlab.kjwt.model/JwtHeader.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class co.touchlab.kjwt.model/JwtPayload { // co.touchlab.kjwt.model/JwtPayload|null[0]
+    final val jsonData // co.touchlab.kjwt.model/JwtPayload.jsonData|{}jsonData[0]
+        final fun <get-jsonData>(): kotlinx.serialization.json/JsonObject // co.touchlab.kjwt.model/JwtPayload.jsonData.<get-jsonData>|<get-jsonData>(){}[0]
+
+    final fun <#A1: kotlin/Any?> getClaim(kotlinx.serialization/DeserializationStrategy<#A1>, kotlin/String, kotlinx.serialization.json/Json = ...): #A1 // co.touchlab.kjwt.model/JwtPayload.getClaim|getClaim(kotlinx.serialization.DeserializationStrategy<0:0>;kotlin.String;kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+    final fun <#A1: kotlin/Any?> getClaimOrNull(kotlinx.serialization/DeserializationStrategy<#A1>, kotlin/String, kotlinx.serialization.json/Json = ...): #A1? // co.touchlab.kjwt.model/JwtPayload.getClaimOrNull|getClaimOrNull(kotlinx.serialization.DeserializationStrategy<0:0>;kotlin.String;kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model/JwtPayload.equals|equals(kotlin.Any?){}[0]
+    final fun hasClaim(kotlin/String): kotlin/Boolean // co.touchlab.kjwt.model/JwtPayload.hasClaim|hasClaim(kotlin.String){}[0]
+    final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model/JwtPayload.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // co.touchlab.kjwt.model/JwtPayload.toString|toString(){}[0]
+
+    final class Builder { // co.touchlab.kjwt.model/JwtPayload.Builder|null[0]
+        constructor <init>() // co.touchlab.kjwt.model/JwtPayload.Builder.<init>|<init>(){}[0]
+
+        final val content // co.touchlab.kjwt.model/JwtPayload.Builder.content|{}content[0]
+            final fun <get-content>(): kotlin.collections/MutableMap<kotlin/String, kotlinx.serialization.json/JsonElement> // co.touchlab.kjwt.model/JwtPayload.Builder.content.<get-content>|<get-content>(){}[0]
+
+        final var audience // co.touchlab.kjwt.model/JwtPayload.Builder.audience|{}audience[0]
+            final fun <get-audience>(): kotlin.collections/Set<kotlin/String>? // co.touchlab.kjwt.model/JwtPayload.Builder.audience.<get-audience>|<get-audience>(){}[0]
+            final fun <set-audience>(kotlin.collections/Set<kotlin/String>?) // co.touchlab.kjwt.model/JwtPayload.Builder.audience.<set-audience>|<set-audience>(kotlin.collections.Set<kotlin.String>?){}[0]
+        final var expiration // co.touchlab.kjwt.model/JwtPayload.Builder.expiration|{}expiration[0]
+            final fun <get-expiration>(): kotlin.time/Instant? // co.touchlab.kjwt.model/JwtPayload.Builder.expiration.<get-expiration>|<get-expiration>(){}[0]
+            final fun <set-expiration>(kotlin.time/Instant?) // co.touchlab.kjwt.model/JwtPayload.Builder.expiration.<set-expiration>|<set-expiration>(kotlin.time.Instant?){}[0]
+        final var id // co.touchlab.kjwt.model/JwtPayload.Builder.id|{}id[0]
+            final fun <get-id>(): kotlin/String? // co.touchlab.kjwt.model/JwtPayload.Builder.id.<get-id>|<get-id>(){}[0]
+            final fun <set-id>(kotlin/String?) // co.touchlab.kjwt.model/JwtPayload.Builder.id.<set-id>|<set-id>(kotlin.String?){}[0]
+        final var issuedAt // co.touchlab.kjwt.model/JwtPayload.Builder.issuedAt|{}issuedAt[0]
+            final fun <get-issuedAt>(): kotlin.time/Instant? // co.touchlab.kjwt.model/JwtPayload.Builder.issuedAt.<get-issuedAt>|<get-issuedAt>(){}[0]
+            final fun <set-issuedAt>(kotlin.time/Instant?) // co.touchlab.kjwt.model/JwtPayload.Builder.issuedAt.<set-issuedAt>|<set-issuedAt>(kotlin.time.Instant?){}[0]
+        final var issuer // co.touchlab.kjwt.model/JwtPayload.Builder.issuer|{}issuer[0]
+            final fun <get-issuer>(): kotlin/String? // co.touchlab.kjwt.model/JwtPayload.Builder.issuer.<get-issuer>|<get-issuer>(){}[0]
+            final fun <set-issuer>(kotlin/String?) // co.touchlab.kjwt.model/JwtPayload.Builder.issuer.<set-issuer>|<set-issuer>(kotlin.String?){}[0]
+        final var notBefore // co.touchlab.kjwt.model/JwtPayload.Builder.notBefore|{}notBefore[0]
+            final fun <get-notBefore>(): kotlin.time/Instant? // co.touchlab.kjwt.model/JwtPayload.Builder.notBefore.<get-notBefore>|<get-notBefore>(){}[0]
+            final fun <set-notBefore>(kotlin.time/Instant?) // co.touchlab.kjwt.model/JwtPayload.Builder.notBefore.<set-notBefore>|<set-notBefore>(kotlin.time.Instant?){}[0]
+        final var subject // co.touchlab.kjwt.model/JwtPayload.Builder.subject|{}subject[0]
+            final fun <get-subject>(): kotlin/String? // co.touchlab.kjwt.model/JwtPayload.Builder.subject.<get-subject>|<get-subject>(){}[0]
+            final fun <set-subject>(kotlin/String?) // co.touchlab.kjwt.model/JwtPayload.Builder.subject.<set-subject>|<set-subject>(kotlin.String?){}[0]
+
+        final fun <#A2: kotlin/Any?> claim(kotlin/String, kotlinx.serialization/SerializationStrategy<#A2>, #A2?, kotlinx.serialization.json/Json = ...) // co.touchlab.kjwt.model/JwtPayload.Builder.claim|claim(kotlin.String;kotlinx.serialization.SerializationStrategy<0:0>;0:0?;kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+        final fun <#A2: kotlin/Any?> takeFrom(kotlinx.serialization/SerializationStrategy<#A2>, #A2, kotlinx.serialization.json/Json = ...) // co.touchlab.kjwt.model/JwtPayload.Builder.takeFrom|takeFrom(kotlinx.serialization.SerializationStrategy<0:0>;0:0;kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+        final fun claim(kotlin/String, kotlinx.serialization.json/JsonElement?) // co.touchlab.kjwt.model/JwtPayload.Builder.claim|claim(kotlin.String;kotlinx.serialization.json.JsonElement?){}[0]
+        final fun expiresIn(kotlin.time/Duration) // co.touchlab.kjwt.model/JwtPayload.Builder.expiresIn|expiresIn(kotlin.time.Duration){}[0]
+        final fun issuedNow() // co.touchlab.kjwt.model/JwtPayload.Builder.issuedNow|issuedNow(){}[0]
+        final fun notBeforeNow() // co.touchlab.kjwt.model/JwtPayload.Builder.notBeforeNow|notBeforeNow(){}[0]
+        final fun randomId() // co.touchlab.kjwt.model/JwtPayload.Builder.randomId|randomId(){}[0]
+        final inline fun <#A2: reified kotlin/Any?> claim(kotlin/String, #A2) // co.touchlab.kjwt.model/JwtPayload.Builder.claim|claim(kotlin.String;0:0){0§<kotlin.Any?>}[0]
+        final inline fun <#A2: reified kotlin/Any?> takeFrom(#A2) // co.touchlab.kjwt.model/JwtPayload.Builder.takeFrom|takeFrom(0:0){0§<kotlin.Any?>}[0]
+    }
+
+    final object Companion { // co.touchlab.kjwt.model/JwtPayload.Companion|null[0]
+        final const val AUD // co.touchlab.kjwt.model/JwtPayload.Companion.AUD|{}AUD[0]
+            final fun <get-AUD>(): kotlin/String // co.touchlab.kjwt.model/JwtPayload.Companion.AUD.<get-AUD>|<get-AUD>(){}[0]
+        final const val EXP // co.touchlab.kjwt.model/JwtPayload.Companion.EXP|{}EXP[0]
+            final fun <get-EXP>(): kotlin/String // co.touchlab.kjwt.model/JwtPayload.Companion.EXP.<get-EXP>|<get-EXP>(){}[0]
+        final const val IAT // co.touchlab.kjwt.model/JwtPayload.Companion.IAT|{}IAT[0]
+            final fun <get-IAT>(): kotlin/String // co.touchlab.kjwt.model/JwtPayload.Companion.IAT.<get-IAT>|<get-IAT>(){}[0]
+        final const val ISS // co.touchlab.kjwt.model/JwtPayload.Companion.ISS|{}ISS[0]
+            final fun <get-ISS>(): kotlin/String // co.touchlab.kjwt.model/JwtPayload.Companion.ISS.<get-ISS>|<get-ISS>(){}[0]
+        final const val JTI // co.touchlab.kjwt.model/JwtPayload.Companion.JTI|{}JTI[0]
+            final fun <get-JTI>(): kotlin/String // co.touchlab.kjwt.model/JwtPayload.Companion.JTI.<get-JTI>|<get-JTI>(){}[0]
+        final const val NBF // co.touchlab.kjwt.model/JwtPayload.Companion.NBF|{}NBF[0]
+            final fun <get-NBF>(): kotlin/String // co.touchlab.kjwt.model/JwtPayload.Companion.NBF.<get-NBF>|<get-NBF>(){}[0]
+        final const val SUB // co.touchlab.kjwt.model/JwtPayload.Companion.SUB|{}SUB[0]
+            final fun <get-SUB>(): kotlin/String // co.touchlab.kjwt.model/JwtPayload.Companion.SUB.<get-SUB>|<get-SUB>(){}[0]
+
+        final fun serializer(): kotlinx.serialization/KSerializer<co.touchlab.kjwt.model/JwtPayload> // co.touchlab.kjwt.model/JwtPayload.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class co.touchlab.kjwt.parser/JwtParser { // co.touchlab.kjwt.parser/JwtParser|null[0]
+    final suspend fun parse(kotlin/String): co.touchlab.kjwt.model/JwtInstance // co.touchlab.kjwt.parser/JwtParser.parse|parse(kotlin.String){}[0]
+    final suspend fun parseEncrypted(kotlin/String): co.touchlab.kjwt.model/JwtInstance.Jwe // co.touchlab.kjwt.parser/JwtParser.parseEncrypted|parseEncrypted(kotlin.String){}[0]
+    final suspend fun parseSigned(kotlin/String): co.touchlab.kjwt.model/JwtInstance.Jws // co.touchlab.kjwt.parser/JwtParser.parseSigned|parseSigned(kotlin.String){}[0]
+}
+
+final class co.touchlab.kjwt.parser/JwtParserBuilder { // co.touchlab.kjwt.parser/JwtParserBuilder|null[0]
+    constructor <init>(kotlinx.serialization.json/Json) // co.touchlab.kjwt.parser/JwtParserBuilder.<init>|<init>(kotlinx.serialization.json.Json){}[0]
+
+    final val validators // co.touchlab.kjwt.parser/JwtParserBuilder.validators|{}validators[0]
+        final fun <get-validators>(): kotlin.collections/MutableList<kotlin/Function2<co.touchlab.kjwt.model/JwtPayload, co.touchlab.kjwt.model/JwtHeader, kotlin/Unit>> // co.touchlab.kjwt.parser/JwtParserBuilder.validators.<get-validators>|<get-validators>(){}[0]
+
+    final fun allowUnsecured(kotlin/Boolean): co.touchlab.kjwt.parser/JwtParserBuilder // co.touchlab.kjwt.parser/JwtParserBuilder.allowUnsecured|allowUnsecured(kotlin.Boolean){}[0]
+    final fun build(): co.touchlab.kjwt.parser/JwtParser // co.touchlab.kjwt.parser/JwtParserBuilder.build|build(){}[0]
+    final fun clockSkew(kotlin/Long): co.touchlab.kjwt.parser/JwtParserBuilder // co.touchlab.kjwt.parser/JwtParserBuilder.clockSkew|clockSkew(kotlin.Long){}[0]
+    final fun decryptWith(co.touchlab.kjwt.processor/JweProcessor): co.touchlab.kjwt.parser/JwtParserBuilder // co.touchlab.kjwt.parser/JwtParserBuilder.decryptWith|decryptWith(co.touchlab.kjwt.processor.JweProcessor){}[0]
+    final fun noVerify(): co.touchlab.kjwt.parser/JwtParserBuilder // co.touchlab.kjwt.parser/JwtParserBuilder.noVerify|noVerify(){}[0]
+    final fun requireAudience(kotlin/String): co.touchlab.kjwt.parser/JwtParserBuilder // co.touchlab.kjwt.parser/JwtParserBuilder.requireAudience|requireAudience(kotlin.String){}[0]
+    final fun requireIssuer(kotlin/String, kotlin/Boolean = ...): co.touchlab.kjwt.parser/JwtParserBuilder // co.touchlab.kjwt.parser/JwtParserBuilder.requireIssuer|requireIssuer(kotlin.String;kotlin.Boolean){}[0]
+    final fun requireSubject(kotlin/String): co.touchlab.kjwt.parser/JwtParserBuilder // co.touchlab.kjwt.parser/JwtParserBuilder.requireSubject|requireSubject(kotlin.String){}[0]
+    final fun useKeysFrom(co.touchlab.kjwt.model.registry/JwtProcessorRegistry): co.touchlab.kjwt.parser/JwtParserBuilder // co.touchlab.kjwt.parser/JwtParserBuilder.useKeysFrom|useKeysFrom(co.touchlab.kjwt.model.registry.JwtProcessorRegistry){}[0]
+    final fun verifyWith(co.touchlab.kjwt.processor/JwsProcessor): co.touchlab.kjwt.parser/JwtParserBuilder // co.touchlab.kjwt.parser/JwtParserBuilder.verifyWith|verifyWith(co.touchlab.kjwt.processor.JwsProcessor){}[0]
+    final inline fun <#A1: reified kotlin/Any?> requireClaim(kotlin/String, #A1): co.touchlab.kjwt.parser/JwtParserBuilder // co.touchlab.kjwt.parser/JwtParserBuilder.requireClaim|requireClaim(kotlin.String;0:0){0§<kotlin.Any?>}[0]
+}
+
+open class co.touchlab.kjwt.exception/JwtException : kotlin/Exception { // co.touchlab.kjwt.exception/JwtException|null[0]
+    constructor <init>(kotlin/String, kotlin/Throwable? = ...) // co.touchlab.kjwt.exception/JwtException.<init>|<init>(kotlin.String;kotlin.Throwable?){}[0]
+}
+
+sealed class co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm : co.touchlab.kjwt.model.algorithm/Jwa { // co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm|null[0]
+    open val id // co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm.id|{}id[0]
+        open fun <get-id>(): kotlin/String // co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm.id.<get-id>|<get-id>(){}[0]
+
+    open fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm.toString|toString(){}[0]
+
+    sealed class OAEPBased : co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm, co.touchlab.kjwt.model.algorithm/Jwa.UsesHashingAlgorithm { // co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm.OAEPBased|null[0]
+        open val digest // co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm.OAEPBased.digest|{}digest[0]
+            open fun <get-digest>(): co.touchlab.kjwt.model.algorithm/JwtDigest // co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm.OAEPBased.digest.<get-digest>|<get-digest>(){}[0]
+    }
+
+    final object Companion { // co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm.Companion|null[0]
+        final fun fromId(kotlin/String): co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm // co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm.Companion.fromId|fromId(kotlin.String){}[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm> // co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm.Companion.serializer|serializer(){}[0]
+    }
+
+    final object Dir : co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm { // co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm.Dir|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm.Dir.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm.Dir.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm.Dir.toString|toString(){}[0]
+    }
+
+    final object RsaOaep : co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm.OAEPBased { // co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm.RsaOaep|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm.RsaOaep.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm.RsaOaep.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm.RsaOaep.toString|toString(){}[0]
+    }
+
+    final object RsaOaep256 : co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm.OAEPBased { // co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm.RsaOaep256|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm.RsaOaep256.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm.RsaOaep256.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm.RsaOaep256.toString|toString(){}[0]
+    }
+}
+
+sealed class co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm { // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm|null[0]
+    final val id // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.id|{}id[0]
+        final fun <get-id>(): kotlin/String // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.id.<get-id>|<get-id>(){}[0]
+
+    open fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.toString|toString(){}[0]
+
+    sealed class AesCBCBased : co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.AesCBCBased|null[0]
+
+    sealed class AesGCMBased : co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.AesGCMBased|null[0]
+
+    final object A128CbcHs256 : co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.AesCBCBased { // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.A128CbcHs256|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.A128CbcHs256.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.A128CbcHs256.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.A128CbcHs256.toString|toString(){}[0]
+    }
+
+    final object A128GCM : co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.AesGCMBased { // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.A128GCM|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.A128GCM.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.A128GCM.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.A128GCM.toString|toString(){}[0]
+    }
+
+    final object A192CbcHs384 : co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.AesCBCBased { // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.A192CbcHs384|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.A192CbcHs384.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.A192CbcHs384.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.A192CbcHs384.toString|toString(){}[0]
+    }
+
+    final object A192GCM : co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.AesGCMBased { // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.A192GCM|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.A192GCM.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.A192GCM.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.A192GCM.toString|toString(){}[0]
+    }
+
+    final object A256CbcHs512 : co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.AesCBCBased { // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.A256CbcHs512|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.A256CbcHs512.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.A256CbcHs512.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.A256CbcHs512.toString|toString(){}[0]
+    }
+
+    final object A256GCM : co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.AesGCMBased { // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.A256GCM|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.A256GCM.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.A256GCM.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.A256GCM.toString|toString(){}[0]
+    }
+
+    final object Companion { // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.Companion|null[0]
+        final fun fromId(kotlin/String): co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm // co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm.Companion.fromId|fromId(kotlin.String){}[0]
+    }
+}
+
+sealed class co.touchlab.kjwt.model.algorithm/SigningAlgorithm : co.touchlab.kjwt.model.algorithm/Jwa { // co.touchlab.kjwt.model.algorithm/SigningAlgorithm|null[0]
+    open val id // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.id|{}id[0]
+        open fun <get-id>(): kotlin/String // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.id.<get-id>|<get-id>(){}[0]
+
+    open fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.toString|toString(){}[0]
+
+    sealed class ECDSABased : co.touchlab.kjwt.model.algorithm/Jwa.UsesHashingAlgorithm, co.touchlab.kjwt.model.algorithm/SigningAlgorithm { // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.ECDSABased|null[0]
+        final val curve // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.ECDSABased.curve|{}curve[0]
+            final fun <get-curve>(): co.touchlab.kjwt.model.algorithm/JwtCurve // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.ECDSABased.curve.<get-curve>|<get-curve>(){}[0]
+        open val digest // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.ECDSABased.digest|{}digest[0]
+            open fun <get-digest>(): co.touchlab.kjwt.model.algorithm/JwtDigest // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.ECDSABased.digest.<get-digest>|<get-digest>(){}[0]
+    }
+
+    sealed class EdDSABased : co.touchlab.kjwt.model.algorithm/SigningAlgorithm { // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.EdDSABased|null[0]
+        final val curve // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.EdDSABased.curve|{}curve[0]
+            final fun <get-curve>(): co.touchlab.kjwt.model.algorithm/JwtEdCurve // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.EdDSABased.curve.<get-curve>|<get-curve>(){}[0]
+    }
+
+    sealed class MACBased : co.touchlab.kjwt.model.algorithm/Jwa.UsesHashingAlgorithm, co.touchlab.kjwt.model.algorithm/SigningAlgorithm { // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.MACBased|null[0]
+        open val digest // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.MACBased.digest|{}digest[0]
+            open fun <get-digest>(): co.touchlab.kjwt.model.algorithm/JwtDigest // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.MACBased.digest.<get-digest>|<get-digest>(){}[0]
+    }
+
+    sealed class PKCS1Based : co.touchlab.kjwt.model.algorithm/Jwa.UsesHashingAlgorithm, co.touchlab.kjwt.model.algorithm/SigningAlgorithm { // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.PKCS1Based|null[0]
+        open val digest // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.PKCS1Based.digest|{}digest[0]
+            open fun <get-digest>(): co.touchlab.kjwt.model.algorithm/JwtDigest // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.PKCS1Based.digest.<get-digest>|<get-digest>(){}[0]
+    }
+
+    sealed class PSSBased : co.touchlab.kjwt.model.algorithm/Jwa.UsesHashingAlgorithm, co.touchlab.kjwt.model.algorithm/SigningAlgorithm { // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.PSSBased|null[0]
+        open val digest // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.PSSBased.digest|{}digest[0]
+            open fun <get-digest>(): co.touchlab.kjwt.model.algorithm/JwtDigest // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.PSSBased.digest.<get-digest>|<get-digest>(){}[0]
+    }
+
+    final object Companion { // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.Companion|null[0]
+        final fun fromId(kotlin/String): co.touchlab.kjwt.model.algorithm/SigningAlgorithm // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.Companion.fromId|fromId(kotlin.String){}[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.algorithm/SigningAlgorithm> // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.Companion.serializer|serializer(){}[0]
+    }
+
+    final object ES256 : co.touchlab.kjwt.model.algorithm/SigningAlgorithm.ECDSABased { // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.ES256|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.ES256.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.ES256.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.ES256.toString|toString(){}[0]
+    }
+
+    final object ES384 : co.touchlab.kjwt.model.algorithm/SigningAlgorithm.ECDSABased { // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.ES384|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.ES384.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.ES384.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.ES384.toString|toString(){}[0]
+    }
+
+    final object ES512 : co.touchlab.kjwt.model.algorithm/SigningAlgorithm.ECDSABased { // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.ES512|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.ES512.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.ES512.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.ES512.toString|toString(){}[0]
+    }
+
+    final object Ed25519 : co.touchlab.kjwt.model.algorithm/SigningAlgorithm.EdDSABased { // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.Ed25519|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.Ed25519.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.Ed25519.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.Ed25519.toString|toString(){}[0]
+    }
+
+    final object Ed448 : co.touchlab.kjwt.model.algorithm/SigningAlgorithm.EdDSABased { // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.Ed448|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.Ed448.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.Ed448.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.Ed448.toString|toString(){}[0]
+    }
+
+    final object HS256 : co.touchlab.kjwt.model.algorithm/SigningAlgorithm.MACBased { // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.HS256|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.HS256.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.HS256.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.HS256.toString|toString(){}[0]
+    }
+
+    final object HS384 : co.touchlab.kjwt.model.algorithm/SigningAlgorithm.MACBased { // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.HS384|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.HS384.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.HS384.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.HS384.toString|toString(){}[0]
+    }
+
+    final object HS512 : co.touchlab.kjwt.model.algorithm/SigningAlgorithm.MACBased { // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.HS512|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.HS512.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.HS512.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.HS512.toString|toString(){}[0]
+    }
+
+    final object None : co.touchlab.kjwt.model.algorithm/SigningAlgorithm { // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.None|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.None.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.None.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.None.toString|toString(){}[0]
+
+        final object SimpleProcessor : co.touchlab.kjwt.processor/JwsProcessor { // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.None.SimpleProcessor|null[0]
+            final val algorithm // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.None.SimpleProcessor.algorithm|{}algorithm[0]
+                final fun <get-algorithm>(): co.touchlab.kjwt.model.algorithm/SigningAlgorithm // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.None.SimpleProcessor.algorithm.<get-algorithm>|<get-algorithm>(){}[0]
+            final val keyId // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.None.SimpleProcessor.keyId|{}keyId[0]
+                final fun <get-keyId>(): kotlin/String? // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.None.SimpleProcessor.keyId.<get-keyId>|<get-keyId>(){}[0]
+
+            final suspend fun sign(kotlin/ByteArray): kotlin/ByteArray // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.None.SimpleProcessor.sign|sign(kotlin.ByteArray){}[0]
+            final suspend fun verify(kotlin/ByteArray, kotlin/ByteArray): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.None.SimpleProcessor.verify|verify(kotlin.ByteArray;kotlin.ByteArray){}[0]
+        }
+    }
+
+    final object PS256 : co.touchlab.kjwt.model.algorithm/SigningAlgorithm.PSSBased { // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.PS256|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.PS256.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.PS256.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.PS256.toString|toString(){}[0]
+    }
+
+    final object PS384 : co.touchlab.kjwt.model.algorithm/SigningAlgorithm.PSSBased { // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.PS384|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.PS384.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.PS384.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.PS384.toString|toString(){}[0]
+    }
+
+    final object PS512 : co.touchlab.kjwt.model.algorithm/SigningAlgorithm.PSSBased { // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.PS512|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.PS512.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.PS512.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.PS512.toString|toString(){}[0]
+    }
+
+    final object RS256 : co.touchlab.kjwt.model.algorithm/SigningAlgorithm.PKCS1Based { // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.RS256|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.RS256.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.RS256.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.RS256.toString|toString(){}[0]
+    }
+
+    final object RS384 : co.touchlab.kjwt.model.algorithm/SigningAlgorithm.PKCS1Based { // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.RS384|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.RS384.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.RS384.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.RS384.toString|toString(){}[0]
+    }
+
+    final object RS512 : co.touchlab.kjwt.model.algorithm/SigningAlgorithm.PKCS1Based { // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.RS512|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.RS512.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.RS512.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.algorithm/SigningAlgorithm.RS512.toString|toString(){}[0]
+    }
+}
+
+sealed class co.touchlab.kjwt.model.jwk/Jwk { // co.touchlab.kjwt.model.jwk/Jwk|null[0]
+    abstract val alg // co.touchlab.kjwt.model.jwk/Jwk.alg|{}alg[0]
+        abstract fun <get-alg>(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.alg.<get-alg>|<get-alg>(){}[0]
+    abstract val isPrivate // co.touchlab.kjwt.model.jwk/Jwk.isPrivate|{}isPrivate[0]
+        abstract fun <get-isPrivate>(): kotlin/Boolean // co.touchlab.kjwt.model.jwk/Jwk.isPrivate.<get-isPrivate>|<get-isPrivate>(){}[0]
+    abstract val keyOps // co.touchlab.kjwt.model.jwk/Jwk.keyOps|{}keyOps[0]
+        abstract fun <get-keyOps>(): kotlin.collections/List<kotlin/String>? // co.touchlab.kjwt.model.jwk/Jwk.keyOps.<get-keyOps>|<get-keyOps>(){}[0]
+    abstract val kid // co.touchlab.kjwt.model.jwk/Jwk.kid|{}kid[0]
+        abstract fun <get-kid>(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.kid.<get-kid>|<get-kid>(){}[0]
+    abstract val thumbprint // co.touchlab.kjwt.model.jwk/Jwk.thumbprint|{}thumbprint[0]
+        abstract fun <get-thumbprint>(): co.touchlab.kjwt.model.jwk/Jwk.Thumbprint // co.touchlab.kjwt.model.jwk/Jwk.thumbprint.<get-thumbprint>|<get-thumbprint>(){}[0]
+    abstract val use // co.touchlab.kjwt.model.jwk/Jwk.use|{}use[0]
+        abstract fun <get-use>(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.use.<get-use>|<get-use>(){}[0]
+
+    final class Ec : co.touchlab.kjwt.model.jwk/Jwk { // co.touchlab.kjwt.model.jwk/Jwk.Ec|null[0]
+        constructor <init>(kotlin/String, kotlin/String, kotlin/String, kotlin/String? = ..., kotlin/String? = ..., kotlin.collections/List<kotlin/String>? = ..., kotlin/String? = ..., kotlin/String? = ...) // co.touchlab.kjwt.model.jwk/Jwk.Ec.<init>|<init>(kotlin.String;kotlin.String;kotlin.String;kotlin.String?;kotlin.String?;kotlin.collections.List<kotlin.String>?;kotlin.String?;kotlin.String?){}[0]
+
+        final val alg // co.touchlab.kjwt.model.jwk/Jwk.Ec.alg|{}alg[0]
+            final fun <get-alg>(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Ec.alg.<get-alg>|<get-alg>(){}[0]
+        final val crv // co.touchlab.kjwt.model.jwk/Jwk.Ec.crv|{}crv[0]
+            final fun <get-crv>(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Ec.crv.<get-crv>|<get-crv>(){}[0]
+        final val d // co.touchlab.kjwt.model.jwk/Jwk.Ec.d|{}d[0]
+            final fun <get-d>(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Ec.d.<get-d>|<get-d>(){}[0]
+        final val isPrivate // co.touchlab.kjwt.model.jwk/Jwk.Ec.isPrivate|{}isPrivate[0]
+            final fun <get-isPrivate>(): kotlin/Boolean // co.touchlab.kjwt.model.jwk/Jwk.Ec.isPrivate.<get-isPrivate>|<get-isPrivate>(){}[0]
+        final val keyOps // co.touchlab.kjwt.model.jwk/Jwk.Ec.keyOps|{}keyOps[0]
+            final fun <get-keyOps>(): kotlin.collections/List<kotlin/String>? // co.touchlab.kjwt.model.jwk/Jwk.Ec.keyOps.<get-keyOps>|<get-keyOps>(){}[0]
+        final val kid // co.touchlab.kjwt.model.jwk/Jwk.Ec.kid|{}kid[0]
+            final fun <get-kid>(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Ec.kid.<get-kid>|<get-kid>(){}[0]
+        final val thumbprint // co.touchlab.kjwt.model.jwk/Jwk.Ec.thumbprint|{}thumbprint[0]
+            final fun <get-thumbprint>(): co.touchlab.kjwt.model.jwk/Jwk.Thumbprint // co.touchlab.kjwt.model.jwk/Jwk.Ec.thumbprint.<get-thumbprint>|<get-thumbprint>(){}[0]
+        final val use // co.touchlab.kjwt.model.jwk/Jwk.Ec.use|{}use[0]
+            final fun <get-use>(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Ec.use.<get-use>|<get-use>(){}[0]
+        final val x // co.touchlab.kjwt.model.jwk/Jwk.Ec.x|{}x[0]
+            final fun <get-x>(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Ec.x.<get-x>|<get-x>(){}[0]
+        final val y // co.touchlab.kjwt.model.jwk/Jwk.Ec.y|{}y[0]
+            final fun <get-y>(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Ec.y.<get-y>|<get-y>(){}[0]
+
+        final fun component1(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Ec.component1|component1(){}[0]
+        final fun component2(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Ec.component2|component2(){}[0]
+        final fun component3(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Ec.component3|component3(){}[0]
+        final fun component4(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Ec.component4|component4(){}[0]
+        final fun component5(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Ec.component5|component5(){}[0]
+        final fun component6(): kotlin.collections/List<kotlin/String>? // co.touchlab.kjwt.model.jwk/Jwk.Ec.component6|component6(){}[0]
+        final fun component7(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Ec.component7|component7(){}[0]
+        final fun component8(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Ec.component8|component8(){}[0]
+        final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/String = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin.collections/List<kotlin/String>? = ..., kotlin/String? = ..., kotlin/String? = ...): co.touchlab.kjwt.model.jwk/Jwk.Ec // co.touchlab.kjwt.model.jwk/Jwk.Ec.copy|copy(kotlin.String;kotlin.String;kotlin.String;kotlin.String?;kotlin.String?;kotlin.collections.List<kotlin.String>?;kotlin.String?;kotlin.String?){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.jwk/Jwk.Ec.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.jwk/Jwk.Ec.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Ec.toString|toString(){}[0]
+
+        final class ECThumbprint : co.touchlab.kjwt.model.jwk/Jwk.Thumbprint { // co.touchlab.kjwt.model.jwk/Jwk.Ec.ECThumbprint|null[0]
+            constructor <init>(kotlin/String, kotlin/String, kotlin/String) // co.touchlab.kjwt.model.jwk/Jwk.Ec.ECThumbprint.<init>|<init>(kotlin.String;kotlin.String;kotlin.String){}[0]
+
+            final val crv // co.touchlab.kjwt.model.jwk/Jwk.Ec.ECThumbprint.crv|{}crv[0]
+                final fun <get-crv>(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Ec.ECThumbprint.crv.<get-crv>|<get-crv>(){}[0]
+            final val x // co.touchlab.kjwt.model.jwk/Jwk.Ec.ECThumbprint.x|{}x[0]
+                final fun <get-x>(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Ec.ECThumbprint.x.<get-x>|<get-x>(){}[0]
+            final val y // co.touchlab.kjwt.model.jwk/Jwk.Ec.ECThumbprint.y|{}y[0]
+                final fun <get-y>(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Ec.ECThumbprint.y.<get-y>|<get-y>(){}[0]
+
+            final fun component1(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Ec.ECThumbprint.component1|component1(){}[0]
+            final fun component2(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Ec.ECThumbprint.component2|component2(){}[0]
+            final fun component3(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Ec.ECThumbprint.component3|component3(){}[0]
+            final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/String = ...): co.touchlab.kjwt.model.jwk/Jwk.Ec.ECThumbprint // co.touchlab.kjwt.model.jwk/Jwk.Ec.ECThumbprint.copy|copy(kotlin.String;kotlin.String;kotlin.String){}[0]
+            final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.jwk/Jwk.Ec.ECThumbprint.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.jwk/Jwk.Ec.ECThumbprint.hashCode|hashCode(){}[0]
+            final fun toString(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Ec.ECThumbprint.toString|toString(){}[0]
+
+            final object Companion { // co.touchlab.kjwt.model.jwk/Jwk.Ec.ECThumbprint.Companion|null[0]
+                final fun serializer(): kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.jwk/Jwk.Ec.ECThumbprint> // co.touchlab.kjwt.model.jwk/Jwk.Ec.ECThumbprint.Companion.serializer|serializer(){}[0]
+            }
+        }
+
+        final object Companion { // co.touchlab.kjwt.model.jwk/Jwk.Ec.Companion|null[0]
+            final const val KTY // co.touchlab.kjwt.model.jwk/Jwk.Ec.Companion.KTY|{}KTY[0]
+                final fun <get-KTY>(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Ec.Companion.KTY.<get-KTY>|<get-KTY>(){}[0]
+
+            final fun serializer(): kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.jwk/Jwk.Ec> // co.touchlab.kjwt.model.jwk/Jwk.Ec.Companion.serializer|serializer(){}[0]
+        }
+    }
+
+    final class Oct : co.touchlab.kjwt.model.jwk/Jwk { // co.touchlab.kjwt.model.jwk/Jwk.Oct|null[0]
+        constructor <init>(kotlin/String, kotlin/String? = ..., kotlin.collections/List<kotlin/String>? = ..., kotlin/String? = ..., kotlin/String? = ...) // co.touchlab.kjwt.model.jwk/Jwk.Oct.<init>|<init>(kotlin.String;kotlin.String?;kotlin.collections.List<kotlin.String>?;kotlin.String?;kotlin.String?){}[0]
+
+        final val alg // co.touchlab.kjwt.model.jwk/Jwk.Oct.alg|{}alg[0]
+            final fun <get-alg>(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Oct.alg.<get-alg>|<get-alg>(){}[0]
+        final val isPrivate // co.touchlab.kjwt.model.jwk/Jwk.Oct.isPrivate|{}isPrivate[0]
+            final fun <get-isPrivate>(): kotlin/Boolean // co.touchlab.kjwt.model.jwk/Jwk.Oct.isPrivate.<get-isPrivate>|<get-isPrivate>(){}[0]
+        final val k // co.touchlab.kjwt.model.jwk/Jwk.Oct.k|{}k[0]
+            final fun <get-k>(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Oct.k.<get-k>|<get-k>(){}[0]
+        final val keyOps // co.touchlab.kjwt.model.jwk/Jwk.Oct.keyOps|{}keyOps[0]
+            final fun <get-keyOps>(): kotlin.collections/List<kotlin/String>? // co.touchlab.kjwt.model.jwk/Jwk.Oct.keyOps.<get-keyOps>|<get-keyOps>(){}[0]
+        final val kid // co.touchlab.kjwt.model.jwk/Jwk.Oct.kid|{}kid[0]
+            final fun <get-kid>(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Oct.kid.<get-kid>|<get-kid>(){}[0]
+        final val thumbprint // co.touchlab.kjwt.model.jwk/Jwk.Oct.thumbprint|{}thumbprint[0]
+            final fun <get-thumbprint>(): co.touchlab.kjwt.model.jwk/Jwk.Thumbprint // co.touchlab.kjwt.model.jwk/Jwk.Oct.thumbprint.<get-thumbprint>|<get-thumbprint>(){}[0]
+        final val use // co.touchlab.kjwt.model.jwk/Jwk.Oct.use|{}use[0]
+            final fun <get-use>(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Oct.use.<get-use>|<get-use>(){}[0]
+
+        final fun component1(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Oct.component1|component1(){}[0]
+        final fun component2(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Oct.component2|component2(){}[0]
+        final fun component3(): kotlin.collections/List<kotlin/String>? // co.touchlab.kjwt.model.jwk/Jwk.Oct.component3|component3(){}[0]
+        final fun component4(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Oct.component4|component4(){}[0]
+        final fun component5(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Oct.component5|component5(){}[0]
+        final fun copy(kotlin/String = ..., kotlin/String? = ..., kotlin.collections/List<kotlin/String>? = ..., kotlin/String? = ..., kotlin/String? = ...): co.touchlab.kjwt.model.jwk/Jwk.Oct // co.touchlab.kjwt.model.jwk/Jwk.Oct.copy|copy(kotlin.String;kotlin.String?;kotlin.collections.List<kotlin.String>?;kotlin.String?;kotlin.String?){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.jwk/Jwk.Oct.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.jwk/Jwk.Oct.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Oct.toString|toString(){}[0]
+
+        final class OctThumbprint : co.touchlab.kjwt.model.jwk/Jwk.Thumbprint { // co.touchlab.kjwt.model.jwk/Jwk.Oct.OctThumbprint|null[0]
+            constructor <init>(kotlin/String) // co.touchlab.kjwt.model.jwk/Jwk.Oct.OctThumbprint.<init>|<init>(kotlin.String){}[0]
+
+            final val k // co.touchlab.kjwt.model.jwk/Jwk.Oct.OctThumbprint.k|{}k[0]
+                final fun <get-k>(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Oct.OctThumbprint.k.<get-k>|<get-k>(){}[0]
+
+            final fun component1(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Oct.OctThumbprint.component1|component1(){}[0]
+            final fun copy(kotlin/String = ...): co.touchlab.kjwt.model.jwk/Jwk.Oct.OctThumbprint // co.touchlab.kjwt.model.jwk/Jwk.Oct.OctThumbprint.copy|copy(kotlin.String){}[0]
+            final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.jwk/Jwk.Oct.OctThumbprint.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.jwk/Jwk.Oct.OctThumbprint.hashCode|hashCode(){}[0]
+            final fun toString(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Oct.OctThumbprint.toString|toString(){}[0]
+
+            final object Companion { // co.touchlab.kjwt.model.jwk/Jwk.Oct.OctThumbprint.Companion|null[0]
+                final fun serializer(): kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.jwk/Jwk.Oct.OctThumbprint> // co.touchlab.kjwt.model.jwk/Jwk.Oct.OctThumbprint.Companion.serializer|serializer(){}[0]
+            }
+        }
+
+        final object Companion { // co.touchlab.kjwt.model.jwk/Jwk.Oct.Companion|null[0]
+            final const val KTY // co.touchlab.kjwt.model.jwk/Jwk.Oct.Companion.KTY|{}KTY[0]
+                final fun <get-KTY>(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Oct.Companion.KTY.<get-KTY>|<get-KTY>(){}[0]
+
+            final fun serializer(): kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.jwk/Jwk.Oct> // co.touchlab.kjwt.model.jwk/Jwk.Oct.Companion.serializer|serializer(){}[0]
+        }
+    }
+
+    final class Okp : co.touchlab.kjwt.model.jwk/Jwk { // co.touchlab.kjwt.model.jwk/Jwk.Okp|null[0]
+        constructor <init>(kotlin/String, kotlin/String, kotlin/String? = ..., kotlin/String? = ..., kotlin.collections/List<kotlin/String>? = ..., kotlin/String? = ..., kotlin/String? = ...) // co.touchlab.kjwt.model.jwk/Jwk.Okp.<init>|<init>(kotlin.String;kotlin.String;kotlin.String?;kotlin.String?;kotlin.collections.List<kotlin.String>?;kotlin.String?;kotlin.String?){}[0]
+
+        final val alg // co.touchlab.kjwt.model.jwk/Jwk.Okp.alg|{}alg[0]
+            final fun <get-alg>(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Okp.alg.<get-alg>|<get-alg>(){}[0]
+        final val crv // co.touchlab.kjwt.model.jwk/Jwk.Okp.crv|{}crv[0]
+            final fun <get-crv>(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Okp.crv.<get-crv>|<get-crv>(){}[0]
+        final val d // co.touchlab.kjwt.model.jwk/Jwk.Okp.d|{}d[0]
+            final fun <get-d>(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Okp.d.<get-d>|<get-d>(){}[0]
+        final val isPrivate // co.touchlab.kjwt.model.jwk/Jwk.Okp.isPrivate|{}isPrivate[0]
+            final fun <get-isPrivate>(): kotlin/Boolean // co.touchlab.kjwt.model.jwk/Jwk.Okp.isPrivate.<get-isPrivate>|<get-isPrivate>(){}[0]
+        final val keyOps // co.touchlab.kjwt.model.jwk/Jwk.Okp.keyOps|{}keyOps[0]
+            final fun <get-keyOps>(): kotlin.collections/List<kotlin/String>? // co.touchlab.kjwt.model.jwk/Jwk.Okp.keyOps.<get-keyOps>|<get-keyOps>(){}[0]
+        final val kid // co.touchlab.kjwt.model.jwk/Jwk.Okp.kid|{}kid[0]
+            final fun <get-kid>(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Okp.kid.<get-kid>|<get-kid>(){}[0]
+        final val thumbprint // co.touchlab.kjwt.model.jwk/Jwk.Okp.thumbprint|{}thumbprint[0]
+            final fun <get-thumbprint>(): co.touchlab.kjwt.model.jwk/Jwk.Thumbprint // co.touchlab.kjwt.model.jwk/Jwk.Okp.thumbprint.<get-thumbprint>|<get-thumbprint>(){}[0]
+        final val use // co.touchlab.kjwt.model.jwk/Jwk.Okp.use|{}use[0]
+            final fun <get-use>(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Okp.use.<get-use>|<get-use>(){}[0]
+        final val x // co.touchlab.kjwt.model.jwk/Jwk.Okp.x|{}x[0]
+            final fun <get-x>(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Okp.x.<get-x>|<get-x>(){}[0]
+
+        final fun component1(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Okp.component1|component1(){}[0]
+        final fun component2(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Okp.component2|component2(){}[0]
+        final fun component3(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Okp.component3|component3(){}[0]
+        final fun component4(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Okp.component4|component4(){}[0]
+        final fun component5(): kotlin.collections/List<kotlin/String>? // co.touchlab.kjwt.model.jwk/Jwk.Okp.component5|component5(){}[0]
+        final fun component6(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Okp.component6|component6(){}[0]
+        final fun component7(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Okp.component7|component7(){}[0]
+        final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin.collections/List<kotlin/String>? = ..., kotlin/String? = ..., kotlin/String? = ...): co.touchlab.kjwt.model.jwk/Jwk.Okp // co.touchlab.kjwt.model.jwk/Jwk.Okp.copy|copy(kotlin.String;kotlin.String;kotlin.String?;kotlin.String?;kotlin.collections.List<kotlin.String>?;kotlin.String?;kotlin.String?){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.jwk/Jwk.Okp.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.jwk/Jwk.Okp.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Okp.toString|toString(){}[0]
+
+        final class OkpThumbprint : co.touchlab.kjwt.model.jwk/Jwk.Thumbprint { // co.touchlab.kjwt.model.jwk/Jwk.Okp.OkpThumbprint|null[0]
+            constructor <init>(kotlin/String, kotlin/String) // co.touchlab.kjwt.model.jwk/Jwk.Okp.OkpThumbprint.<init>|<init>(kotlin.String;kotlin.String){}[0]
+
+            final val crv // co.touchlab.kjwt.model.jwk/Jwk.Okp.OkpThumbprint.crv|{}crv[0]
+                final fun <get-crv>(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Okp.OkpThumbprint.crv.<get-crv>|<get-crv>(){}[0]
+            final val x // co.touchlab.kjwt.model.jwk/Jwk.Okp.OkpThumbprint.x|{}x[0]
+                final fun <get-x>(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Okp.OkpThumbprint.x.<get-x>|<get-x>(){}[0]
+
+            final fun component1(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Okp.OkpThumbprint.component1|component1(){}[0]
+            final fun component2(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Okp.OkpThumbprint.component2|component2(){}[0]
+            final fun copy(kotlin/String = ..., kotlin/String = ...): co.touchlab.kjwt.model.jwk/Jwk.Okp.OkpThumbprint // co.touchlab.kjwt.model.jwk/Jwk.Okp.OkpThumbprint.copy|copy(kotlin.String;kotlin.String){}[0]
+            final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.jwk/Jwk.Okp.OkpThumbprint.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.jwk/Jwk.Okp.OkpThumbprint.hashCode|hashCode(){}[0]
+            final fun toString(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Okp.OkpThumbprint.toString|toString(){}[0]
+
+            final object Companion { // co.touchlab.kjwt.model.jwk/Jwk.Okp.OkpThumbprint.Companion|null[0]
+                final fun serializer(): kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.jwk/Jwk.Okp.OkpThumbprint> // co.touchlab.kjwt.model.jwk/Jwk.Okp.OkpThumbprint.Companion.serializer|serializer(){}[0]
+            }
+        }
+
+        final object Companion { // co.touchlab.kjwt.model.jwk/Jwk.Okp.Companion|null[0]
+            final const val KTY // co.touchlab.kjwt.model.jwk/Jwk.Okp.Companion.KTY|{}KTY[0]
+                final fun <get-KTY>(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Okp.Companion.KTY.<get-KTY>|<get-KTY>(){}[0]
+
+            final fun serializer(): kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.jwk/Jwk.Okp> // co.touchlab.kjwt.model.jwk/Jwk.Okp.Companion.serializer|serializer(){}[0]
+        }
+    }
+
+    final class Rsa : co.touchlab.kjwt.model.jwk/Jwk { // co.touchlab.kjwt.model.jwk/Jwk.Rsa|null[0]
+        constructor <init>(kotlin/String, kotlin/String, kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin.collections/List<kotlin/String>? = ..., kotlin/String? = ..., kotlin/String? = ...) // co.touchlab.kjwt.model.jwk/Jwk.Rsa.<init>|<init>(kotlin.String;kotlin.String;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.collections.List<kotlin.String>?;kotlin.String?;kotlin.String?){}[0]
+
+        final val alg // co.touchlab.kjwt.model.jwk/Jwk.Rsa.alg|{}alg[0]
+            final fun <get-alg>(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Rsa.alg.<get-alg>|<get-alg>(){}[0]
+        final val d // co.touchlab.kjwt.model.jwk/Jwk.Rsa.d|{}d[0]
+            final fun <get-d>(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Rsa.d.<get-d>|<get-d>(){}[0]
+        final val dp // co.touchlab.kjwt.model.jwk/Jwk.Rsa.dp|{}dp[0]
+            final fun <get-dp>(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Rsa.dp.<get-dp>|<get-dp>(){}[0]
+        final val dq // co.touchlab.kjwt.model.jwk/Jwk.Rsa.dq|{}dq[0]
+            final fun <get-dq>(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Rsa.dq.<get-dq>|<get-dq>(){}[0]
+        final val e // co.touchlab.kjwt.model.jwk/Jwk.Rsa.e|{}e[0]
+            final fun <get-e>(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Rsa.e.<get-e>|<get-e>(){}[0]
+        final val isPrivate // co.touchlab.kjwt.model.jwk/Jwk.Rsa.isPrivate|{}isPrivate[0]
+            final fun <get-isPrivate>(): kotlin/Boolean // co.touchlab.kjwt.model.jwk/Jwk.Rsa.isPrivate.<get-isPrivate>|<get-isPrivate>(){}[0]
+        final val keyOps // co.touchlab.kjwt.model.jwk/Jwk.Rsa.keyOps|{}keyOps[0]
+            final fun <get-keyOps>(): kotlin.collections/List<kotlin/String>? // co.touchlab.kjwt.model.jwk/Jwk.Rsa.keyOps.<get-keyOps>|<get-keyOps>(){}[0]
+        final val kid // co.touchlab.kjwt.model.jwk/Jwk.Rsa.kid|{}kid[0]
+            final fun <get-kid>(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Rsa.kid.<get-kid>|<get-kid>(){}[0]
+        final val n // co.touchlab.kjwt.model.jwk/Jwk.Rsa.n|{}n[0]
+            final fun <get-n>(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Rsa.n.<get-n>|<get-n>(){}[0]
+        final val p // co.touchlab.kjwt.model.jwk/Jwk.Rsa.p|{}p[0]
+            final fun <get-p>(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Rsa.p.<get-p>|<get-p>(){}[0]
+        final val q // co.touchlab.kjwt.model.jwk/Jwk.Rsa.q|{}q[0]
+            final fun <get-q>(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Rsa.q.<get-q>|<get-q>(){}[0]
+        final val qi // co.touchlab.kjwt.model.jwk/Jwk.Rsa.qi|{}qi[0]
+            final fun <get-qi>(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Rsa.qi.<get-qi>|<get-qi>(){}[0]
+        final val thumbprint // co.touchlab.kjwt.model.jwk/Jwk.Rsa.thumbprint|{}thumbprint[0]
+            final fun <get-thumbprint>(): co.touchlab.kjwt.model.jwk/Jwk.Thumbprint // co.touchlab.kjwt.model.jwk/Jwk.Rsa.thumbprint.<get-thumbprint>|<get-thumbprint>(){}[0]
+        final val use // co.touchlab.kjwt.model.jwk/Jwk.Rsa.use|{}use[0]
+            final fun <get-use>(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Rsa.use.<get-use>|<get-use>(){}[0]
+
+        final fun component1(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Rsa.component1|component1(){}[0]
+        final fun component10(): kotlin.collections/List<kotlin/String>? // co.touchlab.kjwt.model.jwk/Jwk.Rsa.component10|component10(){}[0]
+        final fun component11(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Rsa.component11|component11(){}[0]
+        final fun component12(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Rsa.component12|component12(){}[0]
+        final fun component2(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Rsa.component2|component2(){}[0]
+        final fun component3(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Rsa.component3|component3(){}[0]
+        final fun component4(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Rsa.component4|component4(){}[0]
+        final fun component5(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Rsa.component5|component5(){}[0]
+        final fun component6(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Rsa.component6|component6(){}[0]
+        final fun component7(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Rsa.component7|component7(){}[0]
+        final fun component8(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Rsa.component8|component8(){}[0]
+        final fun component9(): kotlin/String? // co.touchlab.kjwt.model.jwk/Jwk.Rsa.component9|component9(){}[0]
+        final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin.collections/List<kotlin/String>? = ..., kotlin/String? = ..., kotlin/String? = ...): co.touchlab.kjwt.model.jwk/Jwk.Rsa // co.touchlab.kjwt.model.jwk/Jwk.Rsa.copy|copy(kotlin.String;kotlin.String;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.collections.List<kotlin.String>?;kotlin.String?;kotlin.String?){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.jwk/Jwk.Rsa.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.jwk/Jwk.Rsa.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Rsa.toString|toString(){}[0]
+
+        final class RSAThumbprint : co.touchlab.kjwt.model.jwk/Jwk.Thumbprint { // co.touchlab.kjwt.model.jwk/Jwk.Rsa.RSAThumbprint|null[0]
+            constructor <init>(kotlin/String, kotlin/String) // co.touchlab.kjwt.model.jwk/Jwk.Rsa.RSAThumbprint.<init>|<init>(kotlin.String;kotlin.String){}[0]
+
+            final val e // co.touchlab.kjwt.model.jwk/Jwk.Rsa.RSAThumbprint.e|{}e[0]
+                final fun <get-e>(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Rsa.RSAThumbprint.e.<get-e>|<get-e>(){}[0]
+            final val n // co.touchlab.kjwt.model.jwk/Jwk.Rsa.RSAThumbprint.n|{}n[0]
+                final fun <get-n>(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Rsa.RSAThumbprint.n.<get-n>|<get-n>(){}[0]
+
+            final fun component1(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Rsa.RSAThumbprint.component1|component1(){}[0]
+            final fun component2(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Rsa.RSAThumbprint.component2|component2(){}[0]
+            final fun copy(kotlin/String = ..., kotlin/String = ...): co.touchlab.kjwt.model.jwk/Jwk.Rsa.RSAThumbprint // co.touchlab.kjwt.model.jwk/Jwk.Rsa.RSAThumbprint.copy|copy(kotlin.String;kotlin.String){}[0]
+            final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model.jwk/Jwk.Rsa.RSAThumbprint.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model.jwk/Jwk.Rsa.RSAThumbprint.hashCode|hashCode(){}[0]
+            final fun toString(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Rsa.RSAThumbprint.toString|toString(){}[0]
+
+            final object Companion { // co.touchlab.kjwt.model.jwk/Jwk.Rsa.RSAThumbprint.Companion|null[0]
+                final fun serializer(): kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.jwk/Jwk.Rsa.RSAThumbprint> // co.touchlab.kjwt.model.jwk/Jwk.Rsa.RSAThumbprint.Companion.serializer|serializer(){}[0]
+            }
+        }
+
+        final object Companion { // co.touchlab.kjwt.model.jwk/Jwk.Rsa.Companion|null[0]
+            final const val KTY // co.touchlab.kjwt.model.jwk/Jwk.Rsa.Companion.KTY|{}KTY[0]
+                final fun <get-KTY>(): kotlin/String // co.touchlab.kjwt.model.jwk/Jwk.Rsa.Companion.KTY.<get-KTY>|<get-KTY>(){}[0]
+
+            final fun serializer(): kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.jwk/Jwk.Rsa> // co.touchlab.kjwt.model.jwk/Jwk.Rsa.Companion.serializer|serializer(){}[0]
+        }
+    }
+
+    sealed class Thumbprint { // co.touchlab.kjwt.model.jwk/Jwk.Thumbprint|null[0]
+        final object Companion { // co.touchlab.kjwt.model.jwk/Jwk.Thumbprint.Companion|null[0]
+            final fun serializer(): kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.jwk/Jwk.Thumbprint> // co.touchlab.kjwt.model.jwk/Jwk.Thumbprint.Companion.serializer|serializer(){}[0]
+        }
+    }
+
+    final object Companion { // co.touchlab.kjwt.model.jwk/Jwk.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.jwk/Jwk> // co.touchlab.kjwt.model.jwk/Jwk.Companion.serializer|serializer(){}[0]
+    }
+}
+
+sealed class co.touchlab.kjwt.model/JwtInstance { // co.touchlab.kjwt.model/JwtInstance|null[0]
+    abstract val header // co.touchlab.kjwt.model/JwtInstance.header|{}header[0]
+        abstract fun <get-header>(): co.touchlab.kjwt.model/JwtHeader // co.touchlab.kjwt.model/JwtInstance.header.<get-header>|<get-header>(){}[0]
+    abstract val payload // co.touchlab.kjwt.model/JwtInstance.payload|{}payload[0]
+        abstract fun <get-payload>(): co.touchlab.kjwt.model/JwtPayload // co.touchlab.kjwt.model/JwtInstance.payload.<get-payload>|<get-payload>(){}[0]
+
+    abstract fun compact(): kotlin/String // co.touchlab.kjwt.model/JwtInstance.compact|compact(){}[0]
+    final fun <#A1: kotlin/Any?> getHeader(kotlinx.serialization/KSerializer<#A1>, kotlinx.serialization.json/Json = ...): #A1 // co.touchlab.kjwt.model/JwtInstance.getHeader|getHeader(kotlinx.serialization.KSerializer<0:0>;kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+    final fun <#A1: kotlin/Any?> getPayload(kotlinx.serialization/KSerializer<#A1>, kotlinx.serialization.json/Json = ...): #A1 // co.touchlab.kjwt.model/JwtInstance.getPayload|getPayload(kotlinx.serialization.KSerializer<0:0>;kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+    final inline fun <#A1: reified kotlin/Any?> getHeader(kotlinx.serialization.json/Json = ...): #A1 // co.touchlab.kjwt.model/JwtInstance.getHeader|getHeader(kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+    final inline fun <#A1: reified kotlin/Any?> getPayload(kotlinx.serialization.json/Json = ...): #A1 // co.touchlab.kjwt.model/JwtInstance.getPayload|getPayload(kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+    open fun toString(): kotlin/String // co.touchlab.kjwt.model/JwtInstance.toString|toString(){}[0]
+
+    final class Jwe : co.touchlab.kjwt.model/JwtInstance { // co.touchlab.kjwt.model/JwtInstance.Jwe|null[0]
+        final val aad // co.touchlab.kjwt.model/JwtInstance.Jwe.aad|{}aad[0]
+            final fun <get-aad>(): kotlin/String // co.touchlab.kjwt.model/JwtInstance.Jwe.aad.<get-aad>|<get-aad>(){}[0]
+        final val cipherText // co.touchlab.kjwt.model/JwtInstance.Jwe.cipherText|{}cipherText[0]
+            final fun <get-cipherText>(): kotlin/String // co.touchlab.kjwt.model/JwtInstance.Jwe.cipherText.<get-cipherText>|<get-cipherText>(){}[0]
+        final val encryptedKey // co.touchlab.kjwt.model/JwtInstance.Jwe.encryptedKey|{}encryptedKey[0]
+            final fun <get-encryptedKey>(): kotlin/String // co.touchlab.kjwt.model/JwtInstance.Jwe.encryptedKey.<get-encryptedKey>|<get-encryptedKey>(){}[0]
+        final val header // co.touchlab.kjwt.model/JwtInstance.Jwe.header|{}header[0]
+            final fun <get-header>(): co.touchlab.kjwt.model/JwtHeader // co.touchlab.kjwt.model/JwtInstance.Jwe.header.<get-header>|<get-header>(){}[0]
+        final val iv // co.touchlab.kjwt.model/JwtInstance.Jwe.iv|{}iv[0]
+            final fun <get-iv>(): kotlin/String // co.touchlab.kjwt.model/JwtInstance.Jwe.iv.<get-iv>|<get-iv>(){}[0]
+        final val payload // co.touchlab.kjwt.model/JwtInstance.Jwe.payload|{}payload[0]
+            final fun <get-payload>(): co.touchlab.kjwt.model/JwtPayload // co.touchlab.kjwt.model/JwtInstance.Jwe.payload.<get-payload>|<get-payload>(){}[0]
+        final val tag // co.touchlab.kjwt.model/JwtInstance.Jwe.tag|{}tag[0]
+            final fun <get-tag>(): kotlin/String // co.touchlab.kjwt.model/JwtInstance.Jwe.tag.<get-tag>|<get-tag>(){}[0]
+
+        final fun compact(): kotlin/String // co.touchlab.kjwt.model/JwtInstance.Jwe.compact|compact(){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model/JwtInstance.Jwe.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model/JwtInstance.Jwe.hashCode|hashCode(){}[0]
+    }
+
+    final class Jws : co.touchlab.kjwt.model/JwtInstance { // co.touchlab.kjwt.model/JwtInstance.Jws|null[0]
+        final val header // co.touchlab.kjwt.model/JwtInstance.Jws.header|{}header[0]
+            final fun <get-header>(): co.touchlab.kjwt.model/JwtHeader // co.touchlab.kjwt.model/JwtInstance.Jws.header.<get-header>|<get-header>(){}[0]
+        final val payload // co.touchlab.kjwt.model/JwtInstance.Jws.payload|{}payload[0]
+            final fun <get-payload>(): co.touchlab.kjwt.model/JwtPayload // co.touchlab.kjwt.model/JwtInstance.Jws.payload.<get-payload>|<get-payload>(){}[0]
+        final val signature // co.touchlab.kjwt.model/JwtInstance.Jws.signature|{}signature[0]
+            final fun <get-signature>(): kotlin/String // co.touchlab.kjwt.model/JwtInstance.Jws.signature.<get-signature>|<get-signature>(){}[0]
+        final val signatures // co.touchlab.kjwt.model/JwtInstance.Jws.signatures|{}signatures[0]
+            final fun <get-signatures>(): kotlin.collections/List<co.touchlab.kjwt.model/JwtInstance.Jws.Signature> // co.touchlab.kjwt.model/JwtInstance.Jws.signatures.<get-signatures>|<get-signatures>(){}[0]
+
+        final fun compact(): kotlin/String // co.touchlab.kjwt.model/JwtInstance.Jws.compact|compact(){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // co.touchlab.kjwt.model/JwtInstance.Jws.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // co.touchlab.kjwt.model/JwtInstance.Jws.hashCode|hashCode(){}[0]
+
+        final class Signature { // co.touchlab.kjwt.model/JwtInstance.Jws.Signature|null[0]
+            constructor <init>(co.touchlab.kjwt.model/JwtHeader, kotlin/String) // co.touchlab.kjwt.model/JwtInstance.Jws.Signature.<init>|<init>(co.touchlab.kjwt.model.JwtHeader;kotlin.String){}[0]
+
+            final val header // co.touchlab.kjwt.model/JwtInstance.Jws.Signature.header|{}header[0]
+                final fun <get-header>(): co.touchlab.kjwt.model/JwtHeader // co.touchlab.kjwt.model/JwtInstance.Jws.Signature.header.<get-header>|<get-header>(){}[0]
+            final val signature // co.touchlab.kjwt.model/JwtInstance.Jws.Signature.signature|{}signature[0]
+                final fun <get-signature>(): kotlin/String // co.touchlab.kjwt.model/JwtInstance.Jws.Signature.signature.<get-signature>|<get-signature>(){}[0]
+        }
+    }
+}
+
+final object co.touchlab.kjwt.serializers/AudienceDeserializer : kotlinx.serialization/DeserializationStrategy<kotlin.collections/Set<kotlin/String>> { // co.touchlab.kjwt.serializers/AudienceDeserializer|null[0]
+    final val descriptor // co.touchlab.kjwt.serializers/AudienceDeserializer.descriptor|{}descriptor[0]
+        final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // co.touchlab.kjwt.serializers/AudienceDeserializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+    final fun deserialize(kotlinx.serialization.encoding/Decoder): kotlin.collections/Set<kotlin/String> // co.touchlab.kjwt.serializers/AudienceDeserializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+}
+
+final object co.touchlab.kjwt.serializers/EncryptionAlgorithmSerializer : kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm> { // co.touchlab.kjwt.serializers/EncryptionAlgorithmSerializer|null[0]
+    final val descriptor // co.touchlab.kjwt.serializers/EncryptionAlgorithmSerializer.descriptor|{}descriptor[0]
+        final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // co.touchlab.kjwt.serializers/EncryptionAlgorithmSerializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+    final fun deserialize(kotlinx.serialization.encoding/Decoder): co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm // co.touchlab.kjwt.serializers/EncryptionAlgorithmSerializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+    final fun serialize(kotlinx.serialization.encoding/Encoder, co.touchlab.kjwt.model.algorithm/EncryptionAlgorithm) // co.touchlab.kjwt.serializers/EncryptionAlgorithmSerializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;co.touchlab.kjwt.model.algorithm.EncryptionAlgorithm){}[0]
+}
+
+final object co.touchlab.kjwt.serializers/InstantEpochSecondsSerializer : kotlinx.serialization/KSerializer<kotlin.time/Instant> { // co.touchlab.kjwt.serializers/InstantEpochSecondsSerializer|null[0]
+    final val descriptor // co.touchlab.kjwt.serializers/InstantEpochSecondsSerializer.descriptor|{}descriptor[0]
+        final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // co.touchlab.kjwt.serializers/InstantEpochSecondsSerializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+    final fun deserialize(kotlinx.serialization.encoding/Decoder): kotlin.time/Instant // co.touchlab.kjwt.serializers/InstantEpochSecondsSerializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+    final fun serialize(kotlinx.serialization.encoding/Encoder, kotlin.time/Instant) // co.touchlab.kjwt.serializers/InstantEpochSecondsSerializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;kotlin.time.Instant){}[0]
+}
+
+final object co.touchlab.kjwt.serializers/JwaSerializer : kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.algorithm/Jwa> { // co.touchlab.kjwt.serializers/JwaSerializer|null[0]
+    final val descriptor // co.touchlab.kjwt.serializers/JwaSerializer.descriptor|{}descriptor[0]
+        final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // co.touchlab.kjwt.serializers/JwaSerializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+    final fun deserialize(kotlinx.serialization.encoding/Decoder): co.touchlab.kjwt.model.algorithm/Jwa // co.touchlab.kjwt.serializers/JwaSerializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+    final fun serialize(kotlinx.serialization.encoding/Encoder, co.touchlab.kjwt.model.algorithm/Jwa) // co.touchlab.kjwt.serializers/JwaSerializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;co.touchlab.kjwt.model.algorithm.Jwa){}[0]
+}
+
+final object co.touchlab.kjwt.serializers/JwkEcSerializer : kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.jwk/Jwk.Ec> { // co.touchlab.kjwt.serializers/JwkEcSerializer|null[0]
+    final val descriptor // co.touchlab.kjwt.serializers/JwkEcSerializer.descriptor|{}descriptor[0]
+        final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // co.touchlab.kjwt.serializers/JwkEcSerializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+    final fun deserialize(kotlinx.serialization.encoding/Decoder): co.touchlab.kjwt.model.jwk/Jwk.Ec // co.touchlab.kjwt.serializers/JwkEcSerializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+    final fun serialize(kotlinx.serialization.encoding/Encoder, co.touchlab.kjwt.model.jwk/Jwk.Ec) // co.touchlab.kjwt.serializers/JwkEcSerializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;co.touchlab.kjwt.model.jwk.Jwk.Ec){}[0]
+}
+
+final object co.touchlab.kjwt.serializers/JwkEcThumbprintSerializer : kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.jwk/Jwk.Ec.ECThumbprint> { // co.touchlab.kjwt.serializers/JwkEcThumbprintSerializer|null[0]
+    final val descriptor // co.touchlab.kjwt.serializers/JwkEcThumbprintSerializer.descriptor|{}descriptor[0]
+        final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // co.touchlab.kjwt.serializers/JwkEcThumbprintSerializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+    final fun deserialize(kotlinx.serialization.encoding/Decoder): co.touchlab.kjwt.model.jwk/Jwk.Ec.ECThumbprint // co.touchlab.kjwt.serializers/JwkEcThumbprintSerializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+    final fun serialize(kotlinx.serialization.encoding/Encoder, co.touchlab.kjwt.model.jwk/Jwk.Ec.ECThumbprint) // co.touchlab.kjwt.serializers/JwkEcThumbprintSerializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;co.touchlab.kjwt.model.jwk.Jwk.Ec.ECThumbprint){}[0]
+}
+
+final object co.touchlab.kjwt.serializers/JwkOctSerializer : kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.jwk/Jwk.Oct> { // co.touchlab.kjwt.serializers/JwkOctSerializer|null[0]
+    final val descriptor // co.touchlab.kjwt.serializers/JwkOctSerializer.descriptor|{}descriptor[0]
+        final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // co.touchlab.kjwt.serializers/JwkOctSerializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+    final fun deserialize(kotlinx.serialization.encoding/Decoder): co.touchlab.kjwt.model.jwk/Jwk.Oct // co.touchlab.kjwt.serializers/JwkOctSerializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+    final fun serialize(kotlinx.serialization.encoding/Encoder, co.touchlab.kjwt.model.jwk/Jwk.Oct) // co.touchlab.kjwt.serializers/JwkOctSerializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;co.touchlab.kjwt.model.jwk.Jwk.Oct){}[0]
+}
+
+final object co.touchlab.kjwt.serializers/JwkOctThumbprintSerializer : kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.jwk/Jwk.Oct.OctThumbprint> { // co.touchlab.kjwt.serializers/JwkOctThumbprintSerializer|null[0]
+    final val descriptor // co.touchlab.kjwt.serializers/JwkOctThumbprintSerializer.descriptor|{}descriptor[0]
+        final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // co.touchlab.kjwt.serializers/JwkOctThumbprintSerializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+    final fun deserialize(kotlinx.serialization.encoding/Decoder): co.touchlab.kjwt.model.jwk/Jwk.Oct.OctThumbprint // co.touchlab.kjwt.serializers/JwkOctThumbprintSerializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+    final fun serialize(kotlinx.serialization.encoding/Encoder, co.touchlab.kjwt.model.jwk/Jwk.Oct.OctThumbprint) // co.touchlab.kjwt.serializers/JwkOctThumbprintSerializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;co.touchlab.kjwt.model.jwk.Jwk.Oct.OctThumbprint){}[0]
+}
+
+final object co.touchlab.kjwt.serializers/JwkOkpSerializer : kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.jwk/Jwk.Okp> { // co.touchlab.kjwt.serializers/JwkOkpSerializer|null[0]
+    final val descriptor // co.touchlab.kjwt.serializers/JwkOkpSerializer.descriptor|{}descriptor[0]
+        final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // co.touchlab.kjwt.serializers/JwkOkpSerializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+    final fun deserialize(kotlinx.serialization.encoding/Decoder): co.touchlab.kjwt.model.jwk/Jwk.Okp // co.touchlab.kjwt.serializers/JwkOkpSerializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+    final fun serialize(kotlinx.serialization.encoding/Encoder, co.touchlab.kjwt.model.jwk/Jwk.Okp) // co.touchlab.kjwt.serializers/JwkOkpSerializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;co.touchlab.kjwt.model.jwk.Jwk.Okp){}[0]
+}
+
+final object co.touchlab.kjwt.serializers/JwkOkpThumbprintSerializer : kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.jwk/Jwk.Okp.OkpThumbprint> { // co.touchlab.kjwt.serializers/JwkOkpThumbprintSerializer|null[0]
+    final val descriptor // co.touchlab.kjwt.serializers/JwkOkpThumbprintSerializer.descriptor|{}descriptor[0]
+        final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // co.touchlab.kjwt.serializers/JwkOkpThumbprintSerializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+    final fun deserialize(kotlinx.serialization.encoding/Decoder): co.touchlab.kjwt.model.jwk/Jwk.Okp.OkpThumbprint // co.touchlab.kjwt.serializers/JwkOkpThumbprintSerializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+    final fun serialize(kotlinx.serialization.encoding/Encoder, co.touchlab.kjwt.model.jwk/Jwk.Okp.OkpThumbprint) // co.touchlab.kjwt.serializers/JwkOkpThumbprintSerializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;co.touchlab.kjwt.model.jwk.Jwk.Okp.OkpThumbprint){}[0]
+}
+
+final object co.touchlab.kjwt.serializers/JwkRsaSerializer : kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.jwk/Jwk.Rsa> { // co.touchlab.kjwt.serializers/JwkRsaSerializer|null[0]
+    final val descriptor // co.touchlab.kjwt.serializers/JwkRsaSerializer.descriptor|{}descriptor[0]
+        final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // co.touchlab.kjwt.serializers/JwkRsaSerializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+    final fun deserialize(kotlinx.serialization.encoding/Decoder): co.touchlab.kjwt.model.jwk/Jwk.Rsa // co.touchlab.kjwt.serializers/JwkRsaSerializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+    final fun serialize(kotlinx.serialization.encoding/Encoder, co.touchlab.kjwt.model.jwk/Jwk.Rsa) // co.touchlab.kjwt.serializers/JwkRsaSerializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;co.touchlab.kjwt.model.jwk.Jwk.Rsa){}[0]
+}
+
+final object co.touchlab.kjwt.serializers/JwkRsaThumbprintSerializer : kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.jwk/Jwk.Rsa.RSAThumbprint> { // co.touchlab.kjwt.serializers/JwkRsaThumbprintSerializer|null[0]
+    final val descriptor // co.touchlab.kjwt.serializers/JwkRsaThumbprintSerializer.descriptor|{}descriptor[0]
+        final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // co.touchlab.kjwt.serializers/JwkRsaThumbprintSerializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+    final fun deserialize(kotlinx.serialization.encoding/Decoder): co.touchlab.kjwt.model.jwk/Jwk.Rsa.RSAThumbprint // co.touchlab.kjwt.serializers/JwkRsaThumbprintSerializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+    final fun serialize(kotlinx.serialization.encoding/Encoder, co.touchlab.kjwt.model.jwk/Jwk.Rsa.RSAThumbprint) // co.touchlab.kjwt.serializers/JwkRsaThumbprintSerializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;co.touchlab.kjwt.model.jwk.Jwk.Rsa.RSAThumbprint){}[0]
+}
+
+final object co.touchlab.kjwt.serializers/JwkSerializer : kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.jwk/Jwk> { // co.touchlab.kjwt.serializers/JwkSerializer|null[0]
+    final val descriptor // co.touchlab.kjwt.serializers/JwkSerializer.descriptor|{}descriptor[0]
+        final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // co.touchlab.kjwt.serializers/JwkSerializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+    final fun deserialize(kotlinx.serialization.encoding/Decoder): co.touchlab.kjwt.model.jwk/Jwk // co.touchlab.kjwt.serializers/JwkSerializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+    final fun serialize(kotlinx.serialization.encoding/Encoder, co.touchlab.kjwt.model.jwk/Jwk) // co.touchlab.kjwt.serializers/JwkSerializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;co.touchlab.kjwt.model.jwk.Jwk){}[0]
+}
+
+final object co.touchlab.kjwt.serializers/JwkThumbprintSerializer : kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.jwk/Jwk.Thumbprint> { // co.touchlab.kjwt.serializers/JwkThumbprintSerializer|null[0]
+    final val descriptor // co.touchlab.kjwt.serializers/JwkThumbprintSerializer.descriptor|{}descriptor[0]
+        final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // co.touchlab.kjwt.serializers/JwkThumbprintSerializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+    final fun deserialize(kotlinx.serialization.encoding/Decoder): co.touchlab.kjwt.model.jwk/Jwk.Thumbprint // co.touchlab.kjwt.serializers/JwkThumbprintSerializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+    final fun serialize(kotlinx.serialization.encoding/Encoder, co.touchlab.kjwt.model.jwk/Jwk.Thumbprint) // co.touchlab.kjwt.serializers/JwkThumbprintSerializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;co.touchlab.kjwt.model.jwk.Jwk.Thumbprint){}[0]
+}
+
+final object co.touchlab.kjwt.serializers/JwtHeaderSerializer : kotlinx.serialization/KSerializer<co.touchlab.kjwt.model/JwtHeader> { // co.touchlab.kjwt.serializers/JwtHeaderSerializer|null[0]
+    final val descriptor // co.touchlab.kjwt.serializers/JwtHeaderSerializer.descriptor|{}descriptor[0]
+        final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // co.touchlab.kjwt.serializers/JwtHeaderSerializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+    final fun deserialize(kotlinx.serialization.encoding/Decoder): co.touchlab.kjwt.model/JwtHeader // co.touchlab.kjwt.serializers/JwtHeaderSerializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+    final fun serialize(kotlinx.serialization.encoding/Encoder, co.touchlab.kjwt.model/JwtHeader) // co.touchlab.kjwt.serializers/JwtHeaderSerializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;co.touchlab.kjwt.model.JwtHeader){}[0]
+}
+
+final object co.touchlab.kjwt.serializers/JwtPayloadSerializer : kotlinx.serialization/KSerializer<co.touchlab.kjwt.model/JwtPayload> { // co.touchlab.kjwt.serializers/JwtPayloadSerializer|null[0]
+    final val descriptor // co.touchlab.kjwt.serializers/JwtPayloadSerializer.descriptor|{}descriptor[0]
+        final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // co.touchlab.kjwt.serializers/JwtPayloadSerializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+    final fun deserialize(kotlinx.serialization.encoding/Decoder): co.touchlab.kjwt.model/JwtPayload // co.touchlab.kjwt.serializers/JwtPayloadSerializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+    final fun serialize(kotlinx.serialization.encoding/Encoder, co.touchlab.kjwt.model/JwtPayload) // co.touchlab.kjwt.serializers/JwtPayloadSerializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;co.touchlab.kjwt.model.JwtPayload){}[0]
+}
+
+final object co.touchlab.kjwt.serializers/SigningAlgorithmSerializer : kotlinx.serialization/KSerializer<co.touchlab.kjwt.model.algorithm/SigningAlgorithm> { // co.touchlab.kjwt.serializers/SigningAlgorithmSerializer|null[0]
+    final val descriptor // co.touchlab.kjwt.serializers/SigningAlgorithmSerializer.descriptor|{}descriptor[0]
+        final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // co.touchlab.kjwt.serializers/SigningAlgorithmSerializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+    final fun deserialize(kotlinx.serialization.encoding/Decoder): co.touchlab.kjwt.model.algorithm/SigningAlgorithm // co.touchlab.kjwt.serializers/SigningAlgorithmSerializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+    final fun serialize(kotlinx.serialization.encoding/Encoder, co.touchlab.kjwt.model.algorithm/SigningAlgorithm) // co.touchlab.kjwt.serializers/SigningAlgorithmSerializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;co.touchlab.kjwt.model.algorithm.SigningAlgorithm){}[0]
+}
+
+final object co.touchlab.kjwt/Jwt { // co.touchlab.kjwt/Jwt|null[0]
+    final var defaultJsonParser // co.touchlab.kjwt/Jwt.defaultJsonParser|{}defaultJsonParser[0]
+        final fun <get-defaultJsonParser>(): kotlinx.serialization.json/Json // co.touchlab.kjwt/Jwt.defaultJsonParser.<get-defaultJsonParser>|<get-defaultJsonParser>(){}[0]
+        final fun <set-defaultJsonParser>(kotlinx.serialization.json/Json) // co.touchlab.kjwt/Jwt.defaultJsonParser.<set-defaultJsonParser>|<set-defaultJsonParser>(kotlinx.serialization.json.Json){}[0]
+
+    final fun builder(kotlinx.serialization.json/Json = ...): co.touchlab.kjwt.builder/JwtBuilder // co.touchlab.kjwt/Jwt.builder|builder(kotlinx.serialization.json.Json){}[0]
+    final fun parser(kotlinx.serialization.json/Json = ...): co.touchlab.kjwt.parser/JwtParserBuilder // co.touchlab.kjwt/Jwt.parser|parser(kotlinx.serialization.json.Json){}[0]
+}
+
+final val co.touchlab.kjwt.ext/audience // co.touchlab.kjwt.ext/audience|@co.touchlab.kjwt.model.JwtPayload{}audience[0]
+    final fun (co.touchlab.kjwt.model/JwtPayload).<get-audience>(): kotlin.collections/Set<kotlin/String> // co.touchlab.kjwt.ext/audience.<get-audience>|<get-audience>@co.touchlab.kjwt.model.JwtPayload(){}[0]
+final val co.touchlab.kjwt.ext/audienceOrNull // co.touchlab.kjwt.ext/audienceOrNull|@co.touchlab.kjwt.model.JwtPayload{}audienceOrNull[0]
+    final fun (co.touchlab.kjwt.model/JwtPayload).<get-audienceOrNull>(): kotlin.collections/Set<kotlin/String>? // co.touchlab.kjwt.ext/audienceOrNull.<get-audienceOrNull>|<get-audienceOrNull>@co.touchlab.kjwt.model.JwtPayload(){}[0]
+final val co.touchlab.kjwt.ext/contentType // co.touchlab.kjwt.ext/contentType|@co.touchlab.kjwt.model.JwtHeader{}contentType[0]
+    final fun (co.touchlab.kjwt.model/JwtHeader).<get-contentType>(): kotlin/String // co.touchlab.kjwt.ext/contentType.<get-contentType>|<get-contentType>@co.touchlab.kjwt.model.JwtHeader(){}[0]
+final val co.touchlab.kjwt.ext/contentTypeOrNull // co.touchlab.kjwt.ext/contentTypeOrNull|@co.touchlab.kjwt.model.JwtHeader{}contentTypeOrNull[0]
+    final fun (co.touchlab.kjwt.model/JwtHeader).<get-contentTypeOrNull>(): kotlin/String? // co.touchlab.kjwt.ext/contentTypeOrNull.<get-contentTypeOrNull>|<get-contentTypeOrNull>@co.touchlab.kjwt.model.JwtHeader(){}[0]
+final val co.touchlab.kjwt.ext/encryption // co.touchlab.kjwt.ext/encryption|@co.touchlab.kjwt.model.JwtHeader{}encryption[0]
+    final fun (co.touchlab.kjwt.model/JwtHeader).<get-encryption>(): kotlin/String // co.touchlab.kjwt.ext/encryption.<get-encryption>|<get-encryption>@co.touchlab.kjwt.model.JwtHeader(){}[0]
+final val co.touchlab.kjwt.ext/encryptionOrNull // co.touchlab.kjwt.ext/encryptionOrNull|@co.touchlab.kjwt.model.JwtHeader{}encryptionOrNull[0]
+    final fun (co.touchlab.kjwt.model/JwtHeader).<get-encryptionOrNull>(): kotlin/String? // co.touchlab.kjwt.ext/encryptionOrNull.<get-encryptionOrNull>|<get-encryptionOrNull>@co.touchlab.kjwt.model.JwtHeader(){}[0]
+final val co.touchlab.kjwt.ext/expiration // co.touchlab.kjwt.ext/expiration|@co.touchlab.kjwt.model.JwtPayload{}expiration[0]
+    final fun (co.touchlab.kjwt.model/JwtPayload).<get-expiration>(): kotlin.time/Instant // co.touchlab.kjwt.ext/expiration.<get-expiration>|<get-expiration>@co.touchlab.kjwt.model.JwtPayload(){}[0]
+final val co.touchlab.kjwt.ext/expirationOrNull // co.touchlab.kjwt.ext/expirationOrNull|@co.touchlab.kjwt.model.JwtPayload{}expirationOrNull[0]
+    final fun (co.touchlab.kjwt.model/JwtPayload).<get-expirationOrNull>(): kotlin.time/Instant? // co.touchlab.kjwt.ext/expirationOrNull.<get-expirationOrNull>|<get-expirationOrNull>@co.touchlab.kjwt.model.JwtPayload(){}[0]
+final val co.touchlab.kjwt.ext/issuedAt // co.touchlab.kjwt.ext/issuedAt|@co.touchlab.kjwt.model.JwtPayload{}issuedAt[0]
+    final fun (co.touchlab.kjwt.model/JwtPayload).<get-issuedAt>(): kotlin.time/Instant // co.touchlab.kjwt.ext/issuedAt.<get-issuedAt>|<get-issuedAt>@co.touchlab.kjwt.model.JwtPayload(){}[0]
+final val co.touchlab.kjwt.ext/issuedAtOrNull // co.touchlab.kjwt.ext/issuedAtOrNull|@co.touchlab.kjwt.model.JwtPayload{}issuedAtOrNull[0]
+    final fun (co.touchlab.kjwt.model/JwtPayload).<get-issuedAtOrNull>(): kotlin.time/Instant? // co.touchlab.kjwt.ext/issuedAtOrNull.<get-issuedAtOrNull>|<get-issuedAtOrNull>@co.touchlab.kjwt.model.JwtPayload(){}[0]
+final val co.touchlab.kjwt.ext/issuer // co.touchlab.kjwt.ext/issuer|@co.touchlab.kjwt.model.JwtPayload{}issuer[0]
+    final fun (co.touchlab.kjwt.model/JwtPayload).<get-issuer>(): kotlin/String // co.touchlab.kjwt.ext/issuer.<get-issuer>|<get-issuer>@co.touchlab.kjwt.model.JwtPayload(){}[0]
+final val co.touchlab.kjwt.ext/issuerOrNull // co.touchlab.kjwt.ext/issuerOrNull|@co.touchlab.kjwt.model.JwtPayload{}issuerOrNull[0]
+    final fun (co.touchlab.kjwt.model/JwtPayload).<get-issuerOrNull>(): kotlin/String? // co.touchlab.kjwt.ext/issuerOrNull.<get-issuerOrNull>|<get-issuerOrNull>@co.touchlab.kjwt.model.JwtPayload(){}[0]
+final val co.touchlab.kjwt.ext/jwtId // co.touchlab.kjwt.ext/jwtId|@co.touchlab.kjwt.model.JwtPayload{}jwtId[0]
+    final fun (co.touchlab.kjwt.model/JwtPayload).<get-jwtId>(): kotlin/String // co.touchlab.kjwt.ext/jwtId.<get-jwtId>|<get-jwtId>@co.touchlab.kjwt.model.JwtPayload(){}[0]
+final val co.touchlab.kjwt.ext/jwtIdOrNull // co.touchlab.kjwt.ext/jwtIdOrNull|@co.touchlab.kjwt.model.JwtPayload{}jwtIdOrNull[0]
+    final fun (co.touchlab.kjwt.model/JwtPayload).<get-jwtIdOrNull>(): kotlin/String? // co.touchlab.kjwt.ext/jwtIdOrNull.<get-jwtIdOrNull>|<get-jwtIdOrNull>@co.touchlab.kjwt.model.JwtPayload(){}[0]
+final val co.touchlab.kjwt.ext/keyId // co.touchlab.kjwt.ext/keyId|@co.touchlab.kjwt.model.JwtHeader{}keyId[0]
+    final fun (co.touchlab.kjwt.model/JwtHeader).<get-keyId>(): kotlin/String // co.touchlab.kjwt.ext/keyId.<get-keyId>|<get-keyId>@co.touchlab.kjwt.model.JwtHeader(){}[0]
+final val co.touchlab.kjwt.ext/keyIdOrNull // co.touchlab.kjwt.ext/keyIdOrNull|@co.touchlab.kjwt.model.JwtHeader{}keyIdOrNull[0]
+    final fun (co.touchlab.kjwt.model/JwtHeader).<get-keyIdOrNull>(): kotlin/String? // co.touchlab.kjwt.ext/keyIdOrNull.<get-keyIdOrNull>|<get-keyIdOrNull>@co.touchlab.kjwt.model.JwtHeader(){}[0]
+final val co.touchlab.kjwt.ext/notBefore // co.touchlab.kjwt.ext/notBefore|@co.touchlab.kjwt.model.JwtPayload{}notBefore[0]
+    final fun (co.touchlab.kjwt.model/JwtPayload).<get-notBefore>(): kotlin.time/Instant // co.touchlab.kjwt.ext/notBefore.<get-notBefore>|<get-notBefore>@co.touchlab.kjwt.model.JwtPayload(){}[0]
+final val co.touchlab.kjwt.ext/notBeforeOrNull // co.touchlab.kjwt.ext/notBeforeOrNull|@co.touchlab.kjwt.model.JwtPayload{}notBeforeOrNull[0]
+    final fun (co.touchlab.kjwt.model/JwtPayload).<get-notBeforeOrNull>(): kotlin.time/Instant? // co.touchlab.kjwt.ext/notBeforeOrNull.<get-notBeforeOrNull>|<get-notBeforeOrNull>@co.touchlab.kjwt.model.JwtPayload(){}[0]
+final val co.touchlab.kjwt.ext/subject // co.touchlab.kjwt.ext/subject|@co.touchlab.kjwt.model.JwtPayload{}subject[0]
+    final fun (co.touchlab.kjwt.model/JwtPayload).<get-subject>(): kotlin/String // co.touchlab.kjwt.ext/subject.<get-subject>|<get-subject>@co.touchlab.kjwt.model.JwtPayload(){}[0]
+final val co.touchlab.kjwt.ext/subjectOrNull // co.touchlab.kjwt.ext/subjectOrNull|@co.touchlab.kjwt.model.JwtPayload{}subjectOrNull[0]
+    final fun (co.touchlab.kjwt.model/JwtPayload).<get-subjectOrNull>(): kotlin/String? // co.touchlab.kjwt.ext/subjectOrNull.<get-subjectOrNull>|<get-subjectOrNull>@co.touchlab.kjwt.model.JwtPayload(){}[0]
+final val co.touchlab.kjwt.ext/type // co.touchlab.kjwt.ext/type|@co.touchlab.kjwt.model.JwtHeader{}type[0]
+    final fun (co.touchlab.kjwt.model/JwtHeader).<get-type>(): kotlin/String // co.touchlab.kjwt.ext/type.<get-type>|<get-type>@co.touchlab.kjwt.model.JwtHeader(){}[0]
+final val co.touchlab.kjwt.ext/typeOrNull // co.touchlab.kjwt.ext/typeOrNull|@co.touchlab.kjwt.model.JwtHeader{}typeOrNull[0]
+    final fun (co.touchlab.kjwt.model/JwtHeader).<get-typeOrNull>(): kotlin/String? // co.touchlab.kjwt.ext/typeOrNull.<get-typeOrNull>|<get-typeOrNull>@co.touchlab.kjwt.model.JwtHeader(){}[0]
+
+final fun (co.touchlab.kjwt.processor/BaseJweProcessor).co.touchlab.kjwt.ext/mergeWith(co.touchlab.kjwt.processor/BaseJweProcessor?): co.touchlab.kjwt.processor/BaseJweProcessor // co.touchlab.kjwt.ext/mergeWith|mergeWith@co.touchlab.kjwt.processor.BaseJweProcessor(co.touchlab.kjwt.processor.BaseJweProcessor?){}[0]
+final fun (co.touchlab.kjwt.processor/BaseJwsProcessor).co.touchlab.kjwt.ext/mergeWith(co.touchlab.kjwt.processor/BaseJwsProcessor?): co.touchlab.kjwt.processor/BaseJwsProcessor // co.touchlab.kjwt.ext/mergeWith|mergeWith@co.touchlab.kjwt.processor.BaseJwsProcessor(co.touchlab.kjwt.processor.BaseJwsProcessor?){}[0]
+final inline fun <#A: reified kotlin/Any?> (co.touchlab.kjwt.model/JwtHeader).co.touchlab.kjwt.ext/getHeader(kotlin/String, kotlinx.serialization.json/Json = ...): #A // co.touchlab.kjwt.ext/getHeader|getHeader@co.touchlab.kjwt.model.JwtHeader(kotlin.String;kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+final inline fun <#A: reified kotlin/Any?> (co.touchlab.kjwt.model/JwtHeader).co.touchlab.kjwt.ext/getHeaderOrNull(kotlin/String, kotlinx.serialization.json/Json = ...): #A? // co.touchlab.kjwt.ext/getHeaderOrNull|getHeaderOrNull@co.touchlab.kjwt.model.JwtHeader(kotlin.String;kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+final inline fun <#A: reified kotlin/Any?> (co.touchlab.kjwt.model/JwtPayload).co.touchlab.kjwt.ext/getClaim(kotlin/String, kotlinx.serialization.json/Json = ...): #A // co.touchlab.kjwt.ext/getClaim|getClaim@co.touchlab.kjwt.model.JwtPayload(kotlin.String;kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]
+final inline fun <#A: reified kotlin/Any?> (co.touchlab.kjwt.model/JwtPayload).co.touchlab.kjwt.ext/getClaimOrNull(kotlin/String, kotlinx.serialization.json/Json = ...): #A? // co.touchlab.kjwt.ext/getClaimOrNull|getClaimOrNull@co.touchlab.kjwt.model.JwtPayload(kotlin.String;kotlinx.serialization.json.Json){0§<kotlin.Any?>}[0]

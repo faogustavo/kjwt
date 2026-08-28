@@ -1,0 +1,49 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, iosX64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <co.touchlab:kjwt-hardware-backed-processor>
+final enum class co.touchlab.kjwt.hardware.model/SecureHardwarePreference : kotlin/Enum<co.touchlab.kjwt.hardware.model/SecureHardwarePreference> { // co.touchlab.kjwt.hardware.model/SecureHardwarePreference|null[0]
+    enum entry None // co.touchlab.kjwt.hardware.model/SecureHardwarePreference.None|null[0]
+    enum entry Preferred // co.touchlab.kjwt.hardware.model/SecureHardwarePreference.Preferred|null[0]
+    enum entry Required // co.touchlab.kjwt.hardware.model/SecureHardwarePreference.Required|null[0]
+
+    final val entries // co.touchlab.kjwt.hardware.model/SecureHardwarePreference.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<co.touchlab.kjwt.hardware.model/SecureHardwarePreference> // co.touchlab.kjwt.hardware.model/SecureHardwarePreference.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): co.touchlab.kjwt.hardware.model/SecureHardwarePreference // co.touchlab.kjwt.hardware.model/SecureHardwarePreference.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<co.touchlab.kjwt.hardware.model/SecureHardwarePreference> // co.touchlab.kjwt.hardware.model/SecureHardwarePreference.values|values#static(){}[0]
+}
+
+final class co.touchlab.kjwt.hardware/AppleKeychainSigningKey : co.touchlab.kjwt.processor/JwsProcessor { // co.touchlab.kjwt.hardware/AppleKeychainSigningKey|null[0]
+    final val algorithm // co.touchlab.kjwt.hardware/AppleKeychainSigningKey.algorithm|{}algorithm[0]
+        final fun <get-algorithm>(): co.touchlab.kjwt.model.algorithm/SigningAlgorithm // co.touchlab.kjwt.hardware/AppleKeychainSigningKey.algorithm.<get-algorithm>|<get-algorithm>(){}[0]
+    final val keyId // co.touchlab.kjwt.hardware/AppleKeychainSigningKey.keyId|{}keyId[0]
+        final fun <get-keyId>(): kotlin/String // co.touchlab.kjwt.hardware/AppleKeychainSigningKey.keyId.<get-keyId>|<get-keyId>(){}[0]
+
+    final suspend fun sign(kotlin/ByteArray): kotlin/ByteArray // co.touchlab.kjwt.hardware/AppleKeychainSigningKey.sign|sign(kotlin.ByteArray){}[0]
+    final suspend fun verify(kotlin/ByteArray, kotlin/ByteArray): kotlin/Boolean // co.touchlab.kjwt.hardware/AppleKeychainSigningKey.verify|verify(kotlin.ByteArray;kotlin.ByteArray){}[0]
+
+    final object Companion { // co.touchlab.kjwt.hardware/AppleKeychainSigningKey.Companion|null[0]
+        final fun getInstance(co.touchlab.kjwt.model.algorithm/SigningAlgorithm, kotlin/String?): co.touchlab.kjwt.hardware/AppleKeychainSigningKey? // co.touchlab.kjwt.hardware/AppleKeychainSigningKey.Companion.getInstance|getInstance(co.touchlab.kjwt.model.algorithm.SigningAlgorithm;kotlin.String?){}[0]
+        final fun getOrCreateInstance(co.touchlab.kjwt.model.algorithm/SigningAlgorithm, kotlin/String?, kotlin/Int = ..., co.touchlab.kjwt.hardware.model/SecureHardwarePreference = ...): co.touchlab.kjwt.hardware/AppleKeychainSigningKey // co.touchlab.kjwt.hardware/AppleKeychainSigningKey.Companion.getOrCreateInstance|getOrCreateInstance(co.touchlab.kjwt.model.algorithm.SigningAlgorithm;kotlin.String?;kotlin.Int;co.touchlab.kjwt.hardware.model.SecureHardwarePreference){}[0]
+    }
+}
+
+final object co.touchlab.kjwt.hardware/AppleKeychainSigningKeyFactory { // co.touchlab.kjwt.hardware/AppleKeychainSigningKeyFactory|null[0]
+    final fun create(co.touchlab.kjwt.model.algorithm/SigningAlgorithm, kotlin/String, kotlin/Int = ..., kotlin/Boolean = ...) // co.touchlab.kjwt.hardware/AppleKeychainSigningKeyFactory.create|create(co.touchlab.kjwt.model.algorithm.SigningAlgorithm;kotlin.String;kotlin.Int;kotlin.Boolean){}[0]
+}
+
+final object co.touchlab.kjwt.hardware/SecureKeyFactory { // co.touchlab.kjwt.hardware/SecureKeyFactory|null[0]
+    final fun getOrCreateSecureSigningKey(kotlin/String? = ..., co.touchlab.kjwt.model.algorithm/SigningAlgorithm = ..., kotlin/Int = ..., co.touchlab.kjwt.hardware.model/SecureHardwarePreference = ...): co.touchlab.kjwt.processor/JwsProcessor // co.touchlab.kjwt.hardware/SecureKeyFactory.getOrCreateSecureSigningKey|getOrCreateSecureSigningKey(kotlin.String?;co.touchlab.kjwt.model.algorithm.SigningAlgorithm;kotlin.Int;co.touchlab.kjwt.hardware.model.SecureHardwarePreference){}[0]
+}
+
+final val co.touchlab.kjwt.hardware.ext/coordLen // co.touchlab.kjwt.hardware.ext/coordLen|@co.touchlab.kjwt.model.algorithm.SigningAlgorithm.ECDSABased{}coordLen[0]
+    final fun (co.touchlab.kjwt.model.algorithm/SigningAlgorithm.ECDSABased).<get-coordLen>(): kotlin/Int // co.touchlab.kjwt.hardware.ext/coordLen.<get-coordLen>|<get-coordLen>@co.touchlab.kjwt.model.algorithm.SigningAlgorithm.ECDSABased(){}[0]
+final val co.touchlab.kjwt.hardware.ext/secKeyAlgorithm // co.touchlab.kjwt.hardware.ext/secKeyAlgorithm|@co.touchlab.kjwt.model.algorithm.SigningAlgorithm{}secKeyAlgorithm[0]
+    final fun (co.touchlab.kjwt.model.algorithm/SigningAlgorithm).<get-secKeyAlgorithm>(): kotlinx.cinterop/CPointer<cnames.structs/__CFString>? // co.touchlab.kjwt.hardware.ext/secKeyAlgorithm.<get-secKeyAlgorithm>|<get-secKeyAlgorithm>@co.touchlab.kjwt.model.algorithm.SigningAlgorithm(){}[0]
+
+final fun (co.touchlab.kjwt.model.algorithm/EncryptionContentAlgorithm).co.touchlab.kjwt.hardware.ext/generateCek(kotlin/Function1<kotlin/Int, kotlin/ByteArray>): kotlin/ByteArray // co.touchlab.kjwt.hardware.ext/generateCek|generateCek@co.touchlab.kjwt.model.algorithm.EncryptionContentAlgorithm(kotlin.Function1<kotlin.Int,kotlin.ByteArray>){}[0]

@@ -1,0 +1,1099 @@
+public final class co/touchlab/kjwt/Jwt {
+	public static final field INSTANCE Lco/touchlab/kjwt/Jwt;
+	public final fun builder (Lkotlinx/serialization/json/Json;)Lco/touchlab/kjwt/builder/JwtBuilder;
+	public static synthetic fun builder$default (Lco/touchlab/kjwt/Jwt;Lkotlinx/serialization/json/Json;ILjava/lang/Object;)Lco/touchlab/kjwt/builder/JwtBuilder;
+	public final fun getDefaultJsonParser ()Lkotlinx/serialization/json/Json;
+	public final fun parser (Lkotlinx/serialization/json/Json;)Lco/touchlab/kjwt/parser/JwtParserBuilder;
+	public static synthetic fun parser$default (Lco/touchlab/kjwt/Jwt;Lkotlinx/serialization/json/Json;ILjava/lang/Object;)Lco/touchlab/kjwt/parser/JwtParserBuilder;
+	public final fun setDefaultJsonParser (Lkotlinx/serialization/json/Json;)V
+}
+
+public abstract interface annotation class co/touchlab/kjwt/annotations/DelicateKJWTApi : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class co/touchlab/kjwt/annotations/ExperimentalKJWTApi : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class co/touchlab/kjwt/annotations/InternalKJWTApi : java/lang/annotation/Annotation {
+}
+
+public final class co/touchlab/kjwt/builder/JwtBuilder {
+	public fun <init> (Lkotlinx/serialization/json/Json;)V
+	public final fun audience ([Ljava/lang/String;)Lco/touchlab/kjwt/builder/JwtBuilder;
+	public final fun build ()Lco/touchlab/kjwt/model/JwtInstance$Jws;
+	public final fun claim (Ljava/lang/String;Lkotlinx/serialization/SerializationStrategy;Ljava/lang/Object;)Lco/touchlab/kjwt/builder/JwtBuilder;
+	public final fun claim (Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;)Lco/touchlab/kjwt/builder/JwtBuilder;
+	public final fun claims (Lkotlin/jvm/functions/Function1;)Lco/touchlab/kjwt/builder/JwtBuilder;
+	public final fun contentType (Ljava/lang/String;)Lco/touchlab/kjwt/builder/JwtBuilder;
+	public final fun encryptWith (Lco/touchlab/kjwt/model/registry/JwtProcessorRegistry;Lco/touchlab/kjwt/model/algorithm/EncryptionAlgorithm;Lco/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun encryptWith$default (Lco/touchlab/kjwt/builder/JwtBuilder;Lco/touchlab/kjwt/model/registry/JwtProcessorRegistry;Lco/touchlab/kjwt/model/algorithm/EncryptionAlgorithm;Lco/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun encryptWithJweProcessor (Lco/touchlab/kjwt/processor/JweEncryptor;Lco/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun encryptWithJweProcessor$default (Lco/touchlab/kjwt/builder/JwtBuilder;Lco/touchlab/kjwt/processor/JweEncryptor;Lco/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun expiration (Lkotlin/time/Instant;)Lco/touchlab/kjwt/builder/JwtBuilder;
+	public final fun expiresIn-LRDsOJo (J)Lco/touchlab/kjwt/builder/JwtBuilder;
+	public final fun getHeaderBuilder ()Lco/touchlab/kjwt/model/JwtHeader$Builder;
+	public final fun getPayloadBuilder ()Lco/touchlab/kjwt/model/JwtPayload$Builder;
+	public final fun header (Ljava/lang/String;Lkotlinx/serialization/SerializationStrategy;Ljava/lang/Object;)Lco/touchlab/kjwt/builder/JwtBuilder;
+	public final fun header (Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;)Lco/touchlab/kjwt/builder/JwtBuilder;
+	public final fun header (Lkotlin/jvm/functions/Function1;)Lco/touchlab/kjwt/builder/JwtBuilder;
+	public final fun header (Lkotlinx/serialization/SerializationStrategy;Ljava/lang/Object;)Lco/touchlab/kjwt/builder/JwtBuilder;
+	public final fun id (Ljava/lang/String;)Lco/touchlab/kjwt/builder/JwtBuilder;
+	public final fun issuedAt (Lkotlin/time/Instant;)Lco/touchlab/kjwt/builder/JwtBuilder;
+	public final fun issuedNow ()Lco/touchlab/kjwt/builder/JwtBuilder;
+	public final fun issuer (Ljava/lang/String;)Lco/touchlab/kjwt/builder/JwtBuilder;
+	public final fun notBefore (Lkotlin/time/Instant;)Lco/touchlab/kjwt/builder/JwtBuilder;
+	public final fun notBeforeNow ()Lco/touchlab/kjwt/builder/JwtBuilder;
+	public final fun payload (Lkotlinx/serialization/SerializationStrategy;Ljava/lang/Object;)Lco/touchlab/kjwt/builder/JwtBuilder;
+	public final fun randomId ()Lco/touchlab/kjwt/builder/JwtBuilder;
+	public final fun signWith (Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm;Lco/touchlab/kjwt/model/registry/JwtProcessorRegistry;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun signWith (Lco/touchlab/kjwt/processor/JwsSigner;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun signWith$default (Lco/touchlab/kjwt/builder/JwtBuilder;Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm;Lco/touchlab/kjwt/model/registry/JwtProcessorRegistry;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static synthetic fun signWith$default (Lco/touchlab/kjwt/builder/JwtBuilder;Lco/touchlab/kjwt/processor/JwsSigner;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun subject (Ljava/lang/String;)Lco/touchlab/kjwt/builder/JwtBuilder;
+	public final fun type (Ljava/lang/String;)Lco/touchlab/kjwt/builder/JwtBuilder;
+}
+
+public final class co/touchlab/kjwt/exception/ExpiredJwtException : co/touchlab/kjwt/exception/JwtException {
+	public fun <init> (Lco/touchlab/kjwt/model/JwtHeader;Lco/touchlab/kjwt/model/JwtPayload;Ljava/lang/String;)V
+	public final fun getClaims ()Lco/touchlab/kjwt/model/JwtPayload;
+	public final fun getHeader ()Lco/touchlab/kjwt/model/JwtHeader;
+}
+
+public final class co/touchlab/kjwt/exception/IncorrectClaimException : co/touchlab/kjwt/exception/JwtException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V
+	public final fun getActual ()Ljava/lang/Object;
+	public final fun getClaimName ()Ljava/lang/String;
+	public final fun getExpected ()Ljava/lang/Object;
+}
+
+public class co/touchlab/kjwt/exception/JwtException : java/lang/Exception {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class co/touchlab/kjwt/exception/MalformedJwkException : co/touchlab/kjwt/exception/JwtException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class co/touchlab/kjwt/exception/MalformedJwtException : co/touchlab/kjwt/exception/JwtException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class co/touchlab/kjwt/exception/MissingClaimException : co/touchlab/kjwt/exception/JwtException {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun getClaimName ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/exception/MissingHeaderException : co/touchlab/kjwt/exception/JwtException {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun getHeaderName ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/exception/PrematureJwtException : co/touchlab/kjwt/exception/JwtException {
+	public fun <init> (Lco/touchlab/kjwt/model/JwtHeader;Lco/touchlab/kjwt/model/JwtPayload;Ljava/lang/String;)V
+	public final fun getClaims ()Lco/touchlab/kjwt/model/JwtPayload;
+	public final fun getHeader ()Lco/touchlab/kjwt/model/JwtHeader;
+}
+
+public final class co/touchlab/kjwt/exception/SignatureException : co/touchlab/kjwt/exception/JwtException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class co/touchlab/kjwt/exception/UnsupportedJwtException : co/touchlab/kjwt/exception/JwtException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class co/touchlab/kjwt/ext/JwtHeaderExtKt {
+	public static final fun getContentType (Lco/touchlab/kjwt/model/JwtHeader;)Ljava/lang/String;
+	public static final fun getContentTypeOrNull (Lco/touchlab/kjwt/model/JwtHeader;)Ljava/lang/String;
+	public static final fun getEncryption (Lco/touchlab/kjwt/model/JwtHeader;)Ljava/lang/String;
+	public static final fun getEncryptionOrNull (Lco/touchlab/kjwt/model/JwtHeader;)Ljava/lang/String;
+	public static final fun getKeyId (Lco/touchlab/kjwt/model/JwtHeader;)Ljava/lang/String;
+	public static final fun getKeyIdOrNull (Lco/touchlab/kjwt/model/JwtHeader;)Ljava/lang/String;
+	public static final fun getType (Lco/touchlab/kjwt/model/JwtHeader;)Ljava/lang/String;
+	public static final fun getTypeOrNull (Lco/touchlab/kjwt/model/JwtHeader;)Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/ext/JwtPayloadExtKt {
+	public static final fun getAudience (Lco/touchlab/kjwt/model/JwtPayload;)Ljava/util/Set;
+	public static final fun getAudienceOrNull (Lco/touchlab/kjwt/model/JwtPayload;)Ljava/util/Set;
+	public static final fun getExpiration (Lco/touchlab/kjwt/model/JwtPayload;)Lkotlin/time/Instant;
+	public static final fun getExpirationOrNull (Lco/touchlab/kjwt/model/JwtPayload;)Lkotlin/time/Instant;
+	public static final fun getIssuedAt (Lco/touchlab/kjwt/model/JwtPayload;)Lkotlin/time/Instant;
+	public static final fun getIssuedAtOrNull (Lco/touchlab/kjwt/model/JwtPayload;)Lkotlin/time/Instant;
+	public static final fun getIssuer (Lco/touchlab/kjwt/model/JwtPayload;)Ljava/lang/String;
+	public static final fun getIssuerOrNull (Lco/touchlab/kjwt/model/JwtPayload;)Ljava/lang/String;
+	public static final fun getJwtId (Lco/touchlab/kjwt/model/JwtPayload;)Ljava/lang/String;
+	public static final fun getJwtIdOrNull (Lco/touchlab/kjwt/model/JwtPayload;)Ljava/lang/String;
+	public static final fun getNotBefore (Lco/touchlab/kjwt/model/JwtPayload;)Lkotlin/time/Instant;
+	public static final fun getNotBeforeOrNull (Lco/touchlab/kjwt/model/JwtPayload;)Lkotlin/time/Instant;
+	public static final fun getSubject (Lco/touchlab/kjwt/model/JwtPayload;)Ljava/lang/String;
+	public static final fun getSubjectOrNull (Lco/touchlab/kjwt/model/JwtPayload;)Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/ext/JwtProcessorKt {
+	public static final fun mergeWith (Lco/touchlab/kjwt/processor/BaseJweProcessor;Lco/touchlab/kjwt/processor/BaseJweProcessor;)Lco/touchlab/kjwt/processor/BaseJweProcessor;
+	public static final fun mergeWith (Lco/touchlab/kjwt/processor/BaseJwsProcessor;Lco/touchlab/kjwt/processor/BaseJwsProcessor;)Lco/touchlab/kjwt/processor/BaseJwsProcessor;
+}
+
+public final class co/touchlab/kjwt/model/JwtHeader {
+	public static final field ALG Ljava/lang/String;
+	public static final field CTY Ljava/lang/String;
+	public static final field Companion Lco/touchlab/kjwt/model/JwtHeader$Companion;
+	public static final field ENC Ljava/lang/String;
+	public static final field KID Ljava/lang/String;
+	public static final field TYP Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAlgorithm ()Ljava/lang/String;
+	public final fun getHeader (Lkotlinx/serialization/DeserializationStrategy;Ljava/lang/String;Lkotlinx/serialization/json/Json;)Ljava/lang/Object;
+	public static synthetic fun getHeader$default (Lco/touchlab/kjwt/model/JwtHeader;Lkotlinx/serialization/DeserializationStrategy;Ljava/lang/String;Lkotlinx/serialization/json/Json;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun getHeaderOrNull (Lkotlinx/serialization/DeserializationStrategy;Ljava/lang/String;Lkotlinx/serialization/json/Json;)Ljava/lang/Object;
+	public static synthetic fun getHeaderOrNull$default (Lco/touchlab/kjwt/model/JwtHeader;Lkotlinx/serialization/DeserializationStrategy;Ljava/lang/String;Lkotlinx/serialization/json/Json;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun getJsonData ()Lkotlinx/serialization/json/JsonObject;
+	public final fun hasHeader (Ljava/lang/String;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/JwtHeader$Builder {
+	public fun <init> ()V
+	public final fun extra (Ljava/lang/String;Lkotlinx/serialization/SerializationStrategy;Ljava/lang/Object;Lkotlinx/serialization/json/Json;)V
+	public final fun extra (Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;)V
+	public static synthetic fun extra$default (Lco/touchlab/kjwt/model/JwtHeader$Builder;Ljava/lang/String;Lkotlinx/serialization/SerializationStrategy;Ljava/lang/Object;Lkotlinx/serialization/json/Json;ILjava/lang/Object;)V
+	public final fun getContentType ()Ljava/lang/String;
+	public final fun getType ()Ljava/lang/String;
+	public final fun setContentType (Ljava/lang/String;)V
+	public final fun setType (Ljava/lang/String;)V
+	public final fun takeFrom (Lkotlinx/serialization/SerializationStrategy;Ljava/lang/Object;Lkotlinx/serialization/json/Json;)V
+	public static synthetic fun takeFrom$default (Lco/touchlab/kjwt/model/JwtHeader$Builder;Lkotlinx/serialization/SerializationStrategy;Ljava/lang/Object;Lkotlinx/serialization/json/Json;ILjava/lang/Object;)V
+}
+
+public final class co/touchlab/kjwt/model/JwtHeader$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract class co/touchlab/kjwt/model/JwtInstance {
+	public abstract fun compact ()Ljava/lang/String;
+	public abstract fun getHeader ()Lco/touchlab/kjwt/model/JwtHeader;
+	public final fun getHeader (Lkotlinx/serialization/KSerializer;Lkotlinx/serialization/json/Json;)Ljava/lang/Object;
+	public static synthetic fun getHeader$default (Lco/touchlab/kjwt/model/JwtInstance;Lkotlinx/serialization/KSerializer;Lkotlinx/serialization/json/Json;ILjava/lang/Object;)Ljava/lang/Object;
+	public abstract fun getPayload ()Lco/touchlab/kjwt/model/JwtPayload;
+	public final fun getPayload (Lkotlinx/serialization/KSerializer;Lkotlinx/serialization/json/Json;)Ljava/lang/Object;
+	public static synthetic fun getPayload$default (Lco/touchlab/kjwt/model/JwtInstance;Lkotlinx/serialization/KSerializer;Lkotlinx/serialization/json/Json;ILjava/lang/Object;)Ljava/lang/Object;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/JwtInstance$Jwe : co/touchlab/kjwt/model/JwtInstance {
+	public fun compact ()Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAad ()Ljava/lang/String;
+	public final fun getCipherText ()Ljava/lang/String;
+	public final fun getEncryptedKey ()Ljava/lang/String;
+	public fun getHeader ()Lco/touchlab/kjwt/model/JwtHeader;
+	public final fun getIv ()Ljava/lang/String;
+	public fun getPayload ()Lco/touchlab/kjwt/model/JwtPayload;
+	public final fun getTag ()Ljava/lang/String;
+	public fun hashCode ()I
+}
+
+public final class co/touchlab/kjwt/model/JwtInstance$Jws : co/touchlab/kjwt/model/JwtInstance {
+	public fun compact ()Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getHeader ()Lco/touchlab/kjwt/model/JwtHeader;
+	public fun getPayload ()Lco/touchlab/kjwt/model/JwtPayload;
+	public final fun getSignature ()Ljava/lang/String;
+	public final fun getSignatures ()Ljava/util/List;
+	public fun hashCode ()I
+}
+
+public final class co/touchlab/kjwt/model/JwtInstance$Jws$Signature {
+	public fun <init> (Lco/touchlab/kjwt/model/JwtHeader;Ljava/lang/String;)V
+	public final fun getHeader ()Lco/touchlab/kjwt/model/JwtHeader;
+	public final fun getSignature ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/JwtPayload {
+	public static final field AUD Ljava/lang/String;
+	public static final field Companion Lco/touchlab/kjwt/model/JwtPayload$Companion;
+	public static final field EXP Ljava/lang/String;
+	public static final field IAT Ljava/lang/String;
+	public static final field ISS Ljava/lang/String;
+	public static final field JTI Ljava/lang/String;
+	public static final field NBF Ljava/lang/String;
+	public static final field SUB Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getClaim (Lkotlinx/serialization/DeserializationStrategy;Ljava/lang/String;Lkotlinx/serialization/json/Json;)Ljava/lang/Object;
+	public static synthetic fun getClaim$default (Lco/touchlab/kjwt/model/JwtPayload;Lkotlinx/serialization/DeserializationStrategy;Ljava/lang/String;Lkotlinx/serialization/json/Json;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun getClaimOrNull (Lkotlinx/serialization/DeserializationStrategy;Ljava/lang/String;Lkotlinx/serialization/json/Json;)Ljava/lang/Object;
+	public static synthetic fun getClaimOrNull$default (Lco/touchlab/kjwt/model/JwtPayload;Lkotlinx/serialization/DeserializationStrategy;Ljava/lang/String;Lkotlinx/serialization/json/Json;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun getJsonData ()Lkotlinx/serialization/json/JsonObject;
+	public final fun hasClaim (Ljava/lang/String;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/JwtPayload$Builder {
+	public fun <init> ()V
+	public final fun claim (Ljava/lang/String;Lkotlinx/serialization/SerializationStrategy;Ljava/lang/Object;Lkotlinx/serialization/json/Json;)V
+	public final fun claim (Ljava/lang/String;Lkotlinx/serialization/json/JsonElement;)V
+	public static synthetic fun claim$default (Lco/touchlab/kjwt/model/JwtPayload$Builder;Ljava/lang/String;Lkotlinx/serialization/SerializationStrategy;Ljava/lang/Object;Lkotlinx/serialization/json/Json;ILjava/lang/Object;)V
+	public final fun expiresIn-LRDsOJo (J)V
+	public final fun getAudience ()Ljava/util/Set;
+	public final fun getContent ()Ljava/util/Map;
+	public final fun getExpiration ()Lkotlin/time/Instant;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getIssuedAt ()Lkotlin/time/Instant;
+	public final fun getIssuer ()Ljava/lang/String;
+	public final fun getNotBefore ()Lkotlin/time/Instant;
+	public final fun getSubject ()Ljava/lang/String;
+	public final fun issuedNow ()V
+	public final fun notBeforeNow ()V
+	public final fun randomId ()V
+	public final fun setAudience (Ljava/util/Set;)V
+	public final fun setExpiration (Lkotlin/time/Instant;)V
+	public final fun setId (Ljava/lang/String;)V
+	public final fun setIssuedAt (Lkotlin/time/Instant;)V
+	public final fun setIssuer (Ljava/lang/String;)V
+	public final fun setNotBefore (Lkotlin/time/Instant;)V
+	public final fun setSubject (Ljava/lang/String;)V
+	public final fun takeFrom (Lkotlinx/serialization/SerializationStrategy;Ljava/lang/Object;Lkotlinx/serialization/json/Json;)V
+	public static synthetic fun takeFrom$default (Lco/touchlab/kjwt/model/JwtPayload$Builder;Lkotlinx/serialization/SerializationStrategy;Ljava/lang/Object;Lkotlinx/serialization/json/Json;ILjava/lang/Object;)V
+}
+
+public final class co/touchlab/kjwt/model/JwtPayload$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract class co/touchlab/kjwt/model/algorithm/EncryptionAlgorithm : co/touchlab/kjwt/model/algorithm/Jwa {
+	public static final field Companion Lco/touchlab/kjwt/model/algorithm/EncryptionAlgorithm$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getId ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/EncryptionAlgorithm$Companion {
+	public final fun fromId (Ljava/lang/String;)Lco/touchlab/kjwt/model/algorithm/EncryptionAlgorithm;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/EncryptionAlgorithm$Dir : co/touchlab/kjwt/model/algorithm/EncryptionAlgorithm {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/EncryptionAlgorithm$Dir;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class co/touchlab/kjwt/model/algorithm/EncryptionAlgorithm$OAEPBased : co/touchlab/kjwt/model/algorithm/EncryptionAlgorithm, co/touchlab/kjwt/model/algorithm/Jwa$UsesHashingAlgorithm {
+	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getDigest ()Lco/touchlab/kjwt/model/algorithm/JwtDigest;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/EncryptionAlgorithm$RsaOaep : co/touchlab/kjwt/model/algorithm/EncryptionAlgorithm$OAEPBased {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/EncryptionAlgorithm$RsaOaep;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/EncryptionAlgorithm$RsaOaep256 : co/touchlab/kjwt/model/algorithm/EncryptionAlgorithm$OAEPBased {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/EncryptionAlgorithm$RsaOaep256;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class co/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm {
+	public static final field Companion Lco/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getId ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm$A128CbcHs256 : co/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm$AesCBCBased {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm$A128CbcHs256;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm$A128GCM : co/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm$AesGCMBased {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm$A128GCM;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm$A192CbcHs384 : co/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm$AesCBCBased {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm$A192CbcHs384;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm$A192GCM : co/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm$AesGCMBased {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm$A192GCM;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm$A256CbcHs512 : co/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm$AesCBCBased {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm$A256CbcHs512;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm$A256GCM : co/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm$AesGCMBased {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm$A256GCM;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class co/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm$AesCBCBased : co/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm {
+	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public abstract class co/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm$AesGCMBased : co/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm {
+	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class co/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm$Companion {
+	public final fun fromId (Ljava/lang/String;)Lco/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm;
+}
+
+public abstract interface class co/touchlab/kjwt/model/algorithm/Jwa {
+	public static final field Companion Lco/touchlab/kjwt/model/algorithm/Jwa$Companion;
+	public abstract fun getId ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/Jwa$Companion {
+	public final fun fromId (Ljava/lang/String;)Lco/touchlab/kjwt/model/algorithm/Jwa;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class co/touchlab/kjwt/model/algorithm/Jwa$UsesHashingAlgorithm {
+	public abstract fun getDigest ()Lco/touchlab/kjwt/model/algorithm/JwtDigest;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/JweEncryptResult {
+	public fun <init> ([B[B[B[B)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCiphertext ()[B
+	public final fun getEncryptedKey ()[B
+	public final fun getIv ()[B
+	public final fun getTag ()[B
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/JwtCurve : java/lang/Enum {
+	public static final field P256 Lco/touchlab/kjwt/model/algorithm/JwtCurve;
+	public static final field P384 Lco/touchlab/kjwt/model/algorithm/JwtCurve;
+	public static final field P521 Lco/touchlab/kjwt/model/algorithm/JwtCurve;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lco/touchlab/kjwt/model/algorithm/JwtCurve;
+	public static fun values ()[Lco/touchlab/kjwt/model/algorithm/JwtCurve;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/JwtDigest : java/lang/Enum {
+	public static final field SHA1 Lco/touchlab/kjwt/model/algorithm/JwtDigest;
+	public static final field SHA256 Lco/touchlab/kjwt/model/algorithm/JwtDigest;
+	public static final field SHA384 Lco/touchlab/kjwt/model/algorithm/JwtDigest;
+	public static final field SHA512 Lco/touchlab/kjwt/model/algorithm/JwtDigest;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lco/touchlab/kjwt/model/algorithm/JwtDigest;
+	public static fun values ()[Lco/touchlab/kjwt/model/algorithm/JwtDigest;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/JwtEdCurve : java/lang/Enum {
+	public static final field Ed25519 Lco/touchlab/kjwt/model/algorithm/JwtEdCurve;
+	public static final field Ed448 Lco/touchlab/kjwt/model/algorithm/JwtEdCurve;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lco/touchlab/kjwt/model/algorithm/JwtEdCurve;
+	public static fun values ()[Lco/touchlab/kjwt/model/algorithm/JwtEdCurve;
+}
+
+public abstract class co/touchlab/kjwt/model/algorithm/SigningAlgorithm : co/touchlab/kjwt/model/algorithm/Jwa {
+	public static final field Companion Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getId ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/SigningAlgorithm$Companion {
+	public final fun fromId (Ljava/lang/String;)Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract class co/touchlab/kjwt/model/algorithm/SigningAlgorithm$ECDSABased : co/touchlab/kjwt/model/algorithm/SigningAlgorithm, co/touchlab/kjwt/model/algorithm/Jwa$UsesHashingAlgorithm {
+	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getCurve ()Lco/touchlab/kjwt/model/algorithm/JwtCurve;
+	public fun getDigest ()Lco/touchlab/kjwt/model/algorithm/JwtDigest;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/SigningAlgorithm$ES256 : co/touchlab/kjwt/model/algorithm/SigningAlgorithm$ECDSABased {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm$ES256;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/SigningAlgorithm$ES384 : co/touchlab/kjwt/model/algorithm/SigningAlgorithm$ECDSABased {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm$ES384;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/SigningAlgorithm$ES512 : co/touchlab/kjwt/model/algorithm/SigningAlgorithm$ECDSABased {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm$ES512;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/SigningAlgorithm$Ed25519 : co/touchlab/kjwt/model/algorithm/SigningAlgorithm$EdDSABased {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm$Ed25519;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/SigningAlgorithm$Ed448 : co/touchlab/kjwt/model/algorithm/SigningAlgorithm$EdDSABased {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm$Ed448;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class co/touchlab/kjwt/model/algorithm/SigningAlgorithm$EdDSABased : co/touchlab/kjwt/model/algorithm/SigningAlgorithm {
+	public synthetic fun <init> (Ljava/lang/String;Lco/touchlab/kjwt/model/algorithm/JwtEdCurve;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getCurve ()Lco/touchlab/kjwt/model/algorithm/JwtEdCurve;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/SigningAlgorithm$HS256 : co/touchlab/kjwt/model/algorithm/SigningAlgorithm$MACBased {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm$HS256;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/SigningAlgorithm$HS384 : co/touchlab/kjwt/model/algorithm/SigningAlgorithm$MACBased {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm$HS384;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/SigningAlgorithm$HS512 : co/touchlab/kjwt/model/algorithm/SigningAlgorithm$MACBased {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm$HS512;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class co/touchlab/kjwt/model/algorithm/SigningAlgorithm$MACBased : co/touchlab/kjwt/model/algorithm/SigningAlgorithm, co/touchlab/kjwt/model/algorithm/Jwa$UsesHashingAlgorithm {
+	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getDigest ()Lco/touchlab/kjwt/model/algorithm/JwtDigest;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/SigningAlgorithm$None : co/touchlab/kjwt/model/algorithm/SigningAlgorithm {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm$None;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/SigningAlgorithm$None$SimpleProcessor : co/touchlab/kjwt/processor/JwsProcessor {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm$None$SimpleProcessor;
+	public fun getAlgorithm ()Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm;
+	public fun getKeyId ()Ljava/lang/String;
+	public fun sign ([BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun verify ([B[BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract class co/touchlab/kjwt/model/algorithm/SigningAlgorithm$PKCS1Based : co/touchlab/kjwt/model/algorithm/SigningAlgorithm, co/touchlab/kjwt/model/algorithm/Jwa$UsesHashingAlgorithm {
+	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getDigest ()Lco/touchlab/kjwt/model/algorithm/JwtDigest;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/SigningAlgorithm$PS256 : co/touchlab/kjwt/model/algorithm/SigningAlgorithm$PSSBased {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm$PS256;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/SigningAlgorithm$PS384 : co/touchlab/kjwt/model/algorithm/SigningAlgorithm$PSSBased {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm$PS384;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/SigningAlgorithm$PS512 : co/touchlab/kjwt/model/algorithm/SigningAlgorithm$PSSBased {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm$PS512;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class co/touchlab/kjwt/model/algorithm/SigningAlgorithm$PSSBased : co/touchlab/kjwt/model/algorithm/SigningAlgorithm, co/touchlab/kjwt/model/algorithm/Jwa$UsesHashingAlgorithm {
+	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getDigest ()Lco/touchlab/kjwt/model/algorithm/JwtDigest;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/SigningAlgorithm$RS256 : co/touchlab/kjwt/model/algorithm/SigningAlgorithm$PKCS1Based {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm$RS256;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/SigningAlgorithm$RS384 : co/touchlab/kjwt/model/algorithm/SigningAlgorithm$PKCS1Based {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm$RS384;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/algorithm/SigningAlgorithm$RS512 : co/touchlab/kjwt/model/algorithm/SigningAlgorithm$PKCS1Based {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm$RS512;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class co/touchlab/kjwt/model/jwk/Jwk {
+	public static final field Companion Lco/touchlab/kjwt/model/jwk/Jwk$Companion;
+	public abstract fun getAlg ()Ljava/lang/String;
+	public abstract fun getKeyOps ()Ljava/util/List;
+	public abstract fun getKid ()Ljava/lang/String;
+	public abstract fun getThumbprint ()Lco/touchlab/kjwt/model/jwk/Jwk$Thumbprint;
+	public abstract fun getUse ()Ljava/lang/String;
+	public abstract fun isPrivate ()Z
+}
+
+public final class co/touchlab/kjwt/model/jwk/Jwk$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class co/touchlab/kjwt/model/jwk/Jwk$Ec : co/touchlab/kjwt/model/jwk/Jwk {
+	public static final field Companion Lco/touchlab/kjwt/model/jwk/Jwk$Ec$Companion;
+	public static final field KTY Ljava/lang/String;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/util/List;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;)Lco/touchlab/kjwt/model/jwk/Jwk$Ec;
+	public static synthetic fun copy$default (Lco/touchlab/kjwt/model/jwk/Jwk$Ec;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lco/touchlab/kjwt/model/jwk/Jwk$Ec;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getAlg ()Ljava/lang/String;
+	public final fun getCrv ()Ljava/lang/String;
+	public final fun getD ()Ljava/lang/String;
+	public fun getKeyOps ()Ljava/util/List;
+	public fun getKid ()Ljava/lang/String;
+	public fun getThumbprint ()Lco/touchlab/kjwt/model/jwk/Jwk$Thumbprint;
+	public fun getUse ()Ljava/lang/String;
+	public final fun getX ()Ljava/lang/String;
+	public final fun getY ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun isPrivate ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/jwk/Jwk$Ec$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class co/touchlab/kjwt/model/jwk/Jwk$Ec$ECThumbprint : co/touchlab/kjwt/model/jwk/Jwk$Thumbprint {
+	public static final field Companion Lco/touchlab/kjwt/model/jwk/Jwk$Ec$ECThumbprint$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lco/touchlab/kjwt/model/jwk/Jwk$Ec$ECThumbprint;
+	public static synthetic fun copy$default (Lco/touchlab/kjwt/model/jwk/Jwk$Ec$ECThumbprint;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lco/touchlab/kjwt/model/jwk/Jwk$Ec$ECThumbprint;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCrv ()Ljava/lang/String;
+	public final fun getX ()Ljava/lang/String;
+	public final fun getY ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/jwk/Jwk$Ec$ECThumbprint$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class co/touchlab/kjwt/model/jwk/Jwk$Oct : co/touchlab/kjwt/model/jwk/Jwk {
+	public static final field Companion Lco/touchlab/kjwt/model/jwk/Jwk$Oct$Companion;
+	public static final field KTY Ljava/lang/String;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/util/List;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;)Lco/touchlab/kjwt/model/jwk/Jwk$Oct;
+	public static synthetic fun copy$default (Lco/touchlab/kjwt/model/jwk/Jwk$Oct;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lco/touchlab/kjwt/model/jwk/Jwk$Oct;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getAlg ()Ljava/lang/String;
+	public final fun getK ()Ljava/lang/String;
+	public fun getKeyOps ()Ljava/util/List;
+	public fun getKid ()Ljava/lang/String;
+	public fun getThumbprint ()Lco/touchlab/kjwt/model/jwk/Jwk$Thumbprint;
+	public fun getUse ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun isPrivate ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/jwk/Jwk$Oct$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class co/touchlab/kjwt/model/jwk/Jwk$Oct$OctThumbprint : co/touchlab/kjwt/model/jwk/Jwk$Thumbprint {
+	public static final field Companion Lco/touchlab/kjwt/model/jwk/Jwk$Oct$OctThumbprint$Companion;
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lco/touchlab/kjwt/model/jwk/Jwk$Oct$OctThumbprint;
+	public static synthetic fun copy$default (Lco/touchlab/kjwt/model/jwk/Jwk$Oct$OctThumbprint;Ljava/lang/String;ILjava/lang/Object;)Lco/touchlab/kjwt/model/jwk/Jwk$Oct$OctThumbprint;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getK ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/jwk/Jwk$Oct$OctThumbprint$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class co/touchlab/kjwt/model/jwk/Jwk$Okp : co/touchlab/kjwt/model/jwk/Jwk {
+	public static final field Companion Lco/touchlab/kjwt/model/jwk/Jwk$Okp$Companion;
+	public static final field KTY Ljava/lang/String;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/util/List;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;)Lco/touchlab/kjwt/model/jwk/Jwk$Okp;
+	public static synthetic fun copy$default (Lco/touchlab/kjwt/model/jwk/Jwk$Okp;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lco/touchlab/kjwt/model/jwk/Jwk$Okp;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getAlg ()Ljava/lang/String;
+	public final fun getCrv ()Ljava/lang/String;
+	public final fun getD ()Ljava/lang/String;
+	public fun getKeyOps ()Ljava/util/List;
+	public fun getKid ()Ljava/lang/String;
+	public fun getThumbprint ()Lco/touchlab/kjwt/model/jwk/Jwk$Thumbprint;
+	public fun getUse ()Ljava/lang/String;
+	public final fun getX ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun isPrivate ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/jwk/Jwk$Okp$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class co/touchlab/kjwt/model/jwk/Jwk$Okp$OkpThumbprint : co/touchlab/kjwt/model/jwk/Jwk$Thumbprint {
+	public static final field Companion Lco/touchlab/kjwt/model/jwk/Jwk$Okp$OkpThumbprint$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lco/touchlab/kjwt/model/jwk/Jwk$Okp$OkpThumbprint;
+	public static synthetic fun copy$default (Lco/touchlab/kjwt/model/jwk/Jwk$Okp$OkpThumbprint;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lco/touchlab/kjwt/model/jwk/Jwk$Okp$OkpThumbprint;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCrv ()Ljava/lang/String;
+	public final fun getX ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/jwk/Jwk$Okp$OkpThumbprint$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class co/touchlab/kjwt/model/jwk/Jwk$Rsa : co/touchlab/kjwt/model/jwk/Jwk {
+	public static final field Companion Lco/touchlab/kjwt/model/jwk/Jwk$Rsa$Companion;
+	public static final field KTY Ljava/lang/String;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Ljava/util/List;
+	public final fun component11 ()Ljava/lang/String;
+	public final fun component12 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;)Lco/touchlab/kjwt/model/jwk/Jwk$Rsa;
+	public static synthetic fun copy$default (Lco/touchlab/kjwt/model/jwk/Jwk$Rsa;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lco/touchlab/kjwt/model/jwk/Jwk$Rsa;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getAlg ()Ljava/lang/String;
+	public final fun getD ()Ljava/lang/String;
+	public final fun getDp ()Ljava/lang/String;
+	public final fun getDq ()Ljava/lang/String;
+	public final fun getE ()Ljava/lang/String;
+	public fun getKeyOps ()Ljava/util/List;
+	public fun getKid ()Ljava/lang/String;
+	public final fun getN ()Ljava/lang/String;
+	public final fun getP ()Ljava/lang/String;
+	public final fun getQ ()Ljava/lang/String;
+	public final fun getQi ()Ljava/lang/String;
+	public fun getThumbprint ()Lco/touchlab/kjwt/model/jwk/Jwk$Thumbprint;
+	public fun getUse ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun isPrivate ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/jwk/Jwk$Rsa$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class co/touchlab/kjwt/model/jwk/Jwk$Rsa$RSAThumbprint : co/touchlab/kjwt/model/jwk/Jwk$Thumbprint {
+	public static final field Companion Lco/touchlab/kjwt/model/jwk/Jwk$Rsa$RSAThumbprint$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lco/touchlab/kjwt/model/jwk/Jwk$Rsa$RSAThumbprint;
+	public static synthetic fun copy$default (Lco/touchlab/kjwt/model/jwk/Jwk$Rsa$RSAThumbprint;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lco/touchlab/kjwt/model/jwk/Jwk$Rsa$RSAThumbprint;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getE ()Ljava/lang/String;
+	public final fun getN ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/model/jwk/Jwk$Rsa$RSAThumbprint$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract class co/touchlab/kjwt/model/jwk/Jwk$Thumbprint {
+	public static final field Companion Lco/touchlab/kjwt/model/jwk/Jwk$Thumbprint$Companion;
+}
+
+public final class co/touchlab/kjwt/model/jwk/Jwk$Thumbprint$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class co/touchlab/kjwt/model/jwk/JwkSet {
+	public static final field Companion Lco/touchlab/kjwt/model/jwk/JwkSet$Companion;
+	public fun <init> (Ljava/util/List;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lco/touchlab/kjwt/model/jwk/JwkSet;
+	public static synthetic fun copy$default (Lco/touchlab/kjwt/model/jwk/JwkSet;Ljava/util/List;ILjava/lang/Object;)Lco/touchlab/kjwt/model/jwk/JwkSet;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun findById (Ljava/lang/String;)Lco/touchlab/kjwt/model/jwk/Jwk;
+	public final fun findByUse (Ljava/lang/String;)Ljava/util/List;
+	public final fun getKeys ()Ljava/util/List;
+	public fun hashCode ()I
+	public final fun publicKeys ()Lco/touchlab/kjwt/model/jwk/JwkSet;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class co/touchlab/kjwt/model/jwk/JwkSet$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lco/touchlab/kjwt/model/jwk/JwkSet$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lco/touchlab/kjwt/model/jwk/JwkSet;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lco/touchlab/kjwt/model/jwk/JwkSet;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class co/touchlab/kjwt/model/jwk/JwkSet$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class co/touchlab/kjwt/model/registry/DefaultJwtProcessorRegistry : co/touchlab/kjwt/model/registry/MutableJwtProcessorRegistry {
+	public fun <init> ()V
+	public fun delegateTo (Lco/touchlab/kjwt/model/registry/JwtProcessorRegistry;)V
+	public fun findBestJweProcessor (Lco/touchlab/kjwt/model/algorithm/EncryptionAlgorithm;Ljava/lang/String;)Lco/touchlab/kjwt/processor/BaseJweProcessor;
+	public fun findBestJwsProcessor (Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm;Ljava/lang/String;)Lco/touchlab/kjwt/processor/BaseJwsProcessor;
+	public fun registerJweProcessor (Lco/touchlab/kjwt/processor/BaseJweProcessor;Ljava/lang/String;)V
+	public fun registerJwsProcessor (Lco/touchlab/kjwt/processor/BaseJwsProcessor;Ljava/lang/String;)V
+}
+
+public abstract interface class co/touchlab/kjwt/model/registry/JwtProcessorRegistry {
+	public abstract fun delegateTo (Lco/touchlab/kjwt/model/registry/JwtProcessorRegistry;)V
+	public abstract fun findBestJweProcessor (Lco/touchlab/kjwt/model/algorithm/EncryptionAlgorithm;Ljava/lang/String;)Lco/touchlab/kjwt/processor/BaseJweProcessor;
+	public abstract fun findBestJwsProcessor (Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm;Ljava/lang/String;)Lco/touchlab/kjwt/processor/BaseJwsProcessor;
+	public abstract fun getDelegateKeyRegistry ()Lco/touchlab/kjwt/model/registry/JwtProcessorRegistry;
+}
+
+public abstract interface class co/touchlab/kjwt/model/registry/MutableJwtProcessorRegistry : co/touchlab/kjwt/model/registry/JwtProcessorRegistry {
+	public abstract fun registerJweProcessor (Lco/touchlab/kjwt/processor/BaseJweProcessor;Ljava/lang/String;)V
+	public static synthetic fun registerJweProcessor$default (Lco/touchlab/kjwt/model/registry/MutableJwtProcessorRegistry;Lco/touchlab/kjwt/processor/BaseJweProcessor;Ljava/lang/String;ILjava/lang/Object;)V
+	public abstract fun registerJwsProcessor (Lco/touchlab/kjwt/processor/BaseJwsProcessor;Ljava/lang/String;)V
+	public static synthetic fun registerJwsProcessor$default (Lco/touchlab/kjwt/model/registry/MutableJwtProcessorRegistry;Lco/touchlab/kjwt/processor/BaseJwsProcessor;Ljava/lang/String;ILjava/lang/Object;)V
+}
+
+public final class co/touchlab/kjwt/model/registry/MutableJwtProcessorRegistry$DefaultImpls {
+	public static synthetic fun registerJweProcessor$default (Lco/touchlab/kjwt/model/registry/MutableJwtProcessorRegistry;Lco/touchlab/kjwt/processor/BaseJweProcessor;Ljava/lang/String;ILjava/lang/Object;)V
+	public static synthetic fun registerJwsProcessor$default (Lco/touchlab/kjwt/model/registry/MutableJwtProcessorRegistry;Lco/touchlab/kjwt/processor/BaseJwsProcessor;Ljava/lang/String;ILjava/lang/Object;)V
+}
+
+public final class co/touchlab/kjwt/parser/JwtParser {
+	public final fun parse (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun parseEncrypted (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun parseSigned (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class co/touchlab/kjwt/parser/JwtParserBuilder {
+	public fun <init> (Lkotlinx/serialization/json/Json;)V
+	public final fun allowUnsecured (Z)Lco/touchlab/kjwt/parser/JwtParserBuilder;
+	public final fun build ()Lco/touchlab/kjwt/parser/JwtParser;
+	public final fun clockSkew (J)Lco/touchlab/kjwt/parser/JwtParserBuilder;
+	public final fun decryptWith (Lco/touchlab/kjwt/processor/JweProcessor;)Lco/touchlab/kjwt/parser/JwtParserBuilder;
+	public final fun getValidators ()Ljava/util/List;
+	public final fun noVerify ()Lco/touchlab/kjwt/parser/JwtParserBuilder;
+	public final fun requireAudience (Ljava/lang/String;)Lco/touchlab/kjwt/parser/JwtParserBuilder;
+	public final fun requireIssuer (Ljava/lang/String;Z)Lco/touchlab/kjwt/parser/JwtParserBuilder;
+	public static synthetic fun requireIssuer$default (Lco/touchlab/kjwt/parser/JwtParserBuilder;Ljava/lang/String;ZILjava/lang/Object;)Lco/touchlab/kjwt/parser/JwtParserBuilder;
+	public final fun requireSubject (Ljava/lang/String;)Lco/touchlab/kjwt/parser/JwtParserBuilder;
+	public final fun useKeysFrom (Lco/touchlab/kjwt/model/registry/JwtProcessorRegistry;)Lco/touchlab/kjwt/parser/JwtParserBuilder;
+	public final fun verifyWith (Lco/touchlab/kjwt/processor/JwsProcessor;)Lco/touchlab/kjwt/parser/JwtParserBuilder;
+}
+
+public abstract interface class co/touchlab/kjwt/processor/BaseJweProcessor {
+	public static final field Companion Lco/touchlab/kjwt/processor/BaseJweProcessor$Companion;
+	public abstract fun getAlgorithm ()Lco/touchlab/kjwt/model/algorithm/EncryptionAlgorithm;
+	public abstract fun getKeyId ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/processor/BaseJweProcessor$Companion {
+}
+
+public abstract interface class co/touchlab/kjwt/processor/BaseJwsProcessor {
+	public static final field Companion Lco/touchlab/kjwt/processor/BaseJwsProcessor$Companion;
+	public abstract fun getAlgorithm ()Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm;
+	public abstract fun getKeyId ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/processor/BaseJwsProcessor$Companion {
+}
+
+public abstract interface class co/touchlab/kjwt/processor/JweDecryptor : co/touchlab/kjwt/processor/BaseJweProcessor {
+	public static final field Companion Lco/touchlab/kjwt/processor/JweDecryptor$Companion;
+	public abstract fun decrypt ([B[B[B[B[BLco/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class co/touchlab/kjwt/processor/JweDecryptor$Companion {
+}
+
+public abstract interface class co/touchlab/kjwt/processor/JweEncryptor : co/touchlab/kjwt/processor/BaseJweProcessor {
+	public static final field Companion Lco/touchlab/kjwt/processor/JweEncryptor$Companion;
+	public abstract fun encrypt ([B[BLco/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class co/touchlab/kjwt/processor/JweEncryptor$Companion {
+}
+
+public abstract interface class co/touchlab/kjwt/processor/JweProcessor : co/touchlab/kjwt/processor/BaseJweProcessor, co/touchlab/kjwt/processor/JweDecryptor, co/touchlab/kjwt/processor/JweEncryptor {
+	public static final field Companion Lco/touchlab/kjwt/processor/JweProcessor$Companion;
+}
+
+public final class co/touchlab/kjwt/processor/JweProcessor$Companion {
+	public final fun combining (Lco/touchlab/kjwt/processor/JweEncryptor;Lco/touchlab/kjwt/processor/JweDecryptor;)Lco/touchlab/kjwt/processor/JweProcessor;
+}
+
+public abstract interface class co/touchlab/kjwt/processor/JwsProcessor : co/touchlab/kjwt/processor/BaseJwsProcessor, co/touchlab/kjwt/processor/JwsSigner, co/touchlab/kjwt/processor/JwsVerifier {
+	public static final field Companion Lco/touchlab/kjwt/processor/JwsProcessor$Companion;
+}
+
+public final class co/touchlab/kjwt/processor/JwsProcessor$Companion {
+	public final fun combining (Lco/touchlab/kjwt/processor/JwsSigner;Lco/touchlab/kjwt/processor/JwsVerifier;)Lco/touchlab/kjwt/processor/JwsProcessor;
+}
+
+public abstract interface class co/touchlab/kjwt/processor/JwsSigner : co/touchlab/kjwt/processor/BaseJwsProcessor {
+	public static final field Companion Lco/touchlab/kjwt/processor/JwsSigner$Companion;
+	public abstract fun sign ([BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class co/touchlab/kjwt/processor/JwsSigner$Companion {
+}
+
+public abstract interface class co/touchlab/kjwt/processor/JwsVerifier : co/touchlab/kjwt/processor/BaseJwsProcessor {
+	public static final field Companion Lco/touchlab/kjwt/processor/JwsVerifier$Companion;
+	public abstract fun verify ([B[BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class co/touchlab/kjwt/processor/JwsVerifier$Companion {
+}
+
+public final class co/touchlab/kjwt/serializers/AudienceDeserializer : kotlinx/serialization/DeserializationStrategy {
+	public static final field INSTANCE Lco/touchlab/kjwt/serializers/AudienceDeserializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/util/Set;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+}
+
+public final class co/touchlab/kjwt/serializers/EncryptionAlgorithmSerializer : kotlinx/serialization/KSerializer {
+	public static final field INSTANCE Lco/touchlab/kjwt/serializers/EncryptionAlgorithmSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lco/touchlab/kjwt/model/algorithm/EncryptionAlgorithm;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lco/touchlab/kjwt/model/algorithm/EncryptionAlgorithm;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class co/touchlab/kjwt/serializers/InstantEpochSecondsSerializer : kotlinx/serialization/KSerializer {
+	public static final field INSTANCE Lco/touchlab/kjwt/serializers/InstantEpochSecondsSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lkotlin/time/Instant;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lkotlin/time/Instant;)V
+}
+
+public final class co/touchlab/kjwt/serializers/JwaSerializer : kotlinx/serialization/KSerializer {
+	public static final field INSTANCE Lco/touchlab/kjwt/serializers/JwaSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lco/touchlab/kjwt/model/algorithm/Jwa;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lco/touchlab/kjwt/model/algorithm/Jwa;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class co/touchlab/kjwt/serializers/JwkEcSerializer : kotlinx/serialization/KSerializer {
+	public static final field INSTANCE Lco/touchlab/kjwt/serializers/JwkEcSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lco/touchlab/kjwt/model/jwk/Jwk$Ec;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lco/touchlab/kjwt/model/jwk/Jwk$Ec;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class co/touchlab/kjwt/serializers/JwkEcThumbprintSerializer : kotlinx/serialization/KSerializer {
+	public static final field INSTANCE Lco/touchlab/kjwt/serializers/JwkEcThumbprintSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lco/touchlab/kjwt/model/jwk/Jwk$Ec$ECThumbprint;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lco/touchlab/kjwt/model/jwk/Jwk$Ec$ECThumbprint;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class co/touchlab/kjwt/serializers/JwkOctSerializer : kotlinx/serialization/KSerializer {
+	public static final field INSTANCE Lco/touchlab/kjwt/serializers/JwkOctSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lco/touchlab/kjwt/model/jwk/Jwk$Oct;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lco/touchlab/kjwt/model/jwk/Jwk$Oct;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class co/touchlab/kjwt/serializers/JwkOctThumbprintSerializer : kotlinx/serialization/KSerializer {
+	public static final field INSTANCE Lco/touchlab/kjwt/serializers/JwkOctThumbprintSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lco/touchlab/kjwt/model/jwk/Jwk$Oct$OctThumbprint;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lco/touchlab/kjwt/model/jwk/Jwk$Oct$OctThumbprint;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class co/touchlab/kjwt/serializers/JwkOkpSerializer : kotlinx/serialization/KSerializer {
+	public static final field INSTANCE Lco/touchlab/kjwt/serializers/JwkOkpSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lco/touchlab/kjwt/model/jwk/Jwk$Okp;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lco/touchlab/kjwt/model/jwk/Jwk$Okp;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class co/touchlab/kjwt/serializers/JwkOkpThumbprintSerializer : kotlinx/serialization/KSerializer {
+	public static final field INSTANCE Lco/touchlab/kjwt/serializers/JwkOkpThumbprintSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lco/touchlab/kjwt/model/jwk/Jwk$Okp$OkpThumbprint;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lco/touchlab/kjwt/model/jwk/Jwk$Okp$OkpThumbprint;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class co/touchlab/kjwt/serializers/JwkRsaSerializer : kotlinx/serialization/KSerializer {
+	public static final field INSTANCE Lco/touchlab/kjwt/serializers/JwkRsaSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lco/touchlab/kjwt/model/jwk/Jwk$Rsa;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lco/touchlab/kjwt/model/jwk/Jwk$Rsa;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class co/touchlab/kjwt/serializers/JwkRsaThumbprintSerializer : kotlinx/serialization/KSerializer {
+	public static final field INSTANCE Lco/touchlab/kjwt/serializers/JwkRsaThumbprintSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lco/touchlab/kjwt/model/jwk/Jwk$Rsa$RSAThumbprint;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lco/touchlab/kjwt/model/jwk/Jwk$Rsa$RSAThumbprint;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class co/touchlab/kjwt/serializers/JwkSerializer : kotlinx/serialization/KSerializer {
+	public static final field INSTANCE Lco/touchlab/kjwt/serializers/JwkSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lco/touchlab/kjwt/model/jwk/Jwk;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lco/touchlab/kjwt/model/jwk/Jwk;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class co/touchlab/kjwt/serializers/JwkThumbprintSerializer : kotlinx/serialization/KSerializer {
+	public static final field INSTANCE Lco/touchlab/kjwt/serializers/JwkThumbprintSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lco/touchlab/kjwt/model/jwk/Jwk$Thumbprint;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lco/touchlab/kjwt/model/jwk/Jwk$Thumbprint;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class co/touchlab/kjwt/serializers/JwtHeaderSerializer : kotlinx/serialization/KSerializer {
+	public static final field INSTANCE Lco/touchlab/kjwt/serializers/JwtHeaderSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lco/touchlab/kjwt/model/JwtHeader;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lco/touchlab/kjwt/model/JwtHeader;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class co/touchlab/kjwt/serializers/JwtPayloadSerializer : kotlinx/serialization/KSerializer {
+	public static final field INSTANCE Lco/touchlab/kjwt/serializers/JwtPayloadSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lco/touchlab/kjwt/model/JwtPayload;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lco/touchlab/kjwt/model/JwtPayload;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class co/touchlab/kjwt/serializers/SigningAlgorithmSerializer : kotlinx/serialization/KSerializer {
+	public static final field INSTANCE Lco/touchlab/kjwt/serializers/SigningAlgorithmSerializer;
+	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+

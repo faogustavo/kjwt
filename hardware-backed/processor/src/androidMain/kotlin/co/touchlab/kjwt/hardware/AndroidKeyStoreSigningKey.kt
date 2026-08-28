@@ -18,11 +18,12 @@ import co.touchlab.kjwt.hardware.model.runWithFlag
 import co.touchlab.kjwt.model.algorithm.Jwa
 import co.touchlab.kjwt.model.algorithm.SigningAlgorithm
 import co.touchlab.kjwt.processor.JwsProcessor
+import java.security.InvalidKeyException
 import java.security.KeyPairGenerator
 import java.security.KeyStore
 import java.security.MessageDigest
 import java.security.Signature
-import java.security.spec.EdDSAParameterSpec
+import java.security.spec.ECGenParameterSpec
 import javax.crypto.KeyGenerator
 import javax.crypto.Mac
 
@@ -99,8 +100,22 @@ public class AndroidKeyStoreSigningKey internal constructor(
             return SigningAlgorithm.None.SimpleProcessor.sign(data)
         }
 
-        val key = AndroidKeyStoreManager.getKey(keyId)
         val jcaAlgorithm = algorithm.toJcaSignatureName()
+
+        if (algorithm is SigningAlgorithm.EdDSABased) {
+            // EdDSA keys must not go through getEntry (see AndroidKeyStoreManager.getPrivateKeyAndCertificate)
+            val (privateKey, _) = AndroidKeyStoreManager.getPrivateKeyAndCertificate(keyId)
+                ?: error("No key available for signing content using $algorithm with id $keyId.")
+
+            // Android Keystore returns raw RFC 8032 bytes — no conversion needed
+            return Signature.getInstance(jcaAlgorithm).run {
+                initSign(privateKey)
+                update(data)
+                sign()
+            }
+        }
+
+        val key = AndroidKeyStoreManager.getKey(keyId)
 
         return when (algorithm) {
             is SigningAlgorithm.MACBased if (key is KeyStore.SecretKeyEntry) -> {
@@ -139,15 +154,6 @@ public class AndroidKeyStoreSigningKey internal constructor(
                 derSignature.ecdsaDerToP1363(algorithm.coordLen)
             }
 
-            is SigningAlgorithm.EdDSABased if (key is KeyStore.PrivateKeyEntry) -> {
-                // Android Keystore returns raw RFC 8032 bytes — no conversion needed
-                Signature.getInstance(jcaAlgorithm).run {
-                    initSign(key.privateKey)
-                    update(data)
-                    sign()
-                }
-            }
-
             else -> {
                 error("No key available for signing content using $algorithm with id $keyId.")
             }
@@ -166,8 +172,32 @@ public class AndroidKeyStoreSigningKey internal constructor(
             return SigningAlgorithm.None.SimpleProcessor.verify(data, signature)
         }
 
-        val key = AndroidKeyStoreManager.getKey(keyId)
         val jcaAlgorithm = algorithm.toJcaSignatureName()
+
+        if (algorithm is SigningAlgorithm.EdDSABased) {
+            // EdDSA keys must not go through getEntry (see AndroidKeyStoreManager.getPrivateKeyAndCertificate)
+            val (_, certificate) = AndroidKeyStoreManager.getPrivateKeyAndCertificate(keyId)
+                ?: error("No key available for verifying $algorithm with id $keyId.")
+
+            // Signature is raw RFC 8032 bytes — no conversion needed
+            return Signature.getInstance(jcaAlgorithm).run {
+                try {
+                    initVerify(certificate.publicKey)
+                } catch (e: InvalidKeyException) {
+                    // Android Keystore can sign with Ed25519 from API 33, but verifying with the public key
+                    // needs a software EdDSA provider. Conscrypt only registers one from API 36; on earlier
+                    // releases no installed provider accepts the certificate's public key.
+                    throw UnsupportedOperationException(
+                        "Verifying $algorithm signatures requires Android API 36+ (no installed provider supports EdDSA verification).",
+                        e,
+                    )
+                }
+                update(data)
+                verify(signature)
+            }
+        }
+
+        val key = AndroidKeyStoreManager.getKey(keyId)
 
         return when (algorithm) {
             is SigningAlgorithm.MACBased if (key is KeyStore.SecretKeyEntry) -> {
@@ -203,15 +233,6 @@ public class AndroidKeyStoreSigningKey internal constructor(
                         update(data)
                         verify(derSignature)
                     }
-            }
-
-            is SigningAlgorithm.EdDSABased if (key is KeyStore.PrivateKeyEntry) -> {
-                // Signature is raw RFC 8032 bytes — no conversion needed
-                Signature.getInstance(jcaAlgorithm).run {
-                    initVerify(key.certificate.publicKey)
-                    update(data)
-                    verify(signature)
-                }
             }
 
             else -> {
@@ -292,13 +313,20 @@ public object AndroidKeystoreSigningKeyFactory {
         }
 
         if (algorithm is SigningAlgorithm.EdDSABased) {
-            setAlgorithmParameterSpec(EdDSAParameterSpec(false))
+            // Android Keystore generates EdDSA keys through the EC generator and only accepts
+            // ECGenParameterSpec with the curve name (EdDSAParameterSpec is rejected).
+            setAlgorithmParameterSpec(ECGenParameterSpec(algorithm.curveName()))
             setDigests(KeyProperties.DIGEST_NONE)
         }
 
         if (useStrongBox && Build.VERSION.SDK_INT >= 28) {
             setIsStrongBoxBacked(true)
         }
+    }
+
+    private fun SigningAlgorithm.EdDSABased.curveName(): String = when (this) {
+        SigningAlgorithm.Ed25519 -> "ed25519"
+        SigningAlgorithm.Ed448 -> "ed448"
     }
 
     private fun SigningAlgorithm.toKeyPropertiesAlgorithm(): String = when (this) {
@@ -314,12 +342,10 @@ public object AndroidKeystoreSigningKeyFactory {
 
         is SigningAlgorithm.ECDSABased -> KeyProperties.KEY_ALGORITHM_EC
 
-        SigningAlgorithm.Ed25519 -> "Ed25519"
+        // Android Keystore has no dedicated EdDSA key algorithm; EdDSA keys are generated via
+        // the EC generator with the curve selected through ECGenParameterSpec.
+        is SigningAlgorithm.EdDSABased -> KeyProperties.KEY_ALGORITHM_EC
 
-        // No constant available in KeyProperties for EdDSA algorithms
-        SigningAlgorithm.Ed448 -> "Ed448"
-
-        // No constant available in KeyProperties for EdDSA algorithms
         SigningAlgorithm.None -> error("None algorithm should be handled outside")
     }
 }

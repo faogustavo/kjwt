@@ -87,7 +87,7 @@ jobs:
 
       - name: Run tests
         if: matrix.android != true
-        run: ./gradlew ${{ matrix.tasks }} --continue
+        run: ./gradlew ${{ matrix.tasks }} checkKotlinAbi --continue
 
       - name: Run tests (Android emulator)
         if: matrix.android == true
@@ -96,7 +96,7 @@ jobs:
           api-level: ${{ matrix.api-level }}
           target: ${{ matrix.target }}
           arch: x86_64
-          script: ./gradlew connectedAndroidDeviceTest --continue
+          script: ./gradlew connectedAndroidDeviceTest checkKotlinAbi --continue
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v6
@@ -137,8 +137,8 @@ jobs:
         run: |
           set -o pipefail && xcodebuild test \
             -project Subprojects/KJWT-HardwareTesting/iosApp/iosApp.xcodeproj \
-            -scheme iosApp \
-            -destination 'platform=iOS Simulator,OS=latest,name=iPhone 16' \
+            -scheme  KJWT-HardwareTestingTests  \
+            -destination 'platform=iOS Simulator,OS=latest,name=iPhone 17' \
             2>&1 | xcpretty --report junit --output build/test-results/ios/TEST-ios-hardware.xml
 
       - name: Publish Test Report
