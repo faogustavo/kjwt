@@ -1,4 +1,6 @@
 import kjwt.configureTests
+import org.jetbrains.kotlin.gradle.dsl.abi.BinariesSource
+import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 
 plugins {
     kotlin("multiplatform")
@@ -12,6 +14,17 @@ plugins {
 
 kotlin {
     explicitApi()
+
+    @OptIn(ExperimentalAbiValidation::class)
+    abiValidation {
+        binariesSource.set(BinariesSource.MAVEN_PUBLICATIONS)
+
+        filters {
+            exclude {
+                annotatedWith.add("co.touchlab.kjwt.annotations.InternalKJWTApi")
+            }
+        }
+    }
 
     compilerOptions {
         freeCompilerArgs.add("-Xexpect-actual-classes")

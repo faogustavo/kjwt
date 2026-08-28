@@ -1,0 +1,125 @@
+public final class co/touchlab/kjwt/cryptography/CryptographyExtensionsKt {
+	public static final fun toCryptographyKotlin (Lco/touchlab/kjwt/model/algorithm/JwtCurve;)Ljava/lang/String;
+	public static final fun toCryptographyKotlin (Lco/touchlab/kjwt/model/algorithm/JwtEdCurve;)Ldev/whyoleg/cryptography/algorithms/EdDSA$Curve;
+}
+
+public abstract class co/touchlab/kjwt/cryptography/EncryptionKey : co/touchlab/kjwt/processor/BaseJweProcessor {
+	public fun getAlgorithm ()Lco/touchlab/kjwt/model/algorithm/EncryptionAlgorithm;
+	public abstract fun getIdentifier ()Lco/touchlab/kjwt/cryptography/EncryptionKey$Identifier;
+	public fun getKeyId ()Ljava/lang/String;
+	public abstract fun getPrivateKey ()Ljava/lang/Object;
+	public abstract fun getPublicKey ()Ljava/lang/Object;
+	public final fun mergeWith (Lco/touchlab/kjwt/cryptography/EncryptionKey;)Lco/touchlab/kjwt/cryptography/EncryptionKey;
+}
+
+public final class co/touchlab/kjwt/cryptography/EncryptionKey$DecryptionOnlyKey : co/touchlab/kjwt/cryptography/EncryptionKey, co/touchlab/kjwt/processor/JweDecryptor {
+	public fun <init> (Lco/touchlab/kjwt/cryptography/EncryptionKey$Identifier;Ljava/lang/Object;)V
+	public fun decrypt ([B[B[B[B[BLco/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getIdentifier ()Lco/touchlab/kjwt/cryptography/EncryptionKey$Identifier;
+	public fun getPrivateKey ()Ljava/lang/Object;
+	public fun getPublicKey ()Ljava/lang/Object;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/cryptography/EncryptionKey$EncryptionKeyPair : co/touchlab/kjwt/cryptography/EncryptionKey, co/touchlab/kjwt/processor/JweProcessor {
+	public fun <init> (Lco/touchlab/kjwt/cryptography/EncryptionKey$Identifier;Ljava/lang/Object;Ljava/lang/Object;)V
+	public fun decrypt ([B[B[B[B[BLco/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun encrypt ([B[BLco/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getIdentifier ()Lco/touchlab/kjwt/cryptography/EncryptionKey$Identifier;
+	public fun getPrivateKey ()Ljava/lang/Object;
+	public fun getPublicKey ()Ljava/lang/Object;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/cryptography/EncryptionKey$EncryptionOnlyKey : co/touchlab/kjwt/cryptography/EncryptionKey, co/touchlab/kjwt/processor/JweEncryptor {
+	public fun <init> (Lco/touchlab/kjwt/cryptography/EncryptionKey$Identifier;Ljava/lang/Object;)V
+	public fun encrypt ([B[BLco/touchlab/kjwt/model/algorithm/EncryptionContentAlgorithm;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getIdentifier ()Lco/touchlab/kjwt/cryptography/EncryptionKey$Identifier;
+	public fun getPrivateKey ()Ljava/lang/Object;
+	public fun getPublicKey ()Ljava/lang/Object;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/cryptography/EncryptionKey$Identifier {
+	public static final field Companion Lco/touchlab/kjwt/cryptography/EncryptionKey$Identifier$Companion;
+	public fun <init> (Lco/touchlab/kjwt/model/algorithm/EncryptionAlgorithm;Ljava/lang/String;)V
+	public final fun component1 ()Lco/touchlab/kjwt/model/algorithm/EncryptionAlgorithm;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Lco/touchlab/kjwt/model/algorithm/EncryptionAlgorithm;Ljava/lang/String;)Lco/touchlab/kjwt/cryptography/EncryptionKey$Identifier;
+	public static synthetic fun copy$default (Lco/touchlab/kjwt/cryptography/EncryptionKey$Identifier;Lco/touchlab/kjwt/model/algorithm/EncryptionAlgorithm;Ljava/lang/String;ILjava/lang/Object;)Lco/touchlab/kjwt/cryptography/EncryptionKey$Identifier;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAlgorithm ()Lco/touchlab/kjwt/model/algorithm/EncryptionAlgorithm;
+	public final fun getKeyId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/cryptography/EncryptionKey$Identifier$Companion {
+}
+
+public abstract class co/touchlab/kjwt/cryptography/SigningKey : co/touchlab/kjwt/processor/BaseJwsProcessor {
+	public fun getAlgorithm ()Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm;
+	public abstract fun getIdentifier ()Lco/touchlab/kjwt/cryptography/SigningKey$Identifier;
+	public fun getKeyId ()Ljava/lang/String;
+	public abstract fun getPrivateKey ()Ljava/lang/Object;
+	public abstract fun getPublicKey ()Ljava/lang/Object;
+}
+
+public final class co/touchlab/kjwt/cryptography/SigningKey$Identifier {
+	public static final field Companion Lco/touchlab/kjwt/cryptography/SigningKey$Identifier$Companion;
+	public fun <init> (Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm;Ljava/lang/String;)V
+	public final fun component1 ()Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm;Ljava/lang/String;)Lco/touchlab/kjwt/cryptography/SigningKey$Identifier;
+	public static synthetic fun copy$default (Lco/touchlab/kjwt/cryptography/SigningKey$Identifier;Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm;Ljava/lang/String;ILjava/lang/Object;)Lco/touchlab/kjwt/cryptography/SigningKey$Identifier;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAlgorithm ()Lco/touchlab/kjwt/model/algorithm/SigningAlgorithm;
+	public final fun getKeyId ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/cryptography/SigningKey$Identifier$Companion {
+	public final fun getNone ()Lco/touchlab/kjwt/cryptography/SigningKey$Identifier;
+}
+
+public final class co/touchlab/kjwt/cryptography/SigningKey$SigningKeyPair : co/touchlab/kjwt/cryptography/SigningKey, co/touchlab/kjwt/processor/JwsProcessor {
+	public fun <init> (Lco/touchlab/kjwt/cryptography/SigningKey$Identifier;Ljava/lang/Object;Ljava/lang/Object;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getIdentifier ()Lco/touchlab/kjwt/cryptography/SigningKey$Identifier;
+	public fun getPrivateKey ()Ljava/lang/Object;
+	public fun getPublicKey ()Ljava/lang/Object;
+	public fun hashCode ()I
+	public fun sign ([BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun toString ()Ljava/lang/String;
+	public fun verify ([B[BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class co/touchlab/kjwt/cryptography/SigningKey$SigningOnlyKey : co/touchlab/kjwt/cryptography/SigningKey, co/touchlab/kjwt/processor/JwsSigner {
+	public fun <init> (Lco/touchlab/kjwt/cryptography/SigningKey$Identifier;Ljava/lang/Object;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getIdentifier ()Lco/touchlab/kjwt/cryptography/SigningKey$Identifier;
+	public fun getPrivateKey ()Ljava/lang/Object;
+	public fun getPublicKey ()Ljava/lang/Object;
+	public fun hashCode ()I
+	public fun sign ([BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class co/touchlab/kjwt/cryptography/SigningKey$VerifyOnlyKey : co/touchlab/kjwt/cryptography/SigningKey, co/touchlab/kjwt/processor/JwsVerifier {
+	public fun <init> (Lco/touchlab/kjwt/cryptography/SigningKey$Identifier;Ljava/lang/Object;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getIdentifier ()Lco/touchlab/kjwt/cryptography/SigningKey$Identifier;
+	public fun getPrivateKey ()Ljava/lang/Object;
+	public fun getPublicKey ()Ljava/lang/Object;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public fun verify ([B[BLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+

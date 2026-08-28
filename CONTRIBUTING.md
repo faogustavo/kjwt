@@ -63,6 +63,29 @@ The CI pipeline also runs detekt automatically on pull requests and posts inline
 
 The detekt configuration lives in `config/detekt/detekt.yml`. Zero violations are allowed (`maxIssues: 0`).
 
+### ABI Compatibility
+
+The project uses the Kotlin ABI validator to track the public API of every published module. Each module keeps its
+ABI dumps in an `api/` directory (`<module>.api` for JVM/Android and `<module>.klib.api` for the other targets).
+Declarations annotated with `@InternalKJWTApi` are excluded from the dumps.
+
+Before submitting a PR, run:
+
+```bash
+./gradlew checkKotlinAbi
+```
+
+This fails if the public API differs from the committed dumps. If your change intentionally modifies the public API
+(adding, removing, or changing a public declaration), regenerate the dumps and commit them alongside your change:
+
+```bash
+./gradlew updateKotlinAbi
+```
+
+Review the resulting diff in the `api/` files carefully: it is the source of truth for what changed in the public
+API, and reviewers use it to spot unintended or breaking changes. The CI pipeline runs `checkKotlinAbi` on every pull
+request.
+
 ### Writing Tests
 
 Tests live in `lib/src/commonTest/kotlin/` and run on all platforms.
