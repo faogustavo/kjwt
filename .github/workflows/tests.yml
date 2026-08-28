@@ -137,8 +137,8 @@ jobs:
         run: |
           set -o pipefail && xcodebuild test \
             -project Subprojects/KJWT-HardwareTesting/iosApp/iosApp.xcodeproj \
-            -scheme iosApp \
-            -destination 'platform=iOS Simulator,OS=latest,name=iPhone 16' \
+            -scheme  KJWT-HardwareTestingTests  \
+            -destination 'platform=iOS Simulator,OS=latest,name=iPhone 17' \
             2>&1 | xcpretty --report junit --output build/test-results/ios/TEST-ios-hardware.xml
 
       - name: Publish Test Report
